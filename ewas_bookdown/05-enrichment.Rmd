@@ -1,0 +1,6 @@
+# Biological interpretation of findings
+We will explain the steps for the biological interpretation of the findings:
+
+## Annotation of CpG sites
+## Functional enrichment analysis
+## Comparison with EWAS Atlas and EWAS Catalog

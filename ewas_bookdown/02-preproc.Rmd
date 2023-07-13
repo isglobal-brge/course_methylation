@@ -1,0 +1,10 @@
+# Pre-processing of DNA methylation data
+
+We will explain the different steps of the pre-processing of
+DNA methylation data
+
+## Sample and CpG quality control
+## Normalisation
+## Technical batch correction
+## Outliers
+## Estimation of cell type proportions

@@ -1,0 +1,6 @@
+# Epigenome-wide association study (EWAS)
+We will explain how to conduct an EWAS:
+
+## Statistical methods
+## Visualisation of results: QQ-plot, Manhattan, Volcano
+

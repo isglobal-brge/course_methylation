@@ -1,0 +1,6 @@
+# Meta-analysis of epigenome-wide association studies (metaEWAS)
+We will explain how to conduct a metaEWAS:
+
+## Quality control of results from different studies
+## Statistical methods to combine results from different studies
+## Visualization of results: QQ-plot, Manhattan, Volcano

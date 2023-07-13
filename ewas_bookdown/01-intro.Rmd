@@ -1,0 +1,18 @@
+# Introduction to DNA methylation data and Bioconductor
+
+## Introduction to epigenetics
+
+### Brief introduction to epigenetics
+### DNA methylation data acquisition
+### Applications of epigenetics
+
+## Epigenetics among transitioning African populations
+
+## Resources and tools for epigenetics
+We will introduce different resources and tools for working
+with omics data in R environment:
+
+### Bioconductor
+### Gene Expression Omnibus (GEO) repository
+### ExpressionSet and GenomicRatioSet
+### Methylation-related packages

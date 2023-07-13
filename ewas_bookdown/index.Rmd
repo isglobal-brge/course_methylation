@@ -1,0 +1,51 @@
+--- 
+title: "Introduction to Epigenome-Wide Association Studies (EWAS)"
+author: "Juan R. González, Mariona Bustamante, Sofía Aguilar & Laura Balagué"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+documentclass: book
+bibliography: [book.bib, packages.bib]
+url: https://ewas-isgsummerschool.netlify.app/
+# cover-image: path to the social sharing image like images/cover.jpg
+description: |
+  Module 1 of the ISGlobal Summer School
+link-citations: yes
+df_print: paged
+---
+
+```{r steup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.align = "center", fig.width = 6, fig.height = 4, cache = T)
+# automatically create a bib database for R packages
+knitr::write_bib(c(
+  .packages(), 'bookdown', 'knitr', 'rmarkdown'
+), 'packages.bib')
+```
+
+# Introduction to Epigenome-Wide Association Studies (EWAS) {-}
+&nbsp;
+
+<span style="color:#E78015">**Coordinator**</span>: Juan Ramon González
+&nbsp;
+
+<span style="color:#E78015">**Other lecturers**</span>: Mariona Bustamante, Sofía Aguilar-Lacasaña, Laura Balagué
+&nbsp;
+
+<span style="color:#E78015">**Aim**</span>: To introduce basic concepts and guidelines to conduct epigenome-wide association studies (EWAS) using DNA methylation data obtained from arrays.
+&nbsp;
+
+<span style="color:#E78015">**Learning Objectives**</span>: Upon successful completion of the module, participants should be able to conduct:
+
+1. Pre-processing of DNA methylation data
+2. Epigenome-wide association studies (EWAS)
+3. Meta-analysis of EWAS from different studies
+4. Annotation and functional interpretation of findings
+&nbsp;
+
+<span style="color:#E78015">**Additional requirements**</span>:
+
+* Required: Intermediate knowledge in R environment.
+* Recommended resources: Laptop or computer with >8Gb RAM
+* Time Slot 1: from 9 to 11 h CEST
+* Teaching language: English
+
+![](images/summer-school.png){width="668"}

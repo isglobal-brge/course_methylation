@@ -1,0 +1,35 @@
+p.caption {
+  color: #777;
+  margin-top: 10px;
+}
+p code {
+  white-space: inherit;
+}
+pre {
+  word-break: normal;
+  word-wrap: normal;
+}
+pre code {
+  white-space: inherit;
+}
+body {
+  text-align: justify;
+}
+h1, h2, h3 {
+  text-align: left;
+}
+#toc ul li {
+  text-align: left;
+}
+#main-nav ul li{
+  text-align: left;
+}
+
+.lightable-paper.lightable-hover tbody tr:hover {
+  background-color: #B5EBAC;
+  color: #113A8A;
+}
+
+.inline-figure {
+    border: solid 2px #ffffff;
+}

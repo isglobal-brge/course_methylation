@@ -10,11 +10,12 @@ gene-expression-omnibus-geo-repository
 expressionset-and-genomicratioset
 methylation-related-packages
 pre-processing-of-dna-methylation-data
+creation-of-the-sample-sheet
 sample-and-cpg-quality-control
 normalisation
-technical-batch-correction
-outliers
+creation-of-a-expression-set
 estimation-of-cell-type-proportions
+assembling
 epigenome-wide-association-study-ewas
 statistical-methods
 visualisation-of-results-qq-plot-manhattan-volcano

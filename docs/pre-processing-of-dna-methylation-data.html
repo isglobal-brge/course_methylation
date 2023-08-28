@@ -6,15 +6,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Chapter 2 Pre-processing of DNA methylation data | Introduction to Epigenome-Wide Association Studies (EWAS)</title>
 <meta name="author" content="Juan R. González, Mariona Bustamante, Sofía Aguilar &amp; Laura Balagué">
-<meta name="description" content="We will explain the different steps of the pre-processing of DNA methylation data  2.1 Sample and CpG quality control   2.2 Normalisation   2.3 Technical batch correction   2.4 Outliers   2.5...">
+<meta name="description" content="In this chapter will explain the steps for the pre-processing of DNA methylation data with the meffil R package.  2.1 Creation of the Sample Sheet After loading the meffil library, we need to...">
 <meta name="generator" content="bookdown 0.34 with bs4_book()">
 <meta property="og:title" content="Chapter 2 Pre-processing of DNA methylation data | Introduction to Epigenome-Wide Association Studies (EWAS)">
 <meta property="og:type" content="book">
-<meta property="og:url" content="https://ewas-isgsummerschool.netlify.app/pre-processing-of-dna-methylation-data.html">
-<meta property="og:description" content="We will explain the different steps of the pre-processing of DNA methylation data  2.1 Sample and CpG quality control   2.2 Normalisation   2.3 Technical batch correction   2.4 Outliers   2.5...">
+<meta property="og:url" content="https://isglobal-brge.github.io/course_methylation/pre-processing-of-dna-methylation-data.html">
+<meta property="og:description" content="In this chapter will explain the steps for the pre-processing of DNA methylation data with the meffil R package.  2.1 Creation of the Sample Sheet After loading the meffil library, we need to...">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Chapter 2 Pre-processing of DNA methylation data | Introduction to Epigenome-Wide Association Studies (EWAS)">
-<meta name="twitter:description" content="We will explain the different steps of the pre-processing of DNA methylation data  2.1 Sample and CpG quality control   2.2 Normalisation   2.3 Technical batch correction   2.4 Outliers   2.5...">
+<meta name="twitter:description" content="In this chapter will explain the steps for the pre-processing of DNA methylation data with the meffil R package.  2.1 Creation of the Sample Sheet After loading the meffil library, we need to...">
 <!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
 <script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.5.0/transition.js"></script><script src="libs/bs3compat-0.5.0/tabs.js"></script><script src="libs/bs3compat-0.5.0/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
@@ -64,33 +64,253 @@
 <h1>
 <span class="header-section-number">2</span> Pre-processing of DNA methylation data<a class="anchor" aria-label="anchor" href="#pre-processing-of-dna-methylation-data"><i class="fas fa-link"></i></a>
 </h1>
-<p>We will explain the different steps of the pre-processing of
-DNA methylation data</p>
-<div id="sample-and-cpg-quality-control" class="section level2" number="2.1">
+<p>In this chapter will explain the steps for the pre-processing of
+DNA methylation data with the meffil R package.</p>
+<div id="creation-of-the-sample-sheet" class="section level2" number="2.1">
 <h2>
-<span class="header-section-number">2.1</span> Sample and CpG quality control<a class="anchor" aria-label="anchor" href="#sample-and-cpg-quality-control"><i class="fas fa-link"></i></a>
+<span class="header-section-number">2.1</span> Creation of the Sample Sheet<a class="anchor" aria-label="anchor" href="#creation-of-the-sample-sheet"><i class="fas fa-link"></i></a>
 </h2>
+<p>After loading the meffil library, we need to create a sample sheet from the IDAT files.</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/perishky/meffil">meffil</a></span><span class="op">)</span></span>
+<span><span class="va">samplesheet</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/meffil/man/meffil.create.samplesheet.html">meffil.create.samplesheet</a></span><span class="op">(</span><span class="st">"H:/analyses/Course_Intro_to_EWAS/db/GSE42861/Raw/G1"</span>, recursive<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">samplesheet</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [1] 298   6</code></pre>
+<p>The function automatically adds the sample name, slide, row, column and filename
+from the IDATs. We can not remove these columns but we can manually add more.
+In this case we add the sex, age and smoking status variables. If we had duplicated
+samples for the same individual, we would also add the individual ID and then
+remove the duplicates.</p>
+<p>First we load the phenotype data</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">pheno</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span><span class="op">(</span><span class="st">"H:/analyses/Course_Intro_to_EWAS/db/GSE42861/Phenotype/GSE42861_pheno.txt"</span>, sep <span class="op">=</span> <span class="st">'\t'</span>, header <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">pheno</span><span class="op">)</span></span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Sample"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Celltype"],"name":[2],"type":["chr"],"align":["left"]},{"label":["Age"],"name":[3],"type":["int"],"align":["right"]},{"label":["Sex"],"name":[4],"type":["chr"],"align":["left"]},{"label":["Smoking"],"name":[5],"type":["chr"],"align":["left"]}],"data":[{"1":"GSM1051533","2":"PBL","3":"55","4":"M","5":"current","_rn_":"1"},{"1":"GSM1051534","2":"PBL","3":"37","4":"M","5":"never","_rn_":"2"},{"1":"GSM1051536","2":"PBL","3":"59","4":"M","5":"former","_rn_":"3"},{"1":"GSM1051537","2":"PBL","3":"49","4":"M","5":"former","_rn_":"4"},{"1":"GSM1051538","2":"PBL","3":"47","4":"M","5":"former","_rn_":"5"},{"1":"GSM1051539","2":"PBL","3":"69","4":"M","5":"never","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
 </div>
-<div id="normalisation" class="section level2" number="2.2">
-<h2>
-<span class="header-section-number">2.2</span> Normalisation<a class="anchor" aria-label="anchor" href="#normalisation"><i class="fas fa-link"></i></a>
-</h2>
+<p>And then add the sex, the age and the smoking status variables, keeping only
+those samples with metadata</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">samplesheet</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html">merge</a></span><span class="op">(</span><span class="va">samplesheet</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'Sample_Name'</span>, <span class="st">'Slide'</span>, <span class="st">'sentrix_row'</span>, <span class="st">'sentrix_col'</span>, <span class="st">'Basename'</span><span class="op">)</span><span class="op">]</span>, </span>
+<span>                     <span class="va">pheno</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'Sample'</span>, <span class="st">'Age'</span>, <span class="st">'Sex'</span>, <span class="st">'Smoking'</span><span class="op">)</span><span class="op">]</span>, </span>
+<span>                     by.x <span class="op">=</span> <span class="st">'Sample_Name'</span>, </span>
+<span>                     by.y <span class="op">=</span> <span class="st">'Sample'</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">samplesheet</span><span class="op">)</span></span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Sample_Name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Slide"],"name":[2],"type":["chr"],"align":["left"]},{"label":["sentrix_row"],"name":[3],"type":["chr"],"align":["left"]},{"label":["sentrix_col"],"name":[4],"type":["chr"],"align":["left"]},{"label":["Basename"],"name":[5],"type":["chr"],"align":["left"]},{"label":["Age"],"name":[6],"type":["int"],"align":["right"]},{"label":["Sex"],"name":[7],"type":["chr"],"align":["left"]},{"label":["Smoking"],"name":[8],"type":["chr"],"align":["left"]}],"data":[{"1":"GSM1051533","2":"7800246024","3":"03","4":"02","5":"H:/analyses/Course_Intro_to_EWAS/db/GSE42861/Raw/G1/GSM1051533_7800246024_R03C02","6":"55","7":"M","8":"current","_rn_":"1"},{"1":"GSM1051534","2":"7800246024","3":"04","4":"02","5":"H:/analyses/Course_Intro_to_EWAS/db/GSE42861/Raw/G1/GSM1051534_7800246024_R04C02","6":"37","7":"M","8":"never","_rn_":"2"},{"1":"GSM1051536","2":"7800246024","3":"06","4":"02","5":"H:/analyses/Course_Intro_to_EWAS/db/GSE42861/Raw/G1/GSM1051536_7800246024_R06C02","6":"59","7":"M","8":"former","_rn_":"3"},{"1":"GSM1051537","2":"7800246085","3":"01","4":"01","5":"H:/analyses/Course_Intro_to_EWAS/db/GSE42861/Raw/G1/GSM1051537_7800246085_R01C01","6":"49","7":"M","8":"former","_rn_":"4"},{"1":"GSM1051538","2":"7800246085","3":"02","4":"01","5":"H:/analyses/Course_Intro_to_EWAS/db/GSE42861/Raw/G1/GSM1051538_7800246085_R02C01","6":"47","7":"M","8":"former","_rn_":"5"},{"1":"GSM1051539","2":"7800246085","3":"03","4":"01","5":"H:/analyses/Course_Intro_to_EWAS/db/GSE42861/Raw/G1/GSM1051539_7800246085_R03C01","6":"69","7":"M","8":"never","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
 </div>
-<div id="technical-batch-correction" class="section level2" number="2.3">
-<h2>
-<span class="header-section-number">2.3</span> Technical batch correction<a class="anchor" aria-label="anchor" href="#technical-batch-correction"><i class="fas fa-link"></i></a>
-</h2>
+<p>Finally we can save the sample sheet</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/save.html">save</a></span><span class="op">(</span><span class="va">samplesheet</span>, file<span class="op">=</span><span class="st">"H:/analyses/Course_Intro_to_EWAS/results/QC/SampleSheetG1.Rdata"</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div id="outliers" class="section level2" number="2.4">
+<div id="sample-and-cpg-quality-control" class="section level2" number="2.2">
 <h2>
-<span class="header-section-number">2.4</span> Outliers<a class="anchor" aria-label="anchor" href="#outliers"><i class="fas fa-link"></i></a>
+<span class="header-section-number">2.2</span> Sample and CpG quality control<a class="anchor" aria-label="anchor" href="#sample-and-cpg-quality-control"><i class="fas fa-link"></i></a>
 </h2>
+<p>Once we have the sample sheet, the first step for the QC is the creation of the
+QC objects. We specify the cell type reference (idol optimized)
+and the thresholds for detection and minimum number of beads.</p>
+<p><strong>DO NOT RUN THIS STEP IN THE CLASS</strong> - it is very time consuming.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># DO NOT RUN</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/meffil/man/meffil.list.cell.type.references.html">meffil.list.cell.type.references</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">qc.objects</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/meffil/man/meffil.qc.html">meffil.qc</a></span><span class="op">(</span><span class="va">samplesheet</span>, cell.type.reference<span class="op">=</span><span class="st">"blood idoloptimized"</span>, </span>
+<span>                        verbose<span class="op">=</span><span class="cn">TRUE</span>,</span>
+<span>                        detection.threshold <span class="op">=</span> <span class="fl">0.01</span>,</span>
+<span>                        bead.threshold <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/save.html">save</a></span><span class="op">(</span><span class="va">qc.objects</span>, file <span class="op">=</span> <span class="st">'H:/analyses/Course_Intro_to_EWAS/results/QC/QCObjects.RData'</span><span class="op">)</span></span></code></pre></div>
+<p>Instead, load the QC Objects that we provide:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span><span class="op">(</span><span class="st">'H:/analyses/Course_Intro_to_EWAS/results/QC/QCObjects.RData'</span><span class="op">)</span></span></code></pre></div>
+<p>After that, we setup the parameters for the QC</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">qc.parameters</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/meffil/man/meffil.qc.parameters.html">meffil.qc.parameters</a></span><span class="op">(</span></span>
+<span>  beadnum.samples.threshold             <span class="op">=</span> <span class="fl">0.05</span>,</span>
+<span>  detectionp.samples.threshold          <span class="op">=</span> <span class="fl">0.03</span>,</span>
+<span>  detectionp.cpgs.threshold             <span class="op">=</span> <span class="fl">0.05</span>, </span>
+<span>  beadnum.cpgs.threshold                <span class="op">=</span> <span class="fl">0.05</span>,</span>
+<span>  sex.outlier.sd                        <span class="op">=</span> <span class="fl">3</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>And run it</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">qc.summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/meffil/man/meffil.qc.summary.html">meffil.qc.summary</a></span><span class="op">(</span></span>
+<span>  <span class="va">qc.objects</span>,</span>
+<span>  parameters <span class="op">=</span> <span class="va">qc.parameters</span>,</span>
+<span>  genotypes<span class="op">=</span><span class="cn">NULL</span>,</span>
+<span>  verbose<span class="op">=</span><span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>To generate the QC report we can run:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/meffil/man/meffil.qc.report.html">meffil.qc.report</a></span><span class="op">(</span><span class="va">qc.summary</span>, output.file<span class="op">=</span><span class="st">"H:/analyses/Course_Intro_to_EWAS/results/QC/qc-report_whole.html"</span><span class="op">)</span></span></code></pre></div>
+<p>This line creates an html report with several QC tests. We need to examine it
+with detail.</p>
+<p>The next step is getting rid of the samples that do not pass the QC. In this
+case, after looking at the report, we have decided to maintain those samples
+that are outliers for the XY ratio.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">outlier</span> <span class="op">&lt;-</span> <span class="va">qc.summary</span><span class="op">$</span><span class="va">bad.samples</span></span>
+<span><span class="va">outlier</span> <span class="op">&lt;-</span> <span class="va">outlier</span><span class="op">[</span><span class="va">outlier</span><span class="op">$</span><span class="va">issue</span><span class="op">!=</span><span class="st">'X-Y ratio outlier'</span>,<span class="op">]</span></span>
+<span><span class="va">outlier</span></span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["sample.name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["issue"],"name":[2],"type":["chr"],"align":["left"]}],"data":[{"1":"GSM1051809","2":"Methylated vs Unmethylated","_rn_":"GSM1051809"},{"1":"GSM1052037","2":"Methylated vs Unmethylated","_rn_":"GSM1052037"},{"1":"GSM1052049","2":"Methylated vs Unmethylated","_rn_":"GSM1052049"},{"1":"GSM1052210","2":"Control probe (oob.G.99%)","_rn_":"12215"},{"1":"GSM1052210","2":"Detection p-value","_rn_":"GSM1052210"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
 </div>
-<div id="estimation-of-cell-type-proportions" class="section level2" number="2.5">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">qc.objects</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/meffil/man/meffil.remove.samples.html">meffil.remove.samples</a></span><span class="op">(</span><span class="va">qc.objects</span>, <span class="va">outlier</span><span class="op">$</span><span class="va">sample.name</span><span class="op">)</span></span></code></pre></div>
+<p>The probes that do not pass the QC will be removed afterwards during the
+normalisation step.</p>
+</div>
+<div id="normalisation" class="section level2" number="2.3">
 <h2>
-<span class="header-section-number">2.5</span> Estimation of cell type proportions<a class="anchor" aria-label="anchor" href="#estimation-of-cell-type-proportions"><i class="fas fa-link"></i></a>
+<span class="header-section-number">2.3</span> Normalisation<a class="anchor" aria-label="anchor" href="#normalisation"><i class="fas fa-link"></i></a>
 </h2>
+<p>First of all we assess the number of needed PCs with the help of this plot:</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/meffil/man/meffil.plot.pc.fit.html">meffil.plot.pc.fit</a></span><span class="op">(</span><span class="va">qc.objects</span><span class="op">)</span></span>
+<span><span class="va">y</span><span class="op">$</span><span class="va">plot</span></span></code></pre></div>
+<div class="inline-figure"><img src="_main_files/figure-html/fitpcs-1.png" width="576" style="display: block; margin: auto;"></div>
+<p>Then we perform the functional normalisation indicating the number of PCs and
+the IDs of bad CpGs from the QC to remove. After this step it is recommended to check
+again the missingness per sample and cpg</p>
+<p><strong>DO NOT RUN THOSE STEPS IN THE CLASS</strong> - they are very time consuming.</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># DO NOT RUN</span></span>
+<span><span class="va">norm.objects</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/meffil/man/meffil.normalize.quantiles.html">meffil.normalize.quantiles</a></span><span class="op">(</span><span class="va">qc.objects</span>, number.pcs<span class="op">=</span><span class="fl">15</span><span class="op">)</span></span>
+<span><span class="co"># DO NOT RUN</span></span>
+<span><span class="va">norm.beta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/meffil/man/meffil.normalize.samples.html">meffil.normalize.samples</a></span><span class="op">(</span></span>
+<span>  <span class="va">norm.objects</span>,</span>
+<span>  just.beta<span class="op">=</span><span class="cn">T</span>,</span>
+<span>  remove.poor.signal <span class="op">=</span> <span class="cn">T</span>,</span>
+<span>  cpglist.remove<span class="op">=</span><span class="va">qc.summary</span><span class="op">$</span><span class="va">bad.cpgs</span><span class="op">$</span><span class="va">name</span>,</span>
+<span>  verbose<span class="op">=</span><span class="cn">T</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># missing per sample - DO NOT RUN</span></span>
+<span><span class="va">miss_IDs</span> <span class="op">&lt;-</span> <span class="fu">miss_case_summary</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/t.html">t</a></span><span class="op">(</span><span class="va">norm.beta</span><span class="op">)</span><span class="op">)</span>, order <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">miss_IDs</span><span class="op">$</span><span class="va">case</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/row_colnames.html">colnames</a></span><span class="op">(</span><span class="va">norm.beta</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/gc.html">gc</a></span><span class="op">(</span>reset<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">bad_ids</span> <span class="op">&lt;-</span> <span class="va">miss_IDs</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/which.html">which</a></span><span class="op">(</span><span class="va">miss_IDs</span><span class="op">$</span><span class="va">pct_miss</span><span class="op">&gt;</span><span class="fl">5</span><span class="op">)</span>,<span class="op">]</span><span class="op">$</span><span class="va">case</span></span>
+<span></span>
+<span><span class="co"># missing per cpg - DO NOT RUN</span></span>
+<span><span class="va">bad_cpgs</span> <span class="op">&lt;-</span> <span class="va">miss_cpgs</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/which.html">which</a></span><span class="op">(</span><span class="va">miss_cpgs</span><span class="op">$</span><span class="va">pct_miss</span><span class="op">&gt;</span><span class="fl">5</span><span class="op">)</span>,<span class="op">]</span><span class="op">$</span><span class="va">variable</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">bad_cpgs</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># remove - DO NOT RUN</span></span>
+<span><span class="va">norm.beta</span> <span class="op">&lt;-</span> <span class="va">norm.beta</span><span class="op">[</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/row_colnames.html">rownames</a></span><span class="op">(</span><span class="va">norm.beta</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/BiocGenerics/man/match.html">%in%</a></span> <span class="va">bad_cpgs</span>, <span class="op">!</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/row_colnames.html">colnames</a></span><span class="op">(</span><span class="va">norm.beta</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/BiocGenerics/man/match.html">%in%</a></span> <span class="va">bad_ids</span><span class="op">]</span></span>
+<span><span class="va">norm.objects</span> <span class="op">&lt;-</span> <span class="va">norm.objects</span><span class="op">[</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">norm.objects</span><span class="op">)</span><span class="op"><a href="https://rdrr.io/pkg/BiocGenerics/man/match.html">%in%</a></span> <span class="va">bad_ids</span><span class="op">]</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/gc.html">gc</a></span><span class="op">(</span>reset<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/save.html">save</a></span><span class="op">(</span><span class="va">norm.objects</span>, file <span class="op">=</span> <span class="st">"H:/analyses/Course_Intro_to_EWAS/results/QC/norm_objects15.RData"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/save.html">save</a></span><span class="op">(</span><span class="va">norm.beta</span>, file <span class="op">=</span> <span class="st">"H:/analyses/Course_Intro_to_EWAS/results/QC/norm_beta15.Robj"</span><span class="op">)</span></span></code></pre></div>
+<p>Instead, load the normalisation objects and the betas that we provide:</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span><span class="op">(</span><span class="st">"H:/analyses/Course_Intro_to_EWAS/results/QC/norm_objects15.RData"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span><span class="op">(</span><span class="st">"H:/analyses/Course_Intro_to_EWAS/results/QC/norm_beta15.Robj"</span><span class="op">)</span></span></code></pre></div>
+<p>Now we can create a normalisation report. We need to convert to factor all the
+batch variables that we want to assess and recalculate the PCs</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">norm.objects</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
+<span>  <span class="va">norm.objects</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">samplesheet</span><span class="op">$</span><span class="va">Slide</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">norm.objects</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">samplesheet</span><span class="op">$</span><span class="va">Slide</span><span class="op">)</span></span>
+<span>  <span class="va">norm.objects</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">samplesheet</span><span class="op">$</span><span class="va">Sex</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">norm.objects</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">samplesheet</span><span class="op">$</span><span class="va">Sex</span><span class="op">)</span></span>
+<span>  <span class="va">norm.objects</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">samplesheet</span><span class="op">$</span><span class="va">Age</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">norm.objects</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">samplesheet</span><span class="op">$</span><span class="va">Age</span><span class="op">)</span></span>
+<span>  <span class="va">norm.objects</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">samplesheet</span><span class="op">$</span><span class="va">Smoking</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">norm.objects</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">samplesheet</span><span class="op">$</span><span class="va">Smoking</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="va">batch_var</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Slide"</span>,<span class="st">"Sex"</span>, <span class="st">"Age"</span>, <span class="st">"Smoking"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">norm.parameters</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/meffil/man/meffil.normalization.parameters.html">meffil.normalization.parameters</a></span><span class="op">(</span></span>
+<span>  <span class="va">norm.objects</span>,</span>
+<span>  variables<span class="op">=</span><span class="va">batch_var</span>,</span>
+<span>  control.pcs<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>,</span>
+<span>  batch.pcs<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>,</span>
+<span>  batch.threshold<span class="op">=</span><span class="fl">0.01</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">pcs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/meffil/man/meffil.methylation.pcs.html">meffil.methylation.pcs</a></span><span class="op">(</span><span class="va">norm.beta</span>,verbose<span class="op">=</span><span class="cn">T</span>, full.obj <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
+<p>Finally, we obtain the normalisation summary and report</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">norm.summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/meffil/man/meffil.normalization.summary.html">meffil.normalization.summary</a></span><span class="op">(</span><span class="va">norm.objects</span>, <span class="va">pcs</span><span class="op">$</span><span class="va">x</span>, parameters<span class="op">=</span><span class="va">norm.parameters</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/meffil/man/meffil.normalization.report.html">meffil.normalization.report</a></span><span class="op">(</span><span class="va">norm.summary</span>, output.file<span class="op">=</span><span class="st">"H:/analyses/Course_Intro_to_EWAS/results/QC/normalization-report.html"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div id="creation-of-a-expression-set" class="section level2" number="2.4">
+<h2>
+<span class="header-section-number">2.4</span> Creation of a Expression Set<a class="anchor" aria-label="anchor" href="#creation-of-a-expression-set"><i class="fas fa-link"></i></a>
+</h2>
+<div id="estimation-of-cell-type-proportions" class="section level3" number="2.4.1">
+<h3>
+<span class="header-section-number">2.4.1</span> Estimation of cell type proportions<a class="anchor" aria-label="anchor" href="#estimation-of-cell-type-proportions"><i class="fas fa-link"></i></a>
+</h3>
+<p>To run the EWAS, we will need to know the cell type proportions. They are
+automatically calculated in the first steps of the QC and can be recovered and
+saved this way:</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">cc</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/t.html">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/lapply.html">sapply</a></span><span class="op">(</span><span class="va">qc.objects</span>, <span class="kw">function</span><span class="op">(</span><span class="va">obj</span><span class="op">)</span> <span class="va">obj</span><span class="op">$</span><span class="va">cell.counts</span><span class="op">$</span><span class="va">counts</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">cc</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>PatientID<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/row.names.html">row.names</a></span><span class="op">(</span><span class="va">cc</span><span class="op">)</span>,<span class="va">cc</span><span class="op">)</span> </span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html">write.table</a></span><span class="op">(</span><span class="va">cc</span>, file <span class="op">=</span> <span class="st">"H:/analyses/Course_Intro_to_EWAS/results/QC/cellular_composition.txt"</span>, quote <span class="op">=</span> <span class="cn">F</span>, row.names <span class="op">=</span> <span class="cn">F</span>, sep <span class="op">=</span> <span class="st">'\t'</span><span class="op">)</span></span></code></pre></div>
+<p>We add this information to the phenotype that we already have</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">phenoData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html">merge</a></span><span class="op">(</span><span class="va">pheno</span>, <span class="va">cc</span><span class="op">[</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">7</span><span class="op">]</span>, by.x <span class="op">=</span> <span class="st">'Sample'</span>, by.y <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/row_colnames.html">rownames</a></span><span class="op">(</span><span class="va">phenoData</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">phenoData</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span></span>
+<span><span class="va">phenoData</span> <span class="op">&lt;-</span> <span class="va">phenoData</span><span class="op">[</span>,<span class="op">-</span><span class="fl">1</span><span class="op">]</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">phenoData</span><span class="op">)</span></span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Celltype"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Age"],"name":[2],"type":["int"],"align":["right"]},{"label":["Sex"],"name":[3],"type":["chr"],"align":["left"]},{"label":["Smoking"],"name":[4],"type":["chr"],"align":["left"]},{"label":["Bcell"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["CD4T"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["CD8T"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["Mono"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["Neu"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["NK"],"name":[10],"type":["dbl"],"align":["right"]}],"data":[{"1":"PBL","2":"55","3":"M","4":"current","5":"0.05776289","6":"0.1247670","7":"0.1504868","8":"0.06491293","9":"0.5358684","10":"0.12265971","_rn_":"GSM1051533"},{"1":"PBL","2":"37","3":"M","4":"never","5":"0.04361658","6":"0.1745954","7":"0.1103084","8":"0.08771190","9":"0.5912413","10":"0.03415583","_rn_":"GSM1051534"},{"1":"PBL","2":"59","3":"M","4":"former","5":"0.08652383","6":"0.2567549","7":"0.1127774","8":"0.10776822","9":"0.3831736","10":"0.11577982","_rn_":"GSM1051536"},{"1":"PBL","2":"49","3":"M","4":"former","5":"0.05720053","6":"0.1568934","7":"0.1046096","8":"0.04774298","9":"0.6380837","10":"0.04546749","_rn_":"GSM1051537"},{"1":"PBL","2":"47","3":"M","4":"former","5":"0.03323647","6":"0.2066790","7":"0.0545260","8":"0.08125238","9":"0.5832287","10":"0.08392876","_rn_":"GSM1051538"},{"1":"PBL","2":"69","3":"M","4":"never","5":"0.03967494","6":"0.1508131","7":"0.1469707","8":"0.09975280","9":"0.5362770","10":"0.07770261","_rn_":"GSM1051539"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="assembling" class="section level3" number="2.4.2">
+<h3>
+<span class="header-section-number">2.4.2</span> Assembling<a class="anchor" aria-label="anchor" href="#assembling"><i class="fas fa-link"></i></a>
+</h3>
+<p>To assemble the final ExpressionSet we first create the metadata for the
+phenotypes, which consists on a dataframe with the variables description.
+Then we create an Annotated Dataframe.</p>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://bioconductor.org/packages/Biobase">Biobase</a></span><span class="op">)</span></span>
+<span><span class="va">mData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>labelDescription<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Sample cell type"</span>,<span class="st">"Patient Age"</span>, <span class="st">"Patient Sex"</span>, <span class="st">"Smoking Status (never/current/former)"</span>,</span>
+<span>                                       <span class="st">"Percentage of B Lymphocytes"</span>, <span class="st">"Percentage of CD4T Lymphocytes"</span>,</span>
+<span>                                       <span class="st">"Percentage of CDBT Lymphocytes"</span>, <span class="st">"Percentage of Monocytes"</span>, <span class="st">"Percentage of Neutrophils"</span>,</span>
+<span>                                       <span class="st">"Percentage of Natural Killer"</span><span class="op">)</span>,</span>
+<span>                    row.names<span class="op">=</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/row_colnames.html">colnames</a></span><span class="op">(</span><span class="va">phenoData</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">phenoData</span> <span class="op">=</span> <span class="fu">new</span><span class="op">(</span><span class="st">"AnnotatedDataFrame"</span>, data<span class="op">=</span><span class="va">phenoData</span>, varMetadata<span class="op">=</span><span class="va">mData</span><span class="op">)</span></span></code></pre></div>
+<p>After that, we join the matrix of the normalized betas with the annotated
+dataframe of the phenotypes and cellular compositions.
+We have to make sure that the sample IDs coincide in the two datasets.</p>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/all.html">all</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/row_colnames.html">colnames</a></span><span class="op">(</span><span class="va">norm.beta</span><span class="op">)</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/row_colnames.html">rownames</a></span><span class="op">(</span><span class="va">phenoData</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">eSet</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/Biobase/man/class.ExpressionSet.html">ExpressionSet</a></span><span class="op">(</span>assayData<span class="op">=</span><span class="va">norm.beta</span>,</span>
+<span>                    phenoData<span class="op">=</span><span class="va">phenoData</span><span class="op">)</span></span>
+<span><span class="va">eSet</span></span></code></pre></div>
+<pre><code>## ExpressionSet (storageMode: lockedEnvironment)
+## assayData: 483153 features, 294 samples 
+##   element names: exprs 
+## protocolData: none
+## phenoData
+##   sampleNames: GSM1051533 GSM1051534 ... GSM1052213 (294 total)
+##   varLabels: Celltype Age ... NK (10 total)
+##   varMetadata: labelDescription
+## featureData: none
+## experimentData: use 'experimentData(object)'
+## Annotation:</code></pre>
+<p>Once we have saved the ExpressionSet with the normalised betas and the
+phenotypes we are ready to run the EWAS.</p>
+<p><strong>DO NOT RUN THIS STEP IN THE CLASS</strong> - it is very time consuming. We will
+provide the eSet needed for the EWAS.</p>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># DO NOT RUN</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">saveRDS</a></span><span class="op">(</span><span class="va">eSet</span>, <span class="st">'H:/analyses/Course_Intro_to_EWAS/results/QC/GSE42861_full_norm.Rds'</span><span class="op">)</span></span></code></pre></div>
 
+</div>
 </div>
 </div>
   <div class="chapter-nav">
@@ -100,11 +320,15 @@ DNA methylation data</p>
     <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
       <ul class="nav navbar-nav">
 <li><a class="nav-link" href="#pre-processing-of-dna-methylation-data"><span class="header-section-number">2</span> Pre-processing of DNA methylation data</a></li>
-<li><a class="nav-link" href="#sample-and-cpg-quality-control"><span class="header-section-number">2.1</span> Sample and CpG quality control</a></li>
-<li><a class="nav-link" href="#normalisation"><span class="header-section-number">2.2</span> Normalisation</a></li>
-<li><a class="nav-link" href="#technical-batch-correction"><span class="header-section-number">2.3</span> Technical batch correction</a></li>
-<li><a class="nav-link" href="#outliers"><span class="header-section-number">2.4</span> Outliers</a></li>
-<li><a class="nav-link" href="#estimation-of-cell-type-proportions"><span class="header-section-number">2.5</span> Estimation of cell type proportions</a></li>
+<li><a class="nav-link" href="#creation-of-the-sample-sheet"><span class="header-section-number">2.1</span> Creation of the Sample Sheet</a></li>
+<li><a class="nav-link" href="#sample-and-cpg-quality-control"><span class="header-section-number">2.2</span> Sample and CpG quality control</a></li>
+<li><a class="nav-link" href="#normalisation"><span class="header-section-number">2.3</span> Normalisation</a></li>
+<li>
+<a class="nav-link" href="#creation-of-a-expression-set"><span class="header-section-number">2.4</span> Creation of a Expression Set</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#estimation-of-cell-type-proportions"><span class="header-section-number">2.4.1</span> Estimation of cell type proportions</a></li>
+<li><a class="nav-link" href="#assembling"><span class="header-section-number">2.4.2</span> Assembling</a></li>
+</ul>
+</li>
 </ul>
 
       <div class="book-extra">
@@ -123,7 +347,7 @@ DNA methylation data</p>
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Introduction to Epigenome-Wide Association Studies (EWAS)</strong>" was written by Juan R. González, Mariona Bustamante, Sofía Aguilar &amp; Laura Balagué. It was last built on 2023-07-13.</p>
+    <p>"<strong>Introduction to Epigenome-Wide Association Studies (EWAS)</strong>" was written by Juan R. González, Mariona Bustamante, Sofía Aguilar &amp; Laura Balagué. It was last built on 2023-08-28.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

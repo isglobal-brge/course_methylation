@@ -1,10 +1,239 @@
 # Pre-processing of DNA methylation data
 
-We will explain the different steps of the pre-processing of
-DNA methylation data
+In this chapter will explain the steps for the pre-processing of
+DNA methylation data with the meffil R package.
+
+## Creation of the Sample Sheet
+After loading the meffil library, we need to create a sample sheet from the IDAT files.
+
+```{r ss, message=FALSE, warning=FALSE, results=FALSE}
+library(meffil)
+samplesheet <- meffil.create.samplesheet("H:/analyses/Course_Intro_to_EWAS/db/GSE42861/Raw/G1", recursive=TRUE)
+```
+```{r ssview}
+dim(samplesheet)
+```
+
+The function automatically adds the sample name, slide, row, column and filename
+from the IDATs. We can not remove these columns but we can manually add more.
+In this case we add the sex, age and smoking status variables. If we had duplicated
+samples for the same individual, we would also add the individual ID and then 
+remove the duplicates. 
+
+First we load the phenotype data
+```{r phenoload}
+pheno <- read.table("H:/analyses/Course_Intro_to_EWAS/db/GSE42861/Phenotype/GSE42861_pheno.txt", sep = '\t', header = T)
+head(pheno)
+```
+
+And then add the sex, the age and the smoking status variables, keeping only
+those samples with metadata
+```{r phenoadd}
+samplesheet <- merge(samplesheet[,c('Sample_Name', 'Slide', 'sentrix_row', 'sentrix_col', 'Basename')], 
+                     pheno[,c('Sample', 'Age', 'Sex', 'Smoking')], 
+                     by.x = 'Sample_Name', 
+                     by.y = 'Sample')
+head(samplesheet)
+```
+
+Finally we can save the sample sheet
+```{r save, eval=FALSE}
+save(samplesheet, file="H:/analyses/Course_Intro_to_EWAS/results/QC/SampleSheetG1.Rdata")
+```
 
 ## Sample and CpG quality control
+Once we have the sample sheet, the first step for the QC is the creation of the 
+QC objects. We specify the cell type reference (idol optimized)
+and the thresholds for detection and minimum number of beads. 
+
+**DO NOT RUN THIS STEP IN THE CLASS** - it is very time consuming. 
+```{r objects, eval=FALSE}
+# DO NOT RUN
+
+meffil.list.cell.type.references()
+qc.objects <- meffil.qc(samplesheet, cell.type.reference="blood idoloptimized", 
+                        verbose=TRUE,
+                        detection.threshold	= 0.01,
+                        bead.threshold = 3)
+save(qc.objects, file = 'H:/analyses/Course_Intro_to_EWAS/results/QC/QCObjects.RData')
+```
+Instead, load the QC Objects that we provide:
+```{r loadqc}
+load('H:/analyses/Course_Intro_to_EWAS/results/QC/QCObjects.RData')
+```
+
+After that, we setup the parameters for the QC
+```{r param}
+qc.parameters <- meffil.qc.parameters(
+  beadnum.samples.threshold             = 0.05,
+  detectionp.samples.threshold          = 0.03,
+  detectionp.cpgs.threshold             = 0.05, 
+  beadnum.cpgs.threshold                = 0.05,
+  sex.outlier.sd                        = 3
+)
+```
+
+And run it
+```{r summary, warning=FALSE, message=FALSE, results=FALSE}
+qc.summary <- meffil.qc.summary(
+  qc.objects,
+  parameters = qc.parameters,
+  genotypes=NULL,
+  verbose=TRUE
+)
+```
+
+To generate the QC report we can run:
+```{r qcrep, eval=FALSE}
+meffil.qc.report(qc.summary, output.file="H:/analyses/Course_Intro_to_EWAS/results/QC/qc-report_whole.html")
+```
+This line creates an html report with several QC tests. We need to examine it
+with detail.
+
+
+The next step is getting rid of the samples that do not pass the QC. In this
+case, after looking at the report, we have decided to maintain those samples
+that are outliers for the XY ratio.
+```{r outliers}
+outlier <- qc.summary$bad.samples
+outlier <- outlier[outlier$issue!='X-Y ratio outlier',]
+outlier
+qc.objects <- meffil.remove.samples(qc.objects, outlier$sample.name)
+```
+The probes that do not pass the QC will be removed afterwards during the
+normalisation step.
+
 ## Normalisation
-## Technical batch correction
-## Outliers
-## Estimation of cell type proportions
+First of all we assess the number of needed PCs with the help of this plot:
+```{r fitpcs, warning=FALSE, message=FALSE, results=FALSE}
+y <- meffil.plot.pc.fit(qc.objects)
+y$plot
+```
+
+Then we perform the functional normalisation indicating the number of PCs and 
+the IDs of bad CpGs from the QC to remove. After this step it is recommended to check
+again the missingness per sample and cpg
+
+**DO NOT RUN THOSE STEPS IN THE CLASS** - they are very time consuming. 
+```{r norm, eval=FALSE}
+# DO NOT RUN
+norm.objects <- meffil.normalize.quantiles(qc.objects, number.pcs=15)
+# DO NOT RUN
+norm.beta <- meffil.normalize.samples(
+  norm.objects,
+  just.beta=T,
+  remove.poor.signal = T,
+  cpglist.remove=qc.summary$bad.cpgs$name,
+  verbose=T)
+
+# missing per sample - DO NOT RUN
+miss_IDs <- miss_case_summary(data.frame(t(norm.beta)), order = TRUE)
+miss_IDs$case <- colnames(norm.beta)
+gc(reset=TRUE)
+bad_ids <- miss_IDs[which(miss_IDs$pct_miss>5),]$case
+
+# missing per cpg - DO NOT RUN
+bad_cpgs <- miss_cpgs[which(miss_cpgs$pct_miss>5),]$variable
+length(bad_cpgs)
+
+# remove - DO NOT RUN
+norm.beta <- norm.beta[!rownames(norm.beta) %in% bad_cpgs, !colnames(norm.beta) %in% bad_ids]
+norm.objects <- norm.objects[!names(norm.objects)%in% bad_ids]
+gc(reset=TRUE)
+
+save(norm.objects, file = "H:/analyses/Course_Intro_to_EWAS/results/QC/norm_objects15.RData")
+save(norm.beta, file = "H:/analyses/Course_Intro_to_EWAS/results/QC/norm_beta15.Robj")
+```
+Instead, load the normalisation objects and the betas that we provide:
+```{r load_norm}
+load("H:/analyses/Course_Intro_to_EWAS/results/QC/norm_objects15.RData")
+load("H:/analyses/Course_Intro_to_EWAS/results/QC/norm_beta15.Robj")
+```
+
+Now we can create a normalisation report. We need to convert to factor all the
+batch variables that we want to assess and recalculate the PCs
+```{r pre_norm, message=FALSE, results=FALSE}
+for (i in 1:length(norm.objects)){
+  norm.objects[[i]]$samplesheet$Slide<-as.factor(norm.objects[[i]]$samplesheet$Slide)
+  norm.objects[[i]]$samplesheet$Sex<-as.factor(norm.objects[[i]]$samplesheet$Sex)
+  norm.objects[[i]]$samplesheet$Age<-as.factor(norm.objects[[i]]$samplesheet$Age)
+  norm.objects[[i]]$samplesheet$Smoking<-as.factor(norm.objects[[i]]$samplesheet$Smoking)
+}
+
+batch_var<-c("Slide","Sex", "Age", "Smoking")
+
+norm.parameters <- meffil.normalization.parameters(
+  norm.objects,
+  variables=batch_var,
+  control.pcs=1:5,
+  batch.pcs=1:5,
+  batch.threshold=0.01
+)
+
+pcs <- meffil.methylation.pcs(norm.beta,verbose=T, full.obj = T)
+```
+
+Finally, we obtain the normalisation summary and report
+```{r normsumm, eval=FALSE}
+norm.summary <- meffil.normalization.summary(norm.objects, pcs$x, parameters=norm.parameters)
+meffil.normalization.report(norm.summary, output.file="H:/analyses/Course_Intro_to_EWAS/results/QC/normalization-report.html")
+```
+## Creation of a Expression Set
+
+### Estimation of cell type proportions
+
+To run the EWAS, we will need to know the cell type proportions. They are
+automatically calculated in the first steps of the QC and can be recovered and
+saved this way:
+```{r cc}
+cc<-t(sapply(qc.objects, function(obj) obj$cell.counts$counts))
+cc<-data.frame(PatientID=row.names(cc),cc) 
+write.table(cc, file = "H:/analyses/Course_Intro_to_EWAS/results/QC/cellular_composition.txt", quote = F, row.names = F, sep = '\t')
+```
+
+We add this information to the phenotype that we already have
+```{r phenodata}
+phenoData <- merge(pheno, cc[,2:7], by.x = 'Sample', by.y = 0)
+rownames(phenoData) <- phenoData[,1]
+phenoData <- phenoData[,-1]
+head(phenoData)
+```
+
+
+### Assembling
+
+To assemble the final ExpressionSet we first create the metadata for the
+phenotypes, which consists on a dataframe with the variables description.
+Then we create an Annotated Dataframe. 
+
+```{r mdata, message=FALSE, results=FALSE}
+library(Biobase)
+mData <- data.frame(labelDescription=c("Sample cell type","Patient Age", "Patient Sex", "Smoking Status (never/current/former)",
+                                       "Percentage of B Lymphocytes", "Percentage of CD4T Lymphocytes",
+                                       "Percentage of CDBT Lymphocytes", "Percentage of Monocytes", "Percentage of Neutrophils",
+                                       "Percentage of Natural Killer"),
+                    row.names=colnames(phenoData))
+
+phenoData = new("AnnotatedDataFrame", data=phenoData, varMetadata=mData)
+```
+
+After that, we join the matrix of the normalized betas with the annotated
+dataframe of the phenotypes and cellular compositions.
+We have to make sure that the sample IDs coincide in the two datasets.
+```{r eset}
+all(colnames(norm.beta) == rownames(phenoData))
+eSet<-ExpressionSet(assayData=norm.beta,
+                    phenoData=phenoData)
+eSet
+```
+
+Once we have saved the ExpressionSet with the normalised betas and the
+phenotypes we are ready to run the EWAS.
+
+**DO NOT RUN THIS STEP IN THE CLASS** - it is very time consuming. We will
+provide the eSet needed for the EWAS.
+```{r saveeset, eval=FALSE}
+# DO NOT RUN
+saveRDS(eSet, 'H:/analyses/Course_Intro_to_EWAS/results/QC/GSE42861_full_norm.Rds')
+```
+

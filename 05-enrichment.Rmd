@@ -10,19 +10,22 @@ library(org.Hs.eg.db)
 ## Annotation of CpG sites
 Once we have obtained a list with the CpGs that are significant in our analysis,
 we need to locate them in the genome and try to know which structures 
-surroud them. The annotation consists in obtaining this information:
+surround them. The annotation consists in obtaining this information:
 ```{r annot}
 
 ```
 
 ## Functional enrichment analysis
 The idea is to compare the list of genes that overlap our CpGs with the list of 
-all the human genes that are anotated in certain databases. With this, we can see
-if our list of genes are enriched in any kind of function.
+all the human genes that are anotated in specific databases. With this, we can see
+if our list of genes is a random subset or no.
 
-First we need to obtain the list of all human genes that are curated in specific
-databases. We will work with the Gene Ontology (GO) and the Kyoto Encyclopedia of
-Genes and Genomes (KEGG) databases
+We will work with the Gene Ontology (GO) and the Kyoto Encyclopedia of
+Genes and Genomes (KEGG) databases. The GO database allows us to see if a
+specific gene function is overrepresented in our gene list. The KEGG database
+will show if a specific pathway is overrepresented in our gene list. 
+
+First we need to obtain the list of all human genes that are curated in the databases
 ```{r genelist, eval=FALSE}
 # GO
 df = as.data.frame(org.Hs.egGO)
@@ -34,7 +37,7 @@ kegg_gene_list = unique(sort(dfk$gene_id))
 ```
 
 
-And run the analyses for the
+And then run the analyses for each one
 ```{r go, eval=FALSE}
 ans.go <- enrichGO(gene = entrez, ont = "BP",
                    OrgDb ="org.Hs.eg.db",

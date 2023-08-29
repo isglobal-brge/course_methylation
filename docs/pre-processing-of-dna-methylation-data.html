@@ -24,6 +24,28 @@
     
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
   </style>
+<style type="text/css">
+    /* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+        }
+    .hanging div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }
+  </style>
 <link rel="stylesheet" href="style.css">
 </head>
 <body data-spy="scroll" data-target="#toc">
@@ -47,7 +69,7 @@
       <nav aria-label="Table of contents"><h2>Table of contents</h2>
         <ul class="book-toc list-unstyled">
 <li><a class="" href="index.html">Introduction to Epigenome-Wide Association Studies (EWAS)</a></li>
-<li><a class="" href="introduction-to-dna-methylation-data-and-bioconductor.html"><span class="header-section-number">1</span> Introduction to DNA methylation data and Bioconductor</a></li>
+<li><a class="" href="resources-and-tools-for-epigenetics-in-bioconductor.html"><span class="header-section-number">1</span> Resources and tools for epigenetics in Bioconductor</a></li>
 <li><a class="active" href="pre-processing-of-dna-methylation-data.html"><span class="header-section-number">2</span> Pre-processing of DNA methylation data</a></li>
 <li><a class="" href="epigenome-wide-association-study-ewas.html"><span class="header-section-number">3</span> Epigenome-wide association study (EWAS)</a></li>
 <li><a class="" href="meta-analysis-of-epigenome-wide-association-studies-metaewas.html"><span class="header-section-number">4</span> Meta-analysis of epigenome-wide association studies (metaEWAS)</a></li>
@@ -71,10 +93,10 @@ DNA methylation data with the meffil R package.</p>
 <span class="header-section-number">2.1</span> Creation of the Sample Sheet<a class="anchor" aria-label="anchor" href="#creation-of-the-sample-sheet"><i class="fas fa-link"></i></a>
 </h2>
 <p>After loading the meffil library, we need to create a sample sheet from the IDAT files.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb94"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/perishky/meffil">meffil</a></span><span class="op">)</span></span>
 <span><span class="va">samplesheet</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/meffil/man/meffil.create.samplesheet.html">meffil.create.samplesheet</a></span><span class="op">(</span><span class="st">"H:/analyses/Course_Intro_to_EWAS/db/GSE42861/Raw/G1"</span>, recursive<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb95"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">samplesheet</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## [1] 298   6</code></pre>
 <p>The function automatically adds the sample name, slide, row, column and filename
@@ -83,7 +105,7 @@ In this case we add the sex, age and smoking status variables. If we had duplica
 samples for the same individual, we would also add the individual ID and then
 remove the duplicates.</p>
 <p>First we load the phenotype data</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb97"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pheno</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span><span class="op">(</span><span class="st">"H:/analyses/Course_Intro_to_EWAS/db/GSE42861/Phenotype/GSE42861_pheno.txt"</span>, sep <span class="op">=</span> <span class="st">'\t'</span>, header <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">pheno</span><span class="op">)</span></span></code></pre></div>
 <div data-pagedtable="false">
@@ -93,7 +115,7 @@ remove the duplicates.</p>
 </div>
 <p>And then add the sex, the age and the smoking status variables, keeping only
 those samples with metadata</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb98"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">samplesheet</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/S4Vectors/man/Vector-merge.html">merge</a></span><span class="op">(</span><span class="va">samplesheet</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'Sample_Name'</span>, <span class="st">'Slide'</span>, <span class="st">'sentrix_row'</span>, <span class="st">'sentrix_col'</span>, <span class="st">'Basename'</span><span class="op">)</span><span class="op">]</span>, </span>
 <span>                     <span class="va">pheno</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'Sample'</span>, <span class="st">'Age'</span>, <span class="st">'Sex'</span>, <span class="st">'Smoking'</span><span class="op">)</span><span class="op">]</span>, </span>
 <span>                     by.x <span class="op">=</span> <span class="st">'Sample_Name'</span>, </span>
@@ -105,7 +127,7 @@ those samples with metadata</p>
   </script>
 </div>
 <p>Finally we can save the sample sheet</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb99"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/save.html">save</a></span><span class="op">(</span><span class="va">samplesheet</span>, file<span class="op">=</span><span class="st">"H:/analyses/Course_Intro_to_EWAS/results/QC/SampleSheetG1.Rdata"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div id="sample-and-cpg-quality-control" class="section level2" number="2.2">
@@ -116,7 +138,7 @@ those samples with metadata</p>
 QC objects. We specify the cell type reference (idol optimized)
 and the thresholds for detection and minimum number of beads.</p>
 <p><strong>DO NOT RUN THIS STEP IN THE CLASS</strong> - it is very time consuming.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb100"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># DO NOT RUN</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/meffil/man/meffil.list.cell.type.references.html">meffil.list.cell.type.references</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -126,10 +148,10 @@ and the thresholds for detection and minimum number of beads.</p>
 <span>                        bead.threshold <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/save.html">save</a></span><span class="op">(</span><span class="va">qc.objects</span>, file <span class="op">=</span> <span class="st">'H:/analyses/Course_Intro_to_EWAS/results/QC/QCObjects.RData'</span><span class="op">)</span></span></code></pre></div>
 <p>Instead, load the QC Objects that we provide:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb101"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span><span class="op">(</span><span class="st">'H:/analyses/Course_Intro_to_EWAS/results/QC/QCObjects.RData'</span><span class="op">)</span></span></code></pre></div>
 <p>After that, we setup the parameters for the QC</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb102"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">qc.parameters</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/meffil/man/meffil.qc.parameters.html">meffil.qc.parameters</a></span><span class="op">(</span></span>
 <span>  beadnum.samples.threshold             <span class="op">=</span> <span class="fl">0.05</span>,</span>
 <span>  detectionp.samples.threshold          <span class="op">=</span> <span class="fl">0.03</span>,</span>
@@ -138,7 +160,7 @@ and the thresholds for detection and minimum number of beads.</p>
 <span>  sex.outlier.sd                        <span class="op">=</span> <span class="fl">3</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>And run it</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb103"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">qc.summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/meffil/man/meffil.qc.summary.html">meffil.qc.summary</a></span><span class="op">(</span></span>
 <span>  <span class="va">qc.objects</span>,</span>
 <span>  parameters <span class="op">=</span> <span class="va">qc.parameters</span>,</span>
@@ -146,14 +168,14 @@ and the thresholds for detection and minimum number of beads.</p>
 <span>  verbose<span class="op">=</span><span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>To generate the QC report we can run:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb104"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/meffil/man/meffil.qc.report.html">meffil.qc.report</a></span><span class="op">(</span><span class="va">qc.summary</span>, output.file<span class="op">=</span><span class="st">"H:/analyses/Course_Intro_to_EWAS/results/QC/qc-report_whole.html"</span><span class="op">)</span></span></code></pre></div>
 <p>This line creates an html report with several QC tests. We need to examine it
 with detail.</p>
 <p>The next step is getting rid of the samples that do not pass the QC. In this
 case, after looking at the report, we have decided to maintain those samples
 that are outliers for the XY ratio.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb105"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">outlier</span> <span class="op">&lt;-</span> <span class="va">qc.summary</span><span class="op">$</span><span class="va">bad.samples</span></span>
 <span><span class="va">outlier</span> <span class="op">&lt;-</span> <span class="va">outlier</span><span class="op">[</span><span class="va">outlier</span><span class="op">$</span><span class="va">issue</span><span class="op">!=</span><span class="st">'X-Y ratio outlier'</span>,<span class="op">]</span></span>
 <span><span class="va">outlier</span></span></code></pre></div>
@@ -162,7 +184,7 @@ that are outliers for the XY ratio.</p>
 {"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["sample.name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["issue"],"name":[2],"type":["chr"],"align":["left"]}],"data":[{"1":"GSM1051809","2":"Methylated vs Unmethylated","_rn_":"GSM1051809"},{"1":"GSM1052037","2":"Methylated vs Unmethylated","_rn_":"GSM1052037"},{"1":"GSM1052049","2":"Methylated vs Unmethylated","_rn_":"GSM1052049"},{"1":"GSM1052210","2":"Control probe (oob.G.99%)","_rn_":"12215"},{"1":"GSM1052210","2":"Detection p-value","_rn_":"GSM1052210"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb106"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">qc.objects</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/meffil/man/meffil.remove.samples.html">meffil.remove.samples</a></span><span class="op">(</span><span class="va">qc.objects</span>, <span class="va">outlier</span><span class="op">$</span><span class="va">sample.name</span><span class="op">)</span></span></code></pre></div>
 <p>The probes that do not pass the QC will be removed afterwards during the
 normalisation step.</p>
@@ -172,7 +194,7 @@ normalisation step.</p>
 <span class="header-section-number">2.3</span> Normalisation<a class="anchor" aria-label="anchor" href="#normalisation"><i class="fas fa-link"></i></a>
 </h2>
 <p>First of all we assess the number of needed PCs with the help of this plot:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb107"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/meffil/man/meffil.plot.pc.fit.html">meffil.plot.pc.fit</a></span><span class="op">(</span><span class="va">qc.objects</span><span class="op">)</span></span>
 <span><span class="va">y</span><span class="op">$</span><span class="va">plot</span></span></code></pre></div>
 <div class="inline-figure"><img src="_main_files/figure-html/fitpcs-1.png" width="576" style="display: block; margin: auto;"></div>
@@ -180,7 +202,7 @@ normalisation step.</p>
 the IDs of bad CpGs from the QC to remove. After this step it is recommended to check
 again the missingness per sample and cpg</p>
 <p><strong>DO NOT RUN THOSE STEPS IN THE CLASS</strong> - they are very time consuming.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb108"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># DO NOT RUN</span></span>
 <span><span class="va">norm.objects</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/meffil/man/meffil.normalize.quantiles.html">meffil.normalize.quantiles</a></span><span class="op">(</span><span class="va">qc.objects</span>, number.pcs<span class="op">=</span><span class="fl">15</span><span class="op">)</span></span>
 <span><span class="co"># DO NOT RUN</span></span>
@@ -209,12 +231,12 @@ again the missingness per sample and cpg</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/save.html">save</a></span><span class="op">(</span><span class="va">norm.objects</span>, file <span class="op">=</span> <span class="st">"H:/analyses/Course_Intro_to_EWAS/results/QC/norm_objects15.RData"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/save.html">save</a></span><span class="op">(</span><span class="va">norm.beta</span>, file <span class="op">=</span> <span class="st">"H:/analyses/Course_Intro_to_EWAS/results/QC/norm_beta15.Robj"</span><span class="op">)</span></span></code></pre></div>
 <p>Instead, load the normalisation objects and the betas that we provide:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb109"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span><span class="op">(</span><span class="st">"H:/analyses/Course_Intro_to_EWAS/results/QC/norm_objects15.RData"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span><span class="op">(</span><span class="st">"H:/analyses/Course_Intro_to_EWAS/results/QC/norm_beta15.Robj"</span><span class="op">)</span></span></code></pre></div>
 <p>Now we can create a normalisation report. We need to convert to factor all the
 batch variables that we want to assess and recalculate the PCs</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb110"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">norm.objects</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span>  <span class="va">norm.objects</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">samplesheet</span><span class="op">$</span><span class="va">Slide</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">norm.objects</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">samplesheet</span><span class="op">$</span><span class="va">Slide</span><span class="op">)</span></span>
 <span>  <span class="va">norm.objects</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">samplesheet</span><span class="op">$</span><span class="va">Sex</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">norm.objects</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">samplesheet</span><span class="op">$</span><span class="va">Sex</span><span class="op">)</span></span>
@@ -234,7 +256,7 @@ batch variables that we want to assess and recalculate the PCs</p>
 <span></span>
 <span><span class="va">pcs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/meffil/man/meffil.methylation.pcs.html">meffil.methylation.pcs</a></span><span class="op">(</span><span class="va">norm.beta</span>,verbose<span class="op">=</span><span class="cn">T</span>, full.obj <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
 <p>Finally, we obtain the normalisation summary and report</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb111"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">norm.summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/meffil/man/meffil.normalization.summary.html">meffil.normalization.summary</a></span><span class="op">(</span><span class="va">norm.objects</span>, <span class="va">pcs</span><span class="op">$</span><span class="va">x</span>, parameters<span class="op">=</span><span class="va">norm.parameters</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/meffil/man/meffil.normalization.report.html">meffil.normalization.report</a></span><span class="op">(</span><span class="va">norm.summary</span>, output.file<span class="op">=</span><span class="st">"H:/analyses/Course_Intro_to_EWAS/results/QC/normalization-report.html"</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -249,12 +271,12 @@ batch variables that we want to assess and recalculate the PCs</p>
 <p>To run the EWAS, we will need to know the cell type proportions. They are
 automatically calculated in the first steps of the QC and can be recovered and
 saved this way:</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb112"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cc</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/t.html">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/lapply.html">sapply</a></span><span class="op">(</span><span class="va">qc.objects</span>, <span class="kw">function</span><span class="op">(</span><span class="va">obj</span><span class="op">)</span> <span class="va">obj</span><span class="op">$</span><span class="va">cell.counts</span><span class="op">$</span><span class="va">counts</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">cc</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>PatientID<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/row.names.html">row.names</a></span><span class="op">(</span><span class="va">cc</span><span class="op">)</span>,<span class="va">cc</span><span class="op">)</span> </span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html">write.table</a></span><span class="op">(</span><span class="va">cc</span>, file <span class="op">=</span> <span class="st">"H:/analyses/Course_Intro_to_EWAS/results/QC/cellular_composition.txt"</span>, quote <span class="op">=</span> <span class="cn">F</span>, row.names <span class="op">=</span> <span class="cn">F</span>, sep <span class="op">=</span> <span class="st">'\t'</span><span class="op">)</span></span></code></pre></div>
 <p>We add this information to the phenotype that we already have</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb113"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">phenoData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/S4Vectors/man/Vector-merge.html">merge</a></span><span class="op">(</span><span class="va">pheno</span>, <span class="va">cc</span><span class="op">[</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">7</span><span class="op">]</span>, by.x <span class="op">=</span> <span class="st">'Sample'</span>, by.y <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/row_colnames.html">rownames</a></span><span class="op">(</span><span class="va">phenoData</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">phenoData</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span></span>
 <span><span class="va">phenoData</span> <span class="op">&lt;-</span> <span class="va">phenoData</span><span class="op">[</span>,<span class="op">-</span><span class="fl">1</span><span class="op">]</span></span>
@@ -272,7 +294,7 @@ saved this way:</p>
 <p>To assemble the final ExpressionSet we first create the metadata for the
 phenotypes, which consists on a dataframe with the variables description.
 Then we create an Annotated Dataframe.</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb114"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://bioconductor.org/packages/Biobase">Biobase</a></span><span class="op">)</span></span>
 <span><span class="va">mData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>labelDescription<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Sample cell type"</span>,<span class="st">"Patient Age"</span>, <span class="st">"Patient Sex"</span>, <span class="st">"Smoking Status (never/current/former)"</span>,</span>
 <span>                                       <span class="st">"Percentage of B Lymphocytes"</span>, <span class="st">"Percentage of CD4T Lymphocytes"</span>,</span>
@@ -284,10 +306,10 @@ Then we create an Annotated Dataframe.</p>
 <p>After that, we join the matrix of the normalized betas with the annotated
 dataframe of the phenotypes and cellular compositions.
 We have to make sure that the sample IDs coincide in the two datasets.</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb115"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/all.html">all</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/row_colnames.html">colnames</a></span><span class="op">(</span><span class="va">norm.beta</span><span class="op">)</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/row_colnames.html">rownames</a></span><span class="op">(</span><span class="va">phenoData</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb117"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">eSet</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/Biobase/man/class.ExpressionSet.html">ExpressionSet</a></span><span class="op">(</span>assayData<span class="op">=</span><span class="va">norm.beta</span>,</span>
 <span>                    phenoData<span class="op">=</span><span class="va">phenoData</span><span class="op">)</span></span>
 <span><span class="va">eSet</span></span></code></pre></div>
@@ -306,7 +328,7 @@ We have to make sure that the sample IDs coincide in the two datasets.</p>
 phenotypes we are ready to run the EWAS.</p>
 <p><strong>DO NOT RUN THIS STEP IN THE CLASS</strong> - it is very time consuming. We will
 provide the eSet needed for the EWAS.</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb119"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># DO NOT RUN</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">saveRDS</a></span><span class="op">(</span><span class="va">eSet</span>, <span class="st">'H:/analyses/Course_Intro_to_EWAS/results/QC/GSE42861_full_norm.Rds'</span><span class="op">)</span></span></code></pre></div>
 
@@ -314,7 +336,7 @@ provide the eSet needed for the EWAS.</p>
 </div>
 </div>
   <div class="chapter-nav">
-<div class="prev"><a href="introduction-to-dna-methylation-data-and-bioconductor.html"><span class="header-section-number">1</span> Introduction to DNA methylation data and Bioconductor</a></div>
+<div class="prev"><a href="resources-and-tools-for-epigenetics-in-bioconductor.html"><span class="header-section-number">1</span> Resources and tools for epigenetics in Bioconductor</a></div>
 <div class="next"><a href="epigenome-wide-association-study-ewas.html"><span class="header-section-number">3</span> Epigenome-wide association study (EWAS)</a></div>
 </div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
     <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
@@ -355,6 +377,34 @@ provide the eSet needed for the EWAS.</p>
   </div>
 
 </div></div>
-</footer>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
 </body>
 </html>

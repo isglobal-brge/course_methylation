@@ -21,10 +21,10 @@ Packages, vignettes, work flows
 - 2230 packages (Apr'23); including ...
     - 'Software' packages -- statistical methods, pipelines, ...
     - 'Annotation' packages -- static data bases of identifier maps,
-      gene models, pathways, etc; e.g., [TxDb.Hsapiens.UCSC.hg19.knownGene][]
+      gene models, pathways, etc; e.g., [TxDb.Hsapiens.UCSC.hg19.knownGene](https://bioconductor.org/packages/release/data/annotation/html/TxDb.Hsapiens.UCSC.hg19.knownGene.html)
     - 'Experiment packages -- data sets used to illustrate software
-      functionality, e.g., [airway][]
-- Discover and navigate via [biocViews][]
+      functionality, e.g., [airway](https://bioconductor.org/packages/release/data/experiment/html/airway.html)
+- Discover and navigate via [biocViews](https://bioconductor.org/packages/release/bioc/html/biocViews.html)
 - Package 'landing page'
     - Title, author / maintainer, short description, citation,
       installation instructions, ..., download statistics
@@ -41,7 +41,7 @@ Packages, vignettes, work flows
 Package installation and use
 
 - A package needs to be installed once, using the instructions on the
-  package landing page (e.g., [DESeq2][]).
+  package landing page (e.g., [DESeq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html)).
 
     ```{r install_2, eval=FALSE}
     require(BiocManager)
@@ -52,13 +52,13 @@ Package installation and use
     BiocManager::install("DESeq2")
     ```
 
-older versions can be installed by
+- older versions can be installed by
 
     ```{r install_old, eval=FALSE}
     BiocManager::install("DESeq2", version = "3.8")
     ```
 
-- `install()` install _Bioconductor_ and [CRAN][] 
+- `install()` install _Bioconductor_ and [CRAN](https://cran.r-project.org/) 
 
 - Github packages can be install by
 
@@ -191,7 +191,7 @@ Information is coordinated across the object's slots. For instance, subsetting s
 
 Data is retrieved from a `SummarizedExperiment` by using specific methods or accessors. We illustrate the functions with  `brge_methy` which includes real methylation data and is available from the Bioconductor's  `brgedata` package. The data is made available by loading of the package
 
-```{r summexp_example}
+```{r summexp_example, warning=FALSE, message=FALSE}
 library(brgedata)
 brge_methy
 extends("GenomicRatioSet")
@@ -294,7 +294,7 @@ disjoin(gr, ignore.strand=TRUE)
 
 `reduce()` creates the smallest range set of unique, non-overlapping intervals. Strand information is also taken into account by default and can also be turned off
 
-```{r gr6}
+```{r gr6, eval=FALSE}
 reduce(gr, ignore.strand=TRUE)
 ```
 

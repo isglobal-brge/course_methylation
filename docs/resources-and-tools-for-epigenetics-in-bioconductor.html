@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Chapter 1 Resources and tools for epigenetics in Bioconductor | Introduction to Epigenome-Wide Association Studies (EWAS)</title>
+<meta name="author" content="Juan R. González, Mariona Bustamante, Sofía Aguilar &amp; Laura Balagué">
+<meta name="description" content="This section offers a summary of the main data structures that are implemented in Bioconductor for dealing epigenomic data data. Omic data is typically composed of three datasets: one containing...">
+<meta name="generator" content="bookdown 0.34 with bs4_book()">
+<meta property="og:title" content="Chapter 1 Resources and tools for epigenetics in Bioconductor | Introduction to Epigenome-Wide Association Studies (EWAS)">
+<meta property="og:type" content="book">
+<meta property="og:url" content="https://isglobal-brge.github.io/course_methylation/resources-and-tools-for-epigenetics-in-bioconductor.html">
+<meta property="og:description" content="This section offers a summary of the main data structures that are implemented in Bioconductor for dealing epigenomic data data. Omic data is typically composed of three datasets: one containing...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter 1 Resources and tools for epigenetics in Bioconductor | Introduction to Epigenome-Wide Association Studies (EWAS)">
+<meta name="twitter:description" content="This section offers a summary of the main data structures that are implemented in Bioconductor for dealing epigenomic data data. Omic data is typically composed of three datasets: one containing...">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.5.0/transition.js"></script><script src="libs/bs3compat-0.5.0/tabs.js"></script><script src="libs/bs3compat-0.5.0/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><link href="libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="libs/pagedtable-1.1/js/pagedtable.js"></script><link rel="icon" type="image/png" href="images/Logo_Sportomics_AI.jpg">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><style type="text/css">
+    
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  </style>
+<style type="text/css">
+    /* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+        }
+    .hanging div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }
+  </style>
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+    
+    <img id="cover" class="d-none d-lg-block" src="images/isglobal-logo.png" width="200"><div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Introduction to Epigenome-Wide Association Studies (EWAS)</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Introduction to Epigenome-Wide Association Studies (EWAS)</a></li>
+<li><a class="active" href="resources-and-tools-for-epigenetics-in-bioconductor.html"><span class="header-section-number">1</span> Resources and tools for epigenetics in Bioconductor</a></li>
+<li><a class="" href="pre-processing-of-dna-methylation-data.html"><span class="header-section-number">2</span> Pre-processing of DNA methylation data</a></li>
+<li><a class="" href="epigenome-wide-association-study-ewas.html"><span class="header-section-number">3</span> Epigenome-wide association study (EWAS)</a></li>
+<li><a class="" href="meta-analysis-of-epigenome-wide-association-studies-metaewas.html"><span class="header-section-number">4</span> Meta-analysis of epigenome-wide association studies (metaEWAS)</a></li>
+<li><a class="" href="biological-interpretation-of-findings.html"><span class="header-section-number">5</span> Biological interpretation of findings</a></li>
+<li><a class="" href="references.html">References</a></li>
+</ul>
+
+        <div class="book-extra">
+          
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="resources-and-tools-for-epigenetics-in-bioconductor" class="section level1" number="1">
+<h1>
+<span class="header-section-number">1</span> Resources and tools for epigenetics in Bioconductor<a class="anchor" aria-label="anchor" href="#resources-and-tools-for-epigenetics-in-bioconductor"><i class="fas fa-link"></i></a>
+</h1>
+<p>This section offers a summary of the main data structures that are implemented in <a href="https://bioconductor.org/">Bioconductor</a> for dealing epigenomic data data. <code>Omic</code> data is typically composed of three datasets: one containing the actual high-dimensional data of omic variables per individuals, annotation data that specifies the characteristics of the variables and phenotypic information that encodes the subject’s traits of interest, covariates and sampling characteristics. Bioconductor can effectively deal with this data using (among others) <code>ExpressionSet</code> objects which is a data structure that contains the beta values of individuals at each CpG, their genomic information and the phenotypes of the individuals. Specific data is accessed, processed and analyzed with specific functions from diverse packages, conceived as methods acting on the <code>ExpressionSet</code> object.</p>
+<div id="bioconductor" class="section level2" number="1.1">
+<h2>
+<span class="header-section-number">1.1</span> Bioconductor<a class="anchor" aria-label="anchor" href="#bioconductor"><i class="fas fa-link"></i></a>
+</h2>
+<p><a href="https://bioconductor.org/">Bioconductor</a>: Analysis and comprehension of high-throughput
+genomic data</p>
+<ul>
+<li>Statistical analysis: large data, technological artifacts, designed
+experiments; rigorous</li>
+<li>Comprehension: biological context, visualization, reproducibility</li>
+<li>High-throughput
+<ul>
+<li>Sequencing: RNASeq, ChIPSeq, variants, copy number, …</li>
+<li>Microarrays: expression, SNP, …</li>
+<li>Flow cytometry, proteomics, images, …</li>
+</ul>
+</li>
+</ul>
+<p>Packages, vignettes, work flows</p>
+<ul>
+<li>2230 packages (Apr’23); including …
+<ul>
+<li>‘Software’ packages – statistical methods, pipelines, …</li>
+<li>‘Annotation’ packages – static data bases of identifier maps,
+gene models, pathways, etc; e.g., <a href="https://bioconductor.org/packages/release/data/annotation/html/TxDb.Hsapiens.UCSC.hg19.knownGene.html">TxDb.Hsapiens.UCSC.hg19.knownGene</a>
+</li>
+<li>’Experiment packages – data sets used to illustrate software
+functionality, e.g., <a href="https://bioconductor.org/packages/release/data/experiment/html/airway.html">airway</a>
+</li>
+</ul>
+</li>
+<li>Discover and navigate via <a href="https://bioconductor.org/packages/release/bioc/html/biocViews.html">biocViews</a>
+</li>
+<li>Package ‘landing page’
+<ul>
+<li>Title, author / maintainer, short description, citation,
+installation instructions, …, download statistics</li>
+</ul>
+</li>
+<li>All user-visible functions have help pages, most with runnable
+examples</li>
+<li>‘Vignettes’ an important feature in Bioconductor – narrative
+documents illustrating how to use the package, with integrated code</li>
+<li>‘Release’ (every six months) and ‘devel’ branches</li>
+<li>
+<a href="https://support.bioconductor.org">Support site</a>;
+<a href="https://www.youtube.com/user/bioconductor">videos</a>;
+<a href="https://bioconductor.org/help/course-materials/">recent courses</a>.</li>
+<li><a href="https://bioconductor.org/packages/release/BiocViews.html#___Workflow">Common Workflows</a></li>
+</ul>
+<p>Package installation and use</p>
+<ul>
+<li>
+<p>A package needs to be installed once, using the instructions on the
+package landing page (e.g., <a href="https://bioconductor.org/packages/release/bioc/html/DESeq2.html">DESeq2</a>).</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va">BiocManager</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span><span class="op">(</span><span class="st">"DESeq2"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># or</span></span>
+<span></span>
+<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span><span class="op">(</span><span class="st">"DESeq2"</span><span class="op">)</span></span></code></pre></div>
+</li>
+<li>
+<p>older versions can be installed by</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span><span class="op">(</span><span class="st">"DESeq2"</span>, version <span class="op">=</span> <span class="st">"3.8"</span><span class="op">)</span></span></code></pre></div>
+</li>
+<li><p><code><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install()</a></code> install <em>Bioconductor</em> and <a href="https://cran.r-project.org/">CRAN</a></p></li>
+<li>
+<p>Github packages can be install by</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"isglobal-brge/SNPassoc"</span><span class="op">)</span></span></code></pre></div>
+</li>
+<li>
+<p>Once installed, the package can be loaded into an R session</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://bioconductor.org/packages/GenomicRanges">GenomicRanges</a></span><span class="op">)</span></span></code></pre></div>
+<p>and the help system queried interactively, as outlined above:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/help.html">help</a></span><span class="op">(</span>package<span class="op">=</span><span class="st">"GenomicRanges"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/vignette.html">vignette</a></span><span class="op">(</span>package<span class="op">=</span><span class="st">"GenomicRanges"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/vignette.html">vignette</a></span><span class="op">(</span>package<span class="op">=</span><span class="st">"GenomicRanges"</span>, <span class="st">"GenomicRangesHOWTOs"</span><span class="op">)</span></span>
+<span><span class="op">?</span><span class="va">GRanges</span></span></code></pre></div>
+</li>
+</ul>
+</div>
+<div id="gene-expression-omnibus-geo-repository" class="section level2" number="1.2">
+<h2>
+<span class="header-section-number">1.2</span> Gene Expression Omnibus (GEO) repository<a class="anchor" aria-label="anchor" href="#gene-expression-omnibus-geo-repository"><i class="fas fa-link"></i></a>
+</h2>
+<p><a href="https://www.ncbi.nlm.nih.gov/geo/">GEO</a> (Gene Expression Omnibus) is an international public repository that hosts and freely distribute an extensive collection of high-throughput gene expression data generated through technologies like microarrays and RNA sequencing. Researchers from diverse fields can upload their data to GEO, making it accessible to the scientific community for further analysis and interpretation. One of the notable benefits of GEO is its role in validating results from other studies. By comparing and contrasting their findings with existing datasets, researchers can corroborate their conclusions and ensure the reproducibility of their experiments. This validation process is essential for building a robust foundation of knowledge in molecular biology and fostering scientific progress through collaborative efforts and data-driven insights.</p>
+<p>GEO was initially designed to deal with transcriptomic data, but it can also be used as a repository for epigenomic data. For example, we can further investigate the methylation differences in cases diagnoses with Alzheimer’s disease and controls using publicly available data. The study with accession number GSE80970, is a case/control (<span class="math inline">\(N=148/138\)</span>) study of epigenomic data, measured with the Illumina Infinium Human 450K Methylation Array. Data is retrieved directly from the GEO website with the accession number.</p>
+<p>Data for specific accessions in GEO can be downloaded in <code>R</code> using the <code>getGEO</code> of the Bioconductor’s package <code>GEOquery</code></p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/seandavi/GEOquery">GEOquery</a></span><span class="op">)</span></span></code></pre></div>
+<pre><code>## Setting options('download.file.method.GEOquery'='auto')</code></pre>
+<pre><code>## Setting options('GEOquery.inmemory.gpl'=FALSE)</code></pre>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/files2.html">dir.exists</a></span><span class="op">(</span><span class="st">"c:/tmp"</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/files2.html">dir.create</a></span><span class="op">(</span><span class="st">"c:/tmp"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">gsm</span> <span class="op">&lt;-</span> <span class="fu"><a href="http://seandavi.github.io/GEOquery/reference/getGEO.html">getGEO</a></span><span class="op">(</span><span class="st">"GSE80970"</span>, destdir <span class="op">=</span> <span class="st">"c:/tmp"</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## Found 1 file(s)</code></pre>
+<pre><code>## GSE80970_series_matrix.txt.gz</code></pre>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">gsm</span> <span class="op">&lt;-</span> <span class="va">gsm</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
+<p>This function downloads a data file called <code>GSE80970\_series\_matrix.txt.gz</code> that is retrieved automatically in an <code>ExpressionSet</code> object (this objects will be explain latter) that we have named <code>gms.expr</code></p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">gsm</span></span></code></pre></div>
+<pre><code>## ExpressionSet (storageMode: lockedEnvironment)
+## assayData: 485577 features, 286 samples 
+##   element names: exprs 
+## protocolData: none
+## phenoData
+##   sampleNames: GSM2139163 GSM2139164 ... GSM2139448 (286 total)
+##   varLabels: title geo_accession ... tissue:ch1 (45 total)
+##   varMetadata: labelDescription
+## featureData
+##   featureNames: cg00000029 cg00000108 ... rs9839873 (485577 total)
+##   fvarLabels: ID Name ... SPOT_ID (37 total)
+##   fvarMetadata: Column Description labelDescription
+## experimentData: use 'experimentData(object)'
+##   pubMedIds: 29550519 
+## Annotation: GPL13534</code></pre>
+<p>The data stores different tables including the expression profiles for each probe and subject <code>assayData</code>, phenotype data with traits measurements and covariates of interest <code>pData</code>, and feature data with information about the probe’s used in the expression (or methylation) array <code>fData</code> Specific data is retrieved using the necessary functions. In particular, and extract data tables for subjects’ expression levels and phenotypes respectively.</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#get transcriptomic data and apply log2</span></span>
+<span><span class="va">expr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Biobase/man/exprs.html">exprs</a></span><span class="op">(</span><span class="va">gsm</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">expr</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [1] 485577    286</code></pre>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">expr</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span></code></pre></div>
+<pre><code>##            GSM2139163 GSM2139164 GSM2139165 GSM2139166 GSM2139167
+## cg00000029    0.59167    0.61134    0.52240    0.55689    0.66928
+## cg00000108    0.86955    0.87228    0.82742    0.89817    0.88524
+## cg00000109    0.71494    0.68538    0.74456    0.76460    0.74441
+## cg00000165    0.28111    0.26410    0.23158    0.27409    0.27160
+## cg00000236    0.81495    0.78115    0.80187    0.80274    0.83936
+## cg00000289    0.49322    0.51915    0.64688    0.55270    0.55591
+## cg00000292    0.70312    0.67248    0.63095    0.64757    0.67921
+## cg00000321    0.56316    0.54221    0.48866    0.63993    0.61028
+## cg00000363    0.20862    0.24135    0.20399    0.22668    0.24959
+## cg00000622    0.04034    0.03450    0.03127    0.03291    0.02887</code></pre>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#get phenotype data</span></span>
+<span><span class="va">pheno</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Biobase/man/phenoData.html">pData</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/Biobase/man/phenoData.html">phenoData</a></span><span class="op">(</span><span class="va">gsm</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## Warning in pData(phenoData(gsm)): restarting interrupted promise evaluation</code></pre>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">pheno</span><span class="op">)</span></span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["title"],"name":[1],"type":["chr"],"align":["left"]},{"label":["geo_accession"],"name":[2],"type":["chr"],"align":["left"]},{"label":["status"],"name":[3],"type":["chr"],"align":["left"]},{"label":["submission_date"],"name":[4],"type":["chr"],"align":["left"]},{"label":["last_update_date"],"name":[5],"type":["chr"],"align":["left"]},{"label":["type"],"name":[6],"type":["chr"],"align":["left"]},{"label":["channel_count"],"name":[7],"type":["chr"],"align":["left"]},{"label":["source_name_ch1"],"name":[8],"type":["chr"],"align":["left"]},{"label":["organism_ch1"],"name":[9],"type":["chr"],"align":["left"]},{"label":["characteristics_ch1"],"name":[10],"type":["chr"],"align":["left"]},{"label":["characteristics_ch1.1"],"name":[11],"type":["chr"],"align":["left"]},{"label":["characteristics_ch1.2"],"name":[12],"type":["chr"],"align":["left"]},{"label":["characteristics_ch1.3"],"name":[13],"type":["chr"],"align":["left"]},{"label":["characteristics_ch1.4"],"name":[14],"type":["chr"],"align":["left"]},{"label":["characteristics_ch1.5"],"name":[15],"type":["chr"],"align":["left"]},{"label":["characteristics_ch1.6"],"name":[16],"type":["chr"],"align":["left"]},{"label":["molecule_ch1"],"name":[17],"type":["chr"],"align":["left"]},{"label":["extract_protocol_ch1"],"name":[18],"type":["chr"],"align":["left"]},{"label":["label_ch1"],"name":[19],"type":["chr"],"align":["left"]},{"label":["label_protocol_ch1"],"name":[20],"type":["chr"],"align":["left"]},{"label":["taxid_ch1"],"name":[21],"type":["chr"],"align":["left"]},{"label":["hyb_protocol"],"name":[22],"type":["chr"],"align":["left"]},{"label":["scan_protocol"],"name":[23],"type":["chr"],"align":["left"]},{"label":["description"],"name":[24],"type":["chr"],"align":["left"]},{"label":["description.1"],"name":[25],"type":["chr"],"align":["left"]},{"label":["data_processing"],"name":[26],"type":["chr"],"align":["left"]},{"label":["platform_id"],"name":[27],"type":["chr"],"align":["left"]},{"label":["contact_name"],"name":[28],"type":["chr"],"align":["left"]},{"label":["contact_email"],"name":[29],"type":["chr"],"align":["left"]},{"label":["contact_department"],"name":[30],"type":["chr"],"align":["left"]},{"label":["contact_institute"],"name":[31],"type":["chr"],"align":["left"]},{"label":["contact_address"],"name":[32],"type":["chr"],"align":["left"]},{"label":["contact_city"],"name":[33],"type":["chr"],"align":["left"]},{"label":["contact_state"],"name":[34],"type":["chr"],"align":["left"]},{"label":["contact_zip/postal_code"],"name":[35],"type":["chr"],"align":["left"]},{"label":["contact_country"],"name":[36],"type":["chr"],"align":["left"]},{"label":["supplementary_file"],"name":[37],"type":["chr"],"align":["left"]},{"label":["data_row_count"],"name":[38],"type":["chr"],"align":["left"]},{"label":["age (yr):ch1"],"name":[39],"type":["chr"],"align":["left"]},{"label":["braak stage:ch1"],"name":[40],"type":["chr"],"align":["left"]},{"label":["disease status:ch1"],"name":[41],"type":["chr"],"align":["left"]},{"label":["donor id:ch1"],"name":[42],"type":["chr"],"align":["left"]},{"label":["gender:ch1"],"name":[43],"type":["chr"],"align":["left"]},{"label":["sentrix id:ch1"],"name":[44],"type":["chr"],"align":["left"]},{"label":["tissue:ch1"],"name":[45],"type":["chr"],"align":["left"]}],"data":[{"1":"Prefrontal Cortex Male Alzheimer's Disease (MS66AC)","2":"GSM2139163","3":"Public on Aug 01 2016","4":"May 01 2016","5":"Aug 01 2016","6":"genomic","7":"1","8":"Prefrontal cortex, male, Alzheimer's disease","9":"Homo sapiens","10":"tissue: prefrontal cortex","11":"disease status: Alzheimer's disease","12":"braak stage: 5","13":"gender: male","14":"age (yr): 89","15":"donor id: MS66","16":"sentrix id: 7796806144_R01C01","17":"genomic DNA","18":"Phenol-chloroform DNA extraction.","19":"Cy3, Cy5","20":"Illumina Infinium protocol.","21":"9606","22":"Illumina Infinium protocol.","23":"Illumina Infinium protocol scanned using Illumina HiScan System.","24":"Sample name: MS66AC","25":"Prefrontal Cortex AD","26":"Data loaded into R using methylumi, quantile normalised using Dasen function within wateRmelon (version 1.4.0).","27":"GPL13534","28":"Rebecca,Georgina,Smith","29":"r.g.smith@exeter.ac.uk","30":"Medical School","31":"University of Exeter","32":"RILD, RD and E","33":"Exeter","34":"Devon","35":"EX2 5DW","36":"United Kingdom","37":"NONE","38":"485577","39":"89","40":"5","41":"Alzheimer's disease","42":"MS66","43":"male","44":"7796806144_R01C01","45":"prefrontal cortex","_rn_":"GSM2139163"},{"1":"Prefrontal Cortex Female Control (MS546AC)","2":"GSM2139164","3":"Public on Aug 01 2016","4":"May 01 2016","5":"Aug 01 2016","6":"genomic","7":"1","8":"Prefrontal cortex, female, control","9":"Homo sapiens","10":"tissue: prefrontal cortex","11":"disease status: control","12":"braak stage: 2","13":"gender: female","14":"age (yr): 80","15":"donor id: MS546","16":"sentrix id: 7796806144_R01C02","17":"genomic DNA","18":"Phenol-chloroform DNA extraction.","19":"Cy3, Cy5","20":"Illumina Infinium protocol.","21":"9606","22":"Illumina Infinium protocol.","23":"Illumina Infinium protocol scanned using Illumina HiScan System.","24":"Sample name: MS546AC","25":"Prefrontal Cortex NL","26":"Data loaded into R using methylumi, quantile normalised using Dasen function within wateRmelon (version 1.4.0).","27":"GPL13534","28":"Rebecca,Georgina,Smith","29":"r.g.smith@exeter.ac.uk","30":"Medical School","31":"University of Exeter","32":"RILD, RD and E","33":"Exeter","34":"Devon","35":"EX2 5DW","36":"United Kingdom","37":"NONE","38":"485577","39":"80","40":"2","41":"control","42":"MS546","43":"female","44":"7796806144_R01C02","45":"prefrontal cortex","_rn_":"GSM2139164"},{"1":"Prefrontal Cortex Female Alzheimer's Disease (MS709AC)","2":"GSM2139165","3":"Public on Aug 01 2016","4":"May 01 2016","5":"Aug 01 2016","6":"genomic","7":"1","8":"Prefrontal cortex, female, Alzheimer's disease","9":"Homo sapiens","10":"tissue: prefrontal cortex","11":"disease status: Alzheimer's disease","12":"braak stage: 3","13":"gender: female","14":"age (yr): 94","15":"donor id: MS709","16":"sentrix id: 7796806144_R02C01","17":"genomic DNA","18":"Phenol-chloroform DNA extraction.","19":"Cy3, Cy5","20":"Illumina Infinium protocol.","21":"9606","22":"Illumina Infinium protocol.","23":"Illumina Infinium protocol scanned using Illumina HiScan System.","24":"Sample name: MS709AC","25":"Prefrontal Cortex AD","26":"Data loaded into R using methylumi, quantile normalised using Dasen function within wateRmelon (version 1.4.0).","27":"GPL13534","28":"Rebecca,Georgina,Smith","29":"r.g.smith@exeter.ac.uk","30":"Medical School","31":"University of Exeter","32":"RILD, RD and E","33":"Exeter","34":"Devon","35":"EX2 5DW","36":"United Kingdom","37":"NONE","38":"485577","39":"94","40":"3","41":"Alzheimer's disease","42":"MS709","43":"female","44":"7796806144_R02C01","45":"prefrontal cortex","_rn_":"GSM2139165"},{"1":"Prefrontal Cortex Male Control (MS1549AC)","2":"GSM2139166","3":"Public on Aug 01 2016","4":"May 01 2016","5":"Aug 01 2016","6":"genomic","7":"1","8":"Prefrontal cortex, male, control","9":"Homo sapiens","10":"tissue: prefrontal cortex","11":"disease status: control","12":"braak stage: 4","13":"gender: male","14":"age (yr): 78","15":"donor id: MS1549","16":"sentrix id: 7796806144_R03C01","17":"genomic DNA","18":"Phenol-chloroform DNA extraction.","19":"Cy3, Cy5","20":"Illumina Infinium protocol.","21":"9606","22":"Illumina Infinium protocol.","23":"Illumina Infinium protocol scanned using Illumina HiScan System.","24":"Sample name: MS1549AC","25":"Prefrontal Cortex NL","26":"Data loaded into R using methylumi, quantile normalised using Dasen function within wateRmelon (version 1.4.0).","27":"GPL13534","28":"Rebecca,Georgina,Smith","29":"r.g.smith@exeter.ac.uk","30":"Medical School","31":"University of Exeter","32":"RILD, RD and E","33":"Exeter","34":"Devon","35":"EX2 5DW","36":"United Kingdom","37":"NONE","38":"485577","39":"78","40":"4","41":"control","42":"MS1549","43":"male","44":"7796806144_R03C01","45":"prefrontal cortex","_rn_":"GSM2139166"},{"1":"Prefrontal Cortex Female Control (MS82AC)","2":"GSM2139167","3":"Public on Aug 01 2016","4":"May 01 2016","5":"Aug 01 2016","6":"genomic","7":"1","8":"Prefrontal cortex, female, control","9":"Homo sapiens","10":"tissue: prefrontal cortex","11":"disease status: control","12":"braak stage: 3","13":"gender: female","14":"age (yr): 86","15":"donor id: MS82","16":"sentrix id: 7796806144_R03C02","17":"genomic DNA","18":"Phenol-chloroform DNA extraction.","19":"Cy3, Cy5","20":"Illumina Infinium protocol.","21":"9606","22":"Illumina Infinium protocol.","23":"Illumina Infinium protocol scanned using Illumina HiScan System.","24":"Sample name: MS82AC","25":"Prefrontal Cortex NL","26":"Data loaded into R using methylumi, quantile normalised using Dasen function within wateRmelon (version 1.4.0).","27":"GPL13534","28":"Rebecca,Georgina,Smith","29":"r.g.smith@exeter.ac.uk","30":"Medical School","31":"University of Exeter","32":"RILD, RD and E","33":"Exeter","34":"Devon","35":"EX2 5DW","36":"United Kingdom","37":"NONE","38":"485577","39":"86","40":"3","41":"control","42":"MS82","43":"female","44":"7796806144_R03C02","45":"prefrontal cortex","_rn_":"GSM2139167"},{"1":"Prefrontal Cortex Female Alzheimer's Disease (MS752AC)","2":"GSM2139168","3":"Public on Aug 01 2016","4":"May 01 2016","5":"Aug 01 2016","6":"genomic","7":"1","8":"Prefrontal cortex, female, Alzheimer's disease","9":"Homo sapiens","10":"tissue: prefrontal cortex","11":"disease status: Alzheimer's disease","12":"braak stage: 4","13":"gender: female","14":"age (yr): 84","15":"donor id: MS752","16":"sentrix id: 7796806144_R04C01","17":"genomic DNA","18":"Phenol-chloroform DNA extraction.","19":"Cy3, Cy5","20":"Illumina Infinium protocol.","21":"9606","22":"Illumina Infinium protocol.","23":"Illumina Infinium protocol scanned using Illumina HiScan System.","24":"Sample name: MS752AC","25":"Prefrontal Cortex AD","26":"Data loaded into R using methylumi, quantile normalised using Dasen function within wateRmelon (version 1.4.0).","27":"GPL13534","28":"Rebecca,Georgina,Smith","29":"r.g.smith@exeter.ac.uk","30":"Medical School","31":"University of Exeter","32":"RILD, RD and E","33":"Exeter","34":"Devon","35":"EX2 5DW","36":"United Kingdom","37":"NONE","38":"485577","39":"84","40":"4","41":"Alzheimer's disease","42":"MS752","43":"female","44":"7796806144_R04C01","45":"prefrontal cortex","_rn_":"GSM2139168"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#main variable used to be stored in </span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/table.html">table</a></span><span class="op">(</span><span class="va">pheno</span><span class="op">$</span><span class="va">characteristics_ch1</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## 
+##       tissue: prefrontal cortex tissue: superior temporal gyrus 
+##                             142                             144</code></pre>
+<p>We can the, for instance, look at the CpGs located in the APP gene</p>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#locate CpGs in APP</span></span>
+<span><span class="va">genesIDs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Biobase/man/featureData.html">fData</a></span><span class="op">(</span><span class="va">gsm</span><span class="op">)</span><span class="op">$</span><span class="va">UCSC_RefGene_Name</span></span>
+<span><span class="va">genesIDs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html">as.character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/unlist.html">unlist</a></span><span class="op">(</span><span class="va">genesIDs</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">selAPP</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/grep.html">grep</a></span><span class="op">(</span><span class="st">"APP;APP"</span>,<span class="va">genesIDs</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">selAPP</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [1] 21</code></pre>
+<p>After that we can run different analyses. Also, several packages in Bioconductor have as input <code>ExpressionSet</code> objects.</p>
+</div>
+<div id="expressionset-and-genomicratioset-and-others-granges" class="section level2" number="1.3">
+<h2>
+<span class="header-section-number">1.3</span> ExpressionSet and GenomicRatioSet (and others: GRanges)<a class="anchor" aria-label="anchor" href="#expressionset-and-genomicratioset-and-others-granges"><i class="fas fa-link"></i></a>
+</h2>
+<p><code>ExpressionSet</code>was one of the first implementations of Bioconductor to manage <em>omic</em> experiments. This figure illustrates how it is implemented</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:eSetfig"></span>
+<img src="images/eSet_vs_dataframe.png" alt="ExpressionSet scheme." width="100%"><p class="caption">
+Figure 1.1: ExpressionSet scheme.
+</p>
+</div>
+<p>Although its use is discouraged in Bioconductor’s guidelines for the development of current and future packages, most publicly available data is available in this structure while future packages are still required to be able to upload and operate with it. The GEO repository contains thousands of transcriptomic experiments that are available in <code>ExpressionSet</code> format. Data available in <a href="https://www.ncbi.nlm.nih.gov/geo/">GEO repository</a> can be donwloaded into R as an <code>ExpressionSet</code> using <code>GEOquery</code> package. Let us donwload the experiment with accession number GSE63061 from the GEO website</p>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/seandavi/GEOquery">GEOquery</a></span><span class="op">)</span></span>
+<span><span class="va">gsm.expr</span> <span class="op">&lt;-</span> <span class="fu"><a href="http://seandavi.github.io/GEOquery/reference/getGEO.html">getGEO</a></span><span class="op">(</span><span class="st">"GSE63061"</span>, destdir <span class="op">=</span> <span class="st">"."</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
+<pre><code>## Found 1 file(s)</code></pre>
+<pre><code>## GSE63061_series_matrix.txt.gz</code></pre>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">gsm.expr</span> </span></code></pre></div>
+<pre><code>## ExpressionSet (storageMode: lockedEnvironment)
+## assayData: 32049 features, 388 samples 
+##   element names: exprs 
+## protocolData: none
+## phenoData
+##   sampleNames: GSM1539409 GSM1539410 ... GSM1539796 (388 total)
+##   varLabels: title geo_accession ... tissue:ch1 (40 total)
+##   varMetadata: labelDescription
+## featureData
+##   featureNames: ILMN_1343291 ILMN_1343295 ... ILMN_3311190 (32049 total)
+##   fvarLabels: ID Species ... GB_ACC (30 total)
+##   fvarMetadata: Column Description labelDescription
+## experimentData: use 'experimentData(object)'
+##   pubMedIds: 26343147 
+## Annotation: GPL10558</code></pre>
+<p><code>gsm.expr</code> is an object of class <code>ExpressionSet</code> that has three main slots. Transcriptomic data is stored in the <code>assayData</code> slot, phenotypes are in <code>phenoData</code> and probe annotation in <code>featuredData</code>. There are three other slots <code>protocolData</code>, <code>experimentData</code> and <code>annotation</code> that specify equipment-generated information about protocols, resulting publications and the platform on which the samples were assayed. Methods are implemented to extract the data from each slot of the object. For instance <code>exprs</code> extracts the transcriptomic data in a matrix where subjects are columns and probes are rows</p>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">expr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Biobase/man/exprs.html">exprs</a></span><span class="op">(</span><span class="va">gsm.expr</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">expr</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [1] 32049   388</code></pre>
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">expr</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span></code></pre></div>
+<pre><code>##              GSM1539409 GSM1539410 GSM1539411 GSM1539412 GSM1539413
+## ILMN_1343291  12.552807  12.711459  13.088393  12.643831  13.098389
+## ILMN_1343295  10.101556   9.776015   9.594397  10.126782  10.223301
+## ILMN_1651209   6.084671   6.255012   6.160485   6.109219   6.069960
+## ILMN_1651210   6.068805   6.016468   6.024322   6.016118   6.056163
+## ILMN_1651221   6.121060   6.173167   6.039552   6.111306   6.089542</code></pre>
+<p><code><a href="https://rdrr.io/pkg/Biobase/man/phenoData.html">phenoData()</a></code> retrieves the subjects’ phenotypes in an <code>AnnotatedDataFrame</code> object which is converted to a data.frame by the function <code><a href="https://rdrr.io/pkg/Biobase/man/phenoData.html">pData()</a></code></p>
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#get phenotype data</span></span>
+<span><span class="va">pheno</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Biobase/man/phenoData.html">phenoData</a></span><span class="op">(</span><span class="va">gsm.expr</span><span class="op">)</span></span>
+<span><span class="va">pheno</span></span></code></pre></div>
+<pre><code>## An object of class 'AnnotatedDataFrame'
+##   sampleNames: GSM1539409 GSM1539410 ... GSM1539796 (388 total)
+##   varLabels: title geo_accession ... tissue:ch1 (40 total)
+##   varMetadata: labelDescription</code></pre>
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">phenoDataFrame</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Biobase/man/phenoData.html">pData</a></span><span class="op">(</span><span class="va">gsm.expr</span><span class="op">)</span></span>
+<span><span class="va">phenoDataFrame</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span></span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["title"],"name":[1],"type":["chr"],"align":["left"]},{"label":["geo_accession"],"name":[2],"type":["chr"],"align":["left"]},{"label":["status"],"name":[3],"type":["chr"],"align":["left"]},{"label":["submission_date"],"name":[4],"type":["chr"],"align":["left"]}],"data":[{"1":"7196843065_F","2":"GSM1539409","3":"Public on Aug 05 2015","4":"Nov 06 2014","_rn_":"GSM1539409"},{"1":"7196843076_G","2":"GSM1539410","3":"Public on Aug 05 2015","4":"Nov 06 2014","_rn_":"GSM1539410"},{"1":"7196843068_B","2":"GSM1539411","3":"Public on Aug 05 2015","4":"Nov 06 2014","_rn_":"GSM1539411"},{"1":"7196843063_B","2":"GSM1539412","3":"Public on Aug 05 2015","4":"Nov 06 2014","_rn_":"GSM1539412"},{"1":"7196843065_L","2":"GSM1539413","3":"Public on Aug 05 2015","4":"Nov 06 2014","_rn_":"GSM1539413"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#Alzheimer's case control variable</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/table.html">table</a></span><span class="op">(</span><span class="va">phenoDataFrame</span><span class="op">$</span><span class="va">characteristics_ch1</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## 
+##             status: AD status: borderline MCI            status: CTL      status: CTL to AD            status: MCI     status: MCI to CTL 
+##                    139                      3                    134                      1                    109                      1 
+##          status: OTHER 
+##                      1</code></pre>
+<p>Finally the <code><a href="https://rdrr.io/pkg/Biobase/man/featureData.html">fData()</a></code> function gets the probes’ annotationin a data.frame</p>
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">probes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Biobase/man/featureData.html">fData</a></span><span class="op">(</span><span class="va">gsm.expr</span><span class="op">)</span></span>
+<span><span class="va">probes</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["ID"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Species"],"name":[2],"type":["chr"],"align":["left"]},{"label":["Source"],"name":[3],"type":["chr"],"align":["left"]},{"label":["Search_Key"],"name":[4],"type":["chr"],"align":["left"]},{"label":["Transcript"],"name":[5],"type":["chr"],"align":["left"]}],"data":[{"1":"ILMN_1343291","2":"Homo sapiens","3":"RefSeq","4":"NM_001402.4","5":"ILMN_5311","_rn_":"ILMN_1343291"},{"1":"ILMN_1343295","2":"Homo sapiens","3":"RefSeq","4":"","5":"ILMN_27206","_rn_":"ILMN_1343295"},{"1":"ILMN_1651209","2":"Homo sapiens","3":"RefSeq","4":"NM_182838.1","5":"ILMN_8692","_rn_":"ILMN_1651209"},{"1":"ILMN_1651210","2":"Homo sapiens","3":"RefSeq","4":"XM_941691.1","5":"ILMN_138115","_rn_":"ILMN_1651210"},{"1":"ILMN_1651221","2":"Homo sapiens","3":"RefSeq","4":"XM_926225.1","5":"ILMN_33528","_rn_":"ILMN_1651221"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<div id="summarizedexperiment" class="section level3" number="1.3.1">
+<h3>
+<span class="header-section-number">1.3.1</span> <code>SummarizedExperiment</code><a class="anchor" aria-label="anchor" href="#summarizedexperiment"><i class="fas fa-link"></i></a>
+</h3>
+<p>The <code>SummarizedExperiment</code> class is a comprehensive data structure that can be used to store expression and methylation data from microarrays or read counts from RNA-seq experiments, among others. A <code>SummarizedExperiment</code> object contains slots for one or more datasets, feature annotation (e.g. genes, transcripts, SNPs, CpGs), individual phenotypes and experimental details, such as laboratory and experimental protocols. In a <code>SummarizedExperiment</code>, the rows of <em>omic</em> data are features and columns are subjects.</p>
+<div class="figure">
+<img src="images/sumExp.svg" alt=""><p class="caption">SummarizedExperiment</p>
+</div>
+<p>Information is coordinated across the object’s slots. For instance, subsetting samples in the assay matrix automatically subsets them in the phenotype metadata. A <code>SummarizedExperiment</code>object is easily manipulated and constitutes the input and output of many of Bioconductor’s methods.</p>
+<p>Data is retrieved from a <code>SummarizedExperiment</code> by using specific methods or accessors. We illustrate the functions with <code>brge_methy</code> which includes real methylation data and is available from the Bioconductor’s <code>brgedata</code> package. The data is made available by loading of the package</p>
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">brgedata</span><span class="op">)</span></span>
+<span><span class="va">brge_methy</span></span></code></pre></div>
+<pre><code>## class: GenomicRatioSet 
+## dim: 392277 20 
+## metadata(0):
+## assays(1): Beta
+## rownames(392277): cg13869341 cg24669183 ... cg26251715 cg25640065
+## rowData names(14): Forward_Sequence SourceSeq ... Regulatory_Feature_Group DHS
+## colnames(20): x0017 x0043 ... x0077 x0079
+## colData names(9): age sex ... Mono Neu
+## Annotation
+##   array: IlluminaHumanMethylation450k
+##   annotation: ilmn12.hg19
+## Preprocessing
+##   Method: NA
+##   minfi version: NA
+##   Manifest version: NA</code></pre>
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/methods/is.html">extends</a></span><span class="op">(</span><span class="st">"GenomicRatioSet"</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [1] "GenomicRatioSet"            "RangedSummarizedExperiment" "SummarizedExperiment"       "RectangularData"            "Vector"                    
+## [6] "Annotated"                  "vector_OR_Vector"</code></pre>
+<p>The function <code><a href="https://rdrr.io/r/methods/is.html">extends()</a></code> shows that the data has been encoded in an object of <code>GenomicRatioSet</code> class, which is an extension of the more primitive classes <code>RangedSummarizedExperiment</code> and <code>SummarizedExperiment</code>. <code>brge_methy</code> illustrates a typical object within Bioconductor’s framework, as it is a structure that inherits different types of classes in an established hierarchy. For each class, there are specific methods which are properly inherited across classes. For instance, in our example, <code>SummarizedExperiment</code> is <code>brge_methy</code>’s most primitive <em>omic</em> class and, therefore, all the methods of <code>SummarizedExperiment</code> apply to it. In particular, the methylation data that is stored in the object can be extracted with the function <code>assay()</code></p>
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">betas</span> <span class="op">&lt;-</span> <span class="fu">assay</span><span class="op">(</span><span class="va">brge_methy</span><span class="op">)</span></span>
+<span><span class="va">betas</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span></span></code></pre></div>
+<pre><code>##                 x0017      x0043     x0036      x0041
+## cg13869341 0.90331003 0.90082827 0.8543610 0.84231205
+## cg24669183 0.86349463 0.84009629 0.8741255 0.85122181
+## cg15560884 0.65986032 0.69634338 0.6931083 0.69752294
+## cg01014490 0.01448404 0.01509478 0.0163614 0.01322362
+## cg17505339 0.92176287 0.92060149 0.9101060 0.93249167</code></pre>
+<p>The assay slot of a <code>SummarizedExperiment</code> object can contain any type of data (i.e. numeric, character, factor…), structure or large on-disk representations, such as a HDF5Array. Feature annotation data is accessed with the function <code>rowData()</code>:</p>
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">rowData</span><span class="op">(</span><span class="va">brge_methy</span><span class="op">)</span><span class="op">[</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span></code></pre></div>
+<pre><code>## DataFrame with 392277 rows and 4 columns
+##                         SourceSeq Random_Loci Methyl27_Loci         genes
+##                       &lt;character&gt; &lt;character&gt;   &lt;character&gt;   &lt;character&gt;
+## cg13869341 CCGGTGGCTGGCCACTCTGC..                                  WASH5P
+## cg24669183 TCACCGCCTTGACAGCTTTG..                                        
+## cg15560884 CGCGTAAACAAGGGAAGCTG..                                        
+## cg01014490 TCAGAACTCGCGGTGGGGGC..                                        
+## cg17505339 AAACAAACAAAGATATCAAG..                                        
+## ...                           ...         ...           ...           ...
+## cg04964672 CGGCGGCTTTCCACGCTGCG..                                        
+## cg01086462 CGCAGGTATGGTGTACATTA..                                        
+## cg02233183 CAAAATGAATGAAATTTACA..                           NLGN4Y;NLGN4Y
+## cg26251715 CGCTGGTTGTCCAGGCTGGA..                                  TTTY14
+## cg25640065 CGGGGCAGGGGTCCGTAACT..</code></pre>
+<p>which returns a data.frame object. In our example, it contains the sequences and the genes associated with the CpG probes, among other information.</p>
+</div>
+<div id="genomic-ranges-granges" class="section level3" number="1.3.2">
+<h3>
+<span class="header-section-number">1.3.2</span> <code>Genomic Ranges (GRanges)</code><a class="anchor" aria-label="anchor" href="#genomic-ranges-granges"><i class="fas fa-link"></i></a>
+</h3>
+<p>The Bioconductor’s package <code>GenomicRanges</code> aims to represent and manipulate the genomic annotation of molecular <em>omic</em> data under a reference genome. It contains functions to select specific regions and perform operations with them <span class="citation">(<a href="references.html#ref-lawrence2013software" role="doc-biblioref">Lawrence 2013</a>)</span>. Objects of <code>GRanges</code> class are important to annotate and manipulate genomic, transcriptomic and methylomic data. In particular, they are used in conjunction with <code>SummarizedExperiment</code>, within the <code>RangedSummarizedExperiment</code> class that is explained in the following section.</p>
+<p>Annotation data refers to the characteristics of the variables in the high-dimensional data set. In particular for <em>omic</em> data relative to DNA structure and function, each variable may be given a location in a reference genome. While not two genomes are identical, the construction of a reference genome allows the mapping of specific characteristics of individual genomes to a common ground where they can be compared. The reference genome defines a coordinate system: “chromosome id” and “position along the chromosome”. For instance, a position such as chr10:4567-5671 would represent the 4567th to the 5671st base pair on the reference’s chromosome 10.</p>
+<p>The main functionalities implemented <code>GenomicRanges</code> are methods on <code>GRanges</code> objects. Objects are created by the function <code>GRanges</code>, minimum requirements are the genomic positions given by the chromosome <code>seqnames</code> and base pair coordinates <code>ranges</code>. Other metadata (e.g. variables) can be added to provide further information about each segment.</p>
+<p>We illustrate <code>GenomicRanges</code> creating 8 segments on either chr1 or chr2, each with defined start and end points. We add strand information, passed through the argument <code>strand</code>, to indicate the direction of each sequence. We also add a hypothetical variable <code>disease</code> that indicates whether asthma or obesity have been associated with each interval</p>
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://bioconductor.org/packages/GenomicRanges">GenomicRanges</a></span><span class="op">)</span></span>
+<span><span class="va">gr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/GenomicRanges/man/GRanges-class.html">GRanges</a></span><span class="op">(</span>seqnames<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="st">"chr1"</span>, <span class="fl">4</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="st">"chr2"</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>              ranges <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/IRanges/man/IRanges-constructor.html">IRanges</a></span><span class="op">(</span>start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1000</span>, <span class="fl">1800</span>, <span class="fl">5300</span>, <span class="fl">7900</span>,</span>
+<span>                                         <span class="fl">1300</span>, <span class="fl">2100</span>, <span class="fl">3400</span>, <span class="fl">6700</span><span class="op">)</span>,</span>
+<span>                               end <span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2200</span>, <span class="fl">3900</span>, <span class="fl">5400</span>, <span class="fl">8100</span>,</span>
+<span>                                      <span class="fl">2600</span>, <span class="fl">3300</span>, <span class="fl">4460</span>, <span class="fl">6850</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>              strand <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"+"</span>, <span class="st">"-"</span><span class="op">)</span>, <span class="fl">4</span><span class="op">)</span>,</span>
+<span>              disease <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="st">"Asthma"</span>,<span class="fl">4</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="st">"Obesity"</span>,<span class="fl">4</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">gr</span></span></code></pre></div>
+<pre><code>## GRanges object with 8 ranges and 1 metadata column:
+##       seqnames    ranges strand |     disease
+##          &lt;Rle&gt; &lt;IRanges&gt;  &lt;Rle&gt; | &lt;character&gt;
+##   [1]     chr1 1000-2200      + |      Asthma
+##   [2]     chr1 1800-3900      - |      Asthma
+##   [3]     chr1 5300-5400      + |      Asthma
+##   [4]     chr1 7900-8100      - |      Asthma
+##   [5]     chr2 1300-2600      + |     Obesity
+##   [6]     chr2 2100-3300      - |     Obesity
+##   [7]     chr2 3400-4460      + |     Obesity
+##   [8]     chr2 6700-6850      - |     Obesity
+##   -------
+##   seqinfo: 2 sequences from an unspecified genome; no seqlengths</code></pre>
+<p><code>gr</code> is our constructed object of class <code>GRanges</code>. The object responds to the usual array and subset extraction given by squared parentheses</p>
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">gr</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span></code></pre></div>
+<pre><code>## GRanges object with 1 range and 1 metadata column:
+##       seqnames    ranges strand |     disease
+##          &lt;Rle&gt; &lt;IRanges&gt;  &lt;Rle&gt; | &lt;character&gt;
+##   [1]     chr1 1000-2200      + |      Asthma
+##   -------
+##   seqinfo: 2 sequences from an unspecified genome; no seqlengths</code></pre>
+<p>However, there are also specific functions to access and modify information. For instance, <code><a href="https://rdrr.io/pkg/GenomeInfoDb/man/seqinfo.html">seqnames()</a></code> extract the chromosomes defined in our examples, whose first element can be redefined accordingly:</p>
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/GenomeInfoDb/man/seqinfo.html">seqnames</a></span><span class="op">(</span><span class="va">gr</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## factor-Rle of length 8 with 2 runs
+##   Lengths:    4    4
+##   Values : chr1 chr2
+## Levels(2): chr1 chr2</code></pre>
+<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/GenomeInfoDb/man/seqinfo.html">seqnames</a></span><span class="op">(</span><span class="va">gr</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"chr2"</span></span>
+<span><span class="va">gr</span></span></code></pre></div>
+<pre><code>## GRanges object with 8 ranges and 1 metadata column:
+##       seqnames    ranges strand |     disease
+##          &lt;Rle&gt; &lt;IRanges&gt;  &lt;Rle&gt; | &lt;character&gt;
+##   [1]     chr2 1000-2200      + |      Asthma
+##   [2]     chr1 1800-3900      - |      Asthma
+##   [3]     chr1 5300-5400      + |      Asthma
+##   [4]     chr1 7900-8100      - |      Asthma
+##   [5]     chr2 1300-2600      + |     Obesity
+##   [6]     chr2 2100-3300      - |     Obesity
+##   [7]     chr2 3400-4460      + |     Obesity
+##   [8]     chr2 6700-6850      - |     Obesity
+##   -------
+##   seqinfo: 2 sequences from an unspecified genome; no seqlengths</code></pre>
+<p>This is important to annotation using different system. NCBI encodes chromosomes as 1, 2, 3, …; while UCSC uses chr1, chr2, … The chromosome style can be changed using</p>
+<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/GenomeInfoDb/man/seqlevelsStyle.html">seqlevelsStyle</a></span><span class="op">(</span><span class="va">gr</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"NCBI"</span></span>
+<span><span class="va">gr</span></span></code></pre></div>
+<pre><code>## GRanges object with 8 ranges and 1 metadata column:
+##       seqnames    ranges strand |     disease
+##          &lt;Rle&gt; &lt;IRanges&gt;  &lt;Rle&gt; | &lt;character&gt;
+##   [1]        2 1000-2200      + |      Asthma
+##   [2]        1 1800-3900      - |      Asthma
+##   [3]        1 5300-5400      + |      Asthma
+##   [4]        1 7900-8100      - |      Asthma
+##   [5]        2 1300-2600      + |     Obesity
+##   [6]        2 2100-3300      - |     Obesity
+##   [7]        2 3400-4460      + |     Obesity
+##   [8]        2 6700-6850      - |     Obesity
+##   -------
+##   seqinfo: 2 sequences from an unspecified genome; no seqlengths</code></pre>
+<p>Let’s us write back the UCSC style</p>
+<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/GenomeInfoDb/man/seqlevelsStyle.html">seqlevelsStyle</a></span><span class="op">(</span><span class="va">gr</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"UCSC"</span></span>
+<span><span class="va">gr</span></span></code></pre></div>
+<pre><code>## GRanges object with 8 ranges and 1 metadata column:
+##       seqnames    ranges strand |     disease
+##          &lt;Rle&gt; &lt;IRanges&gt;  &lt;Rle&gt; | &lt;character&gt;
+##   [1]     chr2 1000-2200      + |      Asthma
+##   [2]     chr1 1800-3900      - |      Asthma
+##   [3]     chr1 5300-5400      + |      Asthma
+##   [4]     chr1 7900-8100      - |      Asthma
+##   [5]     chr2 1300-2600      + |     Obesity
+##   [6]     chr2 2100-3300      - |     Obesity
+##   [7]     chr2 3400-4460      + |     Obesity
+##   [8]     chr2 6700-6850      - |     Obesity
+##   -------
+##   seqinfo: 2 sequences from an unspecified genome; no seqlengths</code></pre>
+<p>Additional information can be added to the current object as a new field of a list</p>
+<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">gr</span><span class="op">$</span><span class="va">gene_id</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"Gene"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span></span>
+<span><span class="va">gr</span></span></code></pre></div>
+<pre><code>## GRanges object with 8 ranges and 2 metadata columns:
+##       seqnames    ranges strand |     disease     gene_id
+##          &lt;Rle&gt; &lt;IRanges&gt;  &lt;Rle&gt; | &lt;character&gt; &lt;character&gt;
+##   [1]     chr2 1000-2200      + |      Asthma       Gene1
+##   [2]     chr1 1800-3900      - |      Asthma       Gene2
+##   [3]     chr1 5300-5400      + |      Asthma       Gene3
+##   [4]     chr1 7900-8100      - |      Asthma       Gene4
+##   [5]     chr2 1300-2600      + |     Obesity       Gene5
+##   [6]     chr2 2100-3300      - |     Obesity       Gene6
+##   [7]     chr2 3400-4460      + |     Obesity       Gene7
+##   [8]     chr2 6700-6850      - |     Obesity       Gene8
+##   -------
+##   seqinfo: 2 sequences from an unspecified genome; no seqlengths</code></pre>
+<p><code>GenomicRanges</code> provides different methods to perform arithmetic with the ranges, see <code><a href="https://rdrr.io/pkg/GenomicRanges/man/GRanges-class.html">?GRanges</a></code> for a full list. For instance, with <code><a href="https://rdrr.io/pkg/IRanges/man/intra-range-methods.html">shift()</a></code> an interval is moved a given base-pair distance and with <code><a href="https://rdrr.io/pkg/IRanges/man/intra-range-methods.html">flank()</a></code> the interval is stretched</p>
+<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#shift: move all intervals 10 base pair towards the end</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/IRanges/man/intra-range-methods.html">shift</a></span><span class="op">(</span><span class="va">gr</span>, <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## GRanges object with 8 ranges and 2 metadata columns:
+##       seqnames    ranges strand |     disease     gene_id
+##          &lt;Rle&gt; &lt;IRanges&gt;  &lt;Rle&gt; | &lt;character&gt; &lt;character&gt;
+##   [1]     chr2 1010-2210      + |      Asthma       Gene1
+##   [2]     chr1 1810-3910      - |      Asthma       Gene2
+##   [3]     chr1 5310-5410      + |      Asthma       Gene3
+##   [4]     chr1 7910-8110      - |      Asthma       Gene4
+##   [5]     chr2 1310-2610      + |     Obesity       Gene5
+##   [6]     chr2 2110-3310      - |     Obesity       Gene6
+##   [7]     chr2 3410-4470      + |     Obesity       Gene7
+##   [8]     chr2 6710-6860      - |     Obesity       Gene8
+##   -------
+##   seqinfo: 2 sequences from an unspecified genome; no seqlengths</code></pre>
+<div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#shift: move each intervals individually</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/IRanges/man/intra-range-methods.html">shift</a></span><span class="op">(</span><span class="va">gr</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">10</span>,<span class="fl">100</span>, length<span class="op">=</span><span class="fl">8</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## GRanges object with 8 ranges and 2 metadata columns:
+##       seqnames    ranges strand |     disease     gene_id
+##          &lt;Rle&gt; &lt;IRanges&gt;  &lt;Rle&gt; | &lt;character&gt; &lt;character&gt;
+##   [1]     chr2 1010-2210      + |      Asthma       Gene1
+##   [2]     chr1 1822-3922      - |      Asthma       Gene2
+##   [3]     chr1 5335-5435      + |      Asthma       Gene3
+##   [4]     chr1 7948-8148      - |      Asthma       Gene4
+##   [5]     chr2 1361-2661      + |     Obesity       Gene5
+##   [6]     chr2 2174-3374      - |     Obesity       Gene6
+##   [7]     chr2 3487-4547      + |     Obesity       Gene7
+##   [8]     chr2 6800-6950      - |     Obesity       Gene8
+##   -------
+##   seqinfo: 2 sequences from an unspecified genome; no seqlengths</code></pre>
+<div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#flank:  recover regions next to the input set. </span></span>
+<span><span class="co">#        For a 50 base stretch upstream (negative value for</span></span>
+<span><span class="co">#        downstream)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/IRanges/man/intra-range-methods.html">flank</a></span><span class="op">(</span><span class="va">gr</span>, <span class="fl">50</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## GRanges object with 8 ranges and 2 metadata columns:
+##       seqnames    ranges strand |     disease     gene_id
+##          &lt;Rle&gt; &lt;IRanges&gt;  &lt;Rle&gt; | &lt;character&gt; &lt;character&gt;
+##   [1]     chr2   950-999      + |      Asthma       Gene1
+##   [2]     chr1 3901-3950      - |      Asthma       Gene2
+##   [3]     chr1 5250-5299      + |      Asthma       Gene3
+##   [4]     chr1 8101-8150      - |      Asthma       Gene4
+##   [5]     chr2 1250-1299      + |     Obesity       Gene5
+##   [6]     chr2 3301-3350      - |     Obesity       Gene6
+##   [7]     chr2 3350-3399      + |     Obesity       Gene7
+##   [8]     chr2 6851-6900      - |     Obesity       Gene8
+##   -------
+##   seqinfo: 2 sequences from an unspecified genome; no seqlengths</code></pre>
+<p><code>GenomicRanges</code> also includes methods for aggregating and summarizing <code>GRanges</code>objects. The functions <code><a href="https://rdrr.io/pkg/IRanges/man/inter-range-methods.html">reduce()</a></code>, <code>disjoint()</code> and <code><a href="https://rdrr.io/pkg/IRanges/man/coverage-methods.html">coverage()</a></code> are most useful. <code><a href="https://rdrr.io/pkg/IRanges/man/inter-range-methods.html">disjoin()</a></code>, for instance, reduces the intervals into the smallest set of unique, non-overlapping pieces that make up the original object. It is strand-specific by default, but this can be avoided with <code>ignore.strand=TRUE</code>.</p>
+<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/IRanges/man/inter-range-methods.html">disjoin</a></span><span class="op">(</span><span class="va">gr</span>, ignore.strand<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## GRanges object with 10 ranges and 0 metadata columns:
+##        seqnames    ranges strand
+##           &lt;Rle&gt; &lt;IRanges&gt;  &lt;Rle&gt;
+##    [1]     chr1 1800-3900      *
+##    [2]     chr1 5300-5400      *
+##    [3]     chr1 7900-8100      *
+##    [4]     chr2 1000-1299      *
+##    [5]     chr2 1300-2099      *
+##    [6]     chr2 2100-2200      *
+##    [7]     chr2 2201-2600      *
+##    [8]     chr2 2601-3300      *
+##    [9]     chr2 3400-4460      *
+##   [10]     chr2 6700-6850      *
+##   -------
+##   seqinfo: 2 sequences from an unspecified genome; no seqlengths</code></pre>
+<p><code><a href="https://rdrr.io/pkg/IRanges/man/inter-range-methods.html">reduce()</a></code> creates the smallest range set of unique, non-overlapping intervals. Strand information is also taken into account by default and can also be turned off</p>
+<div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/IRanges/man/inter-range-methods.html">reduce</a></span><span class="op">(</span><span class="va">gr</span>, ignore.strand<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<p><code><a href="https://rdrr.io/pkg/IRanges/man/coverage-methods.html">coverage()</a></code> summarizes the times each base is covered by an interval</p>
+<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/IRanges/man/coverage-methods.html">coverage</a></span><span class="op">(</span><span class="va">gr</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## RleList of length 2
+## $chr1
+## integer-Rle of length 8100 with 6 runs
+##   Lengths: 1799 2101 1399  101 2499  201
+##   Values :    0    1    0    1    0    1
+## 
+## $chr2
+## integer-Rle of length 6850 with 10 runs
+##   Lengths:  999  300  800  101  400  700   99 1061 2239  151
+##   Values :    0    1    2    3    2    1    0    1    0    1</code></pre>
+<p>It is also possible to perform operations between two different <code>GRanges</code> objects. For instance, one may be interested in knowing the intervals that overlap with a targeted region:</p>
+<div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">target</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/GenomicRanges/man/GRanges-class.html">GRanges</a></span><span class="op">(</span>seqnames<span class="op">=</span><span class="st">"chr1"</span>, </span>
+<span>                  range<span class="op">=</span><span class="fu"><a href="https://rdrr.io/pkg/IRanges/man/IRanges-constructor.html">IRanges</a></span><span class="op">(</span>start<span class="op">=</span><span class="fl">1200</span>, <span class="fl">4000</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">target</span></span></code></pre></div>
+<pre><code>## GRanges object with 1 range and 0 metadata columns:
+##       seqnames    ranges strand
+##          &lt;Rle&gt; &lt;IRanges&gt;  &lt;Rle&gt;
+##   [1]     chr1 1200-4000      *
+##   -------
+##   seqinfo: 1 sequence from an unspecified genome; no seqlengths</code></pre>
+<div class="sourceCode" id="cb76"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">gr.ov</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/IRanges/man/findOverlaps-methods.html">findOverlaps</a></span><span class="op">(</span><span class="va">target</span>, <span class="va">gr</span><span class="op">)</span></span>
+<span><span class="va">gr.ov</span></span></code></pre></div>
+<pre><code>## Hits object with 1 hit and 0 metadata columns:
+##       queryHits subjectHits
+##       &lt;integer&gt;   &lt;integer&gt;
+##   [1]         1           2
+##   -------
+##   queryLength: 1 / subjectLength: 8</code></pre>
+<p>To recover the overlapping intervals between <code>gr</code> and <code>target</code> we can run</p>
+<div class="sourceCode" id="cb78"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">gr</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/pkg/S4Vectors/man/Hits-class.html">subjectHits</a></span><span class="op">(</span><span class="va">gr.ov</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
+<pre><code>## GRanges object with 1 range and 2 metadata columns:
+##       seqnames    ranges strand |     disease     gene_id
+##          &lt;Rle&gt; &lt;IRanges&gt;  &lt;Rle&gt; | &lt;character&gt; &lt;character&gt;
+##   [1]     chr1 1800-3900      - |      Asthma       Gene2
+##   -------
+##   seqinfo: 2 sequences from an unspecified genome; no seqlengths</code></pre>
+<p>or</p>
+<div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/IRanges/man/findOverlaps-methods.html">subsetByOverlaps</a></span><span class="op">(</span><span class="va">gr</span>, <span class="va">target</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## GRanges object with 1 range and 2 metadata columns:
+##       seqnames    ranges strand |     disease     gene_id
+##          &lt;Rle&gt; &lt;IRanges&gt;  &lt;Rle&gt; | &lt;character&gt; &lt;character&gt;
+##   [1]     chr1 1800-3900      - |      Asthma       Gene2
+##   -------
+##   seqinfo: 2 sequences from an unspecified genome; no seqlengths</code></pre>
+<p>Other operations can be found <a href="https://bioconductor.org/help/course-materials/2014/SeattleFeb2014/">here</a>.</p>
+</div>
+<div id="rangedsummarizedexperiment" class="section level3" number="1.3.3">
+<h3>
+<span class="header-section-number">1.3.3</span> <code>RangedSummarizedExperiment</code><a class="anchor" aria-label="anchor" href="#rangedsummarizedexperiment"><i class="fas fa-link"></i></a>
+</h3>
+<p><code>SummarizedExperiment</code> is extended to <code>RangedSummarizedExperiment</code>, a child class that contains the annotation data of the features in a <code>GenomicRanges</code> object. In our epigenomic example, the second most primitive class of <code>brge_methy</code> object with <em>omic</em> functionality, after <code>SummarizedExperiment</code>, is <code>RangedSummarizedExperiment</code>. Annotation data, with variable names given by</p>
+<div class="sourceCode" id="cb82"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="fu">rowData</span><span class="op">(</span><span class="va">brge_methy</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code>##  [1] "Forward_Sequence"         "SourceSeq"                "Random_Loci"              "Methyl27_Loci"            "genes"                   
+##  [6] "UCSC_RefGene_Accession"   "group"                    "Phantom"                  "DMR"                      "Enhancer"                
+## [11] "HMM_Island"               "Regulatory_Feature_Name"  "Regulatory_Feature_Group" "DHS"</code></pre>
+<p>can be obtained in a <code>GRanges</code> object, for a given variable. For instance, metadata of CpG genomic annotation and neighboring genes is obtained using array syntax</p>
+<div class="sourceCode" id="cb84"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/matrixStats/man/rowRanges.html">rowRanges</a></span><span class="op">(</span><span class="va">brge_methy</span><span class="op">)</span><span class="op">[</span>, <span class="st">"genes"</span><span class="op">]</span></span></code></pre></div>
+<pre><code>## GRanges object with 392277 ranges and 1 metadata column:
+##              seqnames    ranges strand |         genes
+##                 &lt;Rle&gt; &lt;IRanges&gt;  &lt;Rle&gt; |   &lt;character&gt;
+##   cg13869341     chr1     15865      * |        WASH5P
+##   cg24669183     chr1    534242      * |              
+##   cg15560884     chr1    710097      * |              
+##   cg01014490     chr1    714177      * |              
+##   cg17505339     chr1    720865      * |              
+##          ...      ...       ...    ... .           ...
+##   cg04964672     chrY   7428198      * |              
+##   cg01086462     chrY   7429349      * |              
+##   cg02233183     chrY  16634382      * | NLGN4Y;NLGN4Y
+##   cg26251715     chrY  21236229      * |        TTTY14
+##   cg25640065     chrY  23569324      * |              
+##   -------
+##   seqinfo: 24 sequences from an unspecified genome; no seqlengths</code></pre>
+<p>Subject data can be accessed entirely in a single data.frame or a variable at the time. The entire subject (phenotype) information is retrieved with the function <code>colData()</code>:</p>
+<div class="sourceCode" id="cb86"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">colData</span><span class="op">(</span><span class="va">brge_methy</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## DataFrame with 20 rows and 9 columns
+##             age      sex           NK     Bcell       CD4T       CD8T         Eos      Mono       Neu
+##       &lt;numeric&gt; &lt;factor&gt;    &lt;numeric&gt; &lt;numeric&gt;  &lt;numeric&gt;  &lt;numeric&gt;   &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt;
+## x0017         4   Female -5.81386e-19 0.1735078 0.20406869  0.1009741 0.00000e+00 0.0385654  0.490936
+## x0043         4   Female  1.64826e-03 0.1820172 0.16171272  0.1287722 0.00000e+00 0.0499542  0.491822
+## x0036         4   Male    1.13186e-02 0.1690173 0.15546368  0.1277417 0.00000e+00 0.1027105  0.459632
+## x0041         4   Female  8.50822e-03 0.0697158 0.00732789  0.0321861 0.00000e+00 0.0718280  0.807749
+## x0032         4   Male    0.00000e+00 0.1139780 0.22230399  0.0216090 2.60504e-18 0.0567246  0.575614
+## ...         ...      ...          ...       ...        ...        ...         ...       ...       ...
+## x0018         4   Female    0.0170284 0.0781698   0.112735 0.06796816 8.37770e-03 0.0579535  0.658600
+## x0057         4   Female    0.0000000 0.0797774   0.111072 0.00910489 4.61887e-18 0.1015260  0.686010
+## x0061         4   Female    0.0000000 0.1640266   0.224203 0.13125212 8.51074e-03 0.0382647  0.429575
+## x0077         4   Female    0.0000000 0.1122731   0.168056 0.07840593 6.13397e-02 0.0583411  0.515284
+## x0079         4   Female    0.0120148 0.0913650   0.205830 0.11475389 0.00000e+00 0.0750535  0.513597</code></pre>
+<p>The list symbol <code>$</code> can be used, for instance, to obtain the sex of the individuals</p>
+<div class="sourceCode" id="cb88"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">brge_methy</span><span class="op">$</span><span class="va">sex</span></span></code></pre></div>
+<pre><code>##  [1] Female Female Male   Female Male   Male   Male   Male   Male   Male   Female Female Female Male   Male   Female Female Female Female Female
+## Levels: Female Male</code></pre>
+<p>Subsetting the entire structure is also possible following the usual array syntax. For example, we can select only males from the <code>brge_methy</code> dataset</p>
+<div class="sourceCode" id="cb90"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">brge_methy</span><span class="op">[</span>, <span class="va">brge_methy</span><span class="op">$</span><span class="va">sex</span> <span class="op">==</span> <span class="st">"male"</span><span class="op">]</span></span></code></pre></div>
+<pre><code>## class: GenomicRatioSet 
+## dim: 392277 0 
+## metadata(0):
+## assays(1): Beta
+## rownames(392277): cg13869341 cg24669183 ... cg26251715 cg25640065
+## rowData names(14): Forward_Sequence SourceSeq ... Regulatory_Feature_Group DHS
+## colnames(0):
+## colData names(9): age sex ... Mono Neu
+## Annotation
+##   array: IlluminaHumanMethylation450k
+##   annotation: ilmn12.hg19
+## Preprocessing
+##   Method: NA
+##   minfi version: NA
+##   Manifest version: NA</code></pre>
+<p>The <code><a href="https://rdrr.io/pkg/S4Vectors/man/Annotated-class.html">metadata()</a></code> function retrieves experimental data</p>
+<div class="sourceCode" id="cb92"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/S4Vectors/man/Annotated-class.html">metadata</a></span><span class="op">(</span><span class="va">brge_methy</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## list()</code></pre>
+<p>which in our case is empty.</p>
+
+</div>
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="index.html">Introduction to Epigenome-Wide Association Studies (EWAS)</a></div>
+<div class="next"><a href="pre-processing-of-dna-methylation-data.html"><span class="header-section-number">2</span> Pre-processing of DNA methylation data</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#resources-and-tools-for-epigenetics-in-bioconductor"><span class="header-section-number">1</span> Resources and tools for epigenetics in Bioconductor</a></li>
+<li><a class="nav-link" href="#bioconductor"><span class="header-section-number">1.1</span> Bioconductor</a></li>
+<li><a class="nav-link" href="#gene-expression-omnibus-geo-repository"><span class="header-section-number">1.2</span> Gene Expression Omnibus (GEO) repository</a></li>
+<li>
+<a class="nav-link" href="#expressionset-and-genomicratioset-and-others-granges"><span class="header-section-number">1.3</span> ExpressionSet and GenomicRatioSet (and others: GRanges)</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#summarizedexperiment"><span class="header-section-number">1.3.1</span> SummarizedExperiment</a></li>
+<li><a class="nav-link" href="#genomic-ranges-granges"><span class="header-section-number">1.3.2</span> Genomic Ranges (GRanges)</a></li>
+<li><a class="nav-link" href="#rangedsummarizedexperiment"><span class="header-section-number">1.3.3</span> RangedSummarizedExperiment</a></li>
+</ul>
+</li>
+</ul>
+
+      <div class="book-extra">
+        
+        <ul class="list-unstyled">
+          
+        </ul>
+</div>
+    </nav>
+</div>
+  
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Introduction to Epigenome-Wide Association Studies (EWAS)</strong>" was written by Juan R. González, Mariona Bustamante, Sofía Aguilar &amp; Laura Balagué. It was last built on 2023-08-29.</p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+</html>

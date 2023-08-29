@@ -18,8 +18,7 @@ library(karyoploteR)
 We begin loading the output from the last step, which is the ExpressionSet that
 contains the normalised betas together with the phenotypes.
 ```{r load}
-eset.cohort1<-readRDS("H:/analyses/Course_Intro_to_EWAS/results/QC/subsets/GSE42861_norm_cohort1.Rds") 
-
+eset.cohort1<-readRDS("H:/analyses/Course_Intro_to_EWAS/results/QC/subsets/GSE42861_norm_cohort1bis.Rds") 
 pheno.cohort1<-pData(eset.cohort1)
 dim(pheno.cohort1)
 head(pheno.cohort1)

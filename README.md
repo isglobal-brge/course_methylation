@@ -3,7 +3,7 @@
 The aim of this course is to introduce basic concepts and guidelines to conduct epigenome-wide association studies (EWAS) using DNA
 methylation data obtained from arrays. The course is a comprehensive program designed to equip participants with the knowledge and practical skills required to effectively analyze and interpret DNA methylation data using the powerful Bioconductor framework. Upon successful completion of the module, participants should be able to conduct:
 
-1) Introduction to epigenetics ([slides introduction](), [slides application]())
+1) Introduction to epigenetics ([slides introduction](), [slides application: transitioning African populations]())
 2) Pre-processing of DNA methylation data (slides)
 3) Epigenome-wide association studies (EWAS) (slides)
 4) Meta-analysis of EWAS from different studies (slides)

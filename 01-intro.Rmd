@@ -91,6 +91,10 @@ Data for specific accessions in GEO can be downloaded in `R` using the `getGEO` 
 
 ```{r geoquery}
 library(GEOquery)
+
+if(!dir.exists("c:/tmp"))
+  dir.create("c:/tmp")
+
 gsm <- getGEO("GSE80970", destdir = "c:/tmp")
 gsm <- gsm[[1]]
 ```

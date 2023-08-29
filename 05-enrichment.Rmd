@@ -1,6 +1,50 @@
 # Biological interpretation of findings
-We will explain the steps for the biological interpretation of the findings:
+In this chapter we will explain the steps for the biological interpretation of
+the findings. We will need to load some libraries:
+```{r libs_annot, eval=FALSE}
+library(clusterProfiler)
+library(org.Hs.eg.db)
+```
+
 
 ## Annotation of CpG sites
+Once we have obtained a list with the CpGs that are significant in our analysis,
+we need to locate them in the genome and try to know which structures 
+surroud them. The annotation consists in obtaining this information:
+```{r annot}
+
+```
+
 ## Functional enrichment analysis
+The idea is to compare the list of genes that overlap our CpGs with the list of 
+all the human genes that are anotated in certain databases. With this, we can see
+if our list of genes are enriched in any kind of function.
+
+First we need to obtain the list of all human genes that are curated in specific
+databases. We will work with the Gene Ontology (GO) and the Kyoto Encyclopedia of
+Genes and Genomes (KEGG) databases
+```{r genelist, eval=FALSE}
+# GO
+df = as.data.frame(org.Hs.egGO)
+go_gene_list = unique(sort(df$gene_id))
+
+# KEGG
+dfk = as.data.frame(org.Hs.egPATH)
+kegg_gene_list = unique(sort(dfk$gene_id))
+```
+
+
+And run the analyses for the
+```{r go, eval=FALSE}
+ans.go <- enrichGO(gene = entrez, ont = "BP",
+                   OrgDb ="org.Hs.eg.db",
+                   universe = go_gene_list,
+                   readable=TRUE,
+                   pvalueCutoff = 0.05)
+
+tab.go <- as.data.frame(ans.go)
+tab.go<- subset(tab.go, Count>5)
+
+```
+
 ## Comparison with EWAS Atlas and EWAS Catalog

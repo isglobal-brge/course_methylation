@@ -1,19 +1,8 @@
 # Epigenome-wide association study (EWAS)
-In this chapter we will run an Epigenome-wide association study (EWAS)
+In this chapter we will run an Epigenome-Wide Association Study (EWAS)
 
 ## Install and load packages
-```{r librariesinstall, eval=FALSE}
-if (!require("BiocManager", quietly = TRUE))
-  install.packages("BiocManager")
-
-BiocManager::install("Biobase")
-BiocManager::install("GenomicRanges")
-BiocManager::install("karyoploteR")
-
-install.packages("devtools")
-devtools::install_github("perishky/meffil")
-install.packages(c("qqman","ggplot2","ggrepel"))
-```
+Today we will load these packages
 ```{r librariesload}
 library(Biobase)# to be able to access and modify data in the ExpressionSet
 library(meffil) # to run the EWAS
@@ -25,6 +14,9 @@ library(karyoploteR)
 ```
 
 ## Load dataset and extract the phenotypes and methylation matrix
+
+We begin loading the output from the last step, which is the ExpressionSet that
+contains the normalised betas together with the phenotypes.
 ```{r load}
 eset.cohort1<-readRDS("H:/analyses/Course_Intro_to_EWAS/results/QC/subsets/GSE42861_norm_cohort1.Rds") 
 
@@ -35,17 +27,25 @@ head(pheno.cohort1)
 methyl.cohort1<-exprs(eset.cohort1)
 dim(methyl.cohort1) 
 methyl.cohort1[1:5,1:5]
+
+table(eset.cohort1$Smoking)
 ```
 
 ## Run EWAS
-### OPTION 1: Never vs Current
-#### Data preparation
-Subset the eset to never vs current smokers from Cohort1 
+### Data preparation
+Here we will show an example to run the analysis testing current smokers against 
+never smokers. Nevertheless, the same code can be applied to run other
+analyses testing never vs former or current vs former. 
+
+The first step is to subset the ExpressionSet with only the samples that we need.
+In this case, we only keep the never smokers and the current smokers,
+getting rid of the former smokers. 
 ```{r subset}
-current <- pheno.cohort1[pheno.cohort1$Smoking %in% c('never','current'),] #subset the phenodata to individuals that never or current smoke
+current <- pheno.cohort1[pheno.cohort1$Smoking %in% c('never','current'),]
 dim(current)
 eset.current <- eset.cohort1[,rownames(current)] #subset the eset
 eset.current
+table(eset.current$Smoking)
 ```
 
 Extract methylation
@@ -90,7 +90,7 @@ Check order of the samples between the pheno and the mehtylation matrix.
 ```{r check}
 table(ifelse(rownames(pheno.current)==colnames(methyl.current),"Matched","--NOT MATCHED--"))
 ```
-#### EWAS
+### EWAS
 To run the EWAS we will use the function meffil.ewas from meffil R package. We need as arguments:
 
 - Methylattion matrix
@@ -108,7 +108,7 @@ ewas.current <- meffil.ewas(methyl.current,
                             winsorize.pct=0.05)
 ```
 
-#### Results
+### Results
 We obtain an object with different information
 ```{r summary1, warning=FALSE, message=FALSE}
 summary(ewas.current)
@@ -155,7 +155,7 @@ write.table(res.current.ord,
 
 ```
 
-#### Report
+### Report
 For this report you will need to specify the CpGs you are interested in. Today
 we will select "cg05575921" that is annotated to AHRR gene and it is well known
 for its association with tabbacco. 
@@ -170,7 +170,7 @@ ewas.summary <- meffil.ewas.summary(ewas.current,
 meffil.ewas.report(ewas.summary, output.file="H:/analyses/Course_Intro_to_EWAS/results/EWAS.results/Reports/Report.EWAS.cohort1.NeverVScurrent.html")
 ```
 
-#### Plots
+### Plots
 Lambda and QQplot
 ```{r qqplot}
 pvals.current<-res.current.ord$p.value

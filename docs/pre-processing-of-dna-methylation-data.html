@@ -94,7 +94,7 @@ remove the duplicates.</p>
 <p>And then add the sex, the age and the smoking status variables, keeping only
 those samples with metadata</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">samplesheet</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html">merge</a></span><span class="op">(</span><span class="va">samplesheet</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'Sample_Name'</span>, <span class="st">'Slide'</span>, <span class="st">'sentrix_row'</span>, <span class="st">'sentrix_col'</span>, <span class="st">'Basename'</span><span class="op">)</span><span class="op">]</span>, </span>
+<code class="sourceCode R"><span><span class="va">samplesheet</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/S4Vectors/man/Vector-merge.html">merge</a></span><span class="op">(</span><span class="va">samplesheet</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'Sample_Name'</span>, <span class="st">'Slide'</span>, <span class="st">'sentrix_row'</span>, <span class="st">'sentrix_col'</span>, <span class="st">'Basename'</span><span class="op">)</span><span class="op">]</span>, </span>
 <span>                     <span class="va">pheno</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'Sample'</span>, <span class="st">'Age'</span>, <span class="st">'Sex'</span>, <span class="st">'Smoking'</span><span class="op">)</span><span class="op">]</span>, </span>
 <span>                     by.x <span class="op">=</span> <span class="st">'Sample_Name'</span>, </span>
 <span>                     by.y <span class="op">=</span> <span class="st">'Sample'</span><span class="op">)</span></span>
@@ -255,7 +255,7 @@ saved this way:</p>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html">write.table</a></span><span class="op">(</span><span class="va">cc</span>, file <span class="op">=</span> <span class="st">"H:/analyses/Course_Intro_to_EWAS/results/QC/cellular_composition.txt"</span>, quote <span class="op">=</span> <span class="cn">F</span>, row.names <span class="op">=</span> <span class="cn">F</span>, sep <span class="op">=</span> <span class="st">'\t'</span><span class="op">)</span></span></code></pre></div>
 <p>We add this information to the phenotype that we already have</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">phenoData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html">merge</a></span><span class="op">(</span><span class="va">pheno</span>, <span class="va">cc</span><span class="op">[</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">7</span><span class="op">]</span>, by.x <span class="op">=</span> <span class="st">'Sample'</span>, by.y <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">phenoData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/S4Vectors/man/Vector-merge.html">merge</a></span><span class="op">(</span><span class="va">pheno</span>, <span class="va">cc</span><span class="op">[</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">7</span><span class="op">]</span>, by.x <span class="op">=</span> <span class="st">'Sample'</span>, by.y <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/row_colnames.html">rownames</a></span><span class="op">(</span><span class="va">phenoData</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">phenoData</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span></span>
 <span><span class="va">phenoData</span> <span class="op">&lt;-</span> <span class="va">phenoData</span><span class="op">[</span>,<span class="op">-</span><span class="fl">1</span><span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">phenoData</span><span class="op">)</span></span></code></pre></div>
@@ -280,7 +280,7 @@ Then we create an Annotated Dataframe.</p>
 <span>                                       <span class="st">"Percentage of Natural Killer"</span><span class="op">)</span>,</span>
 <span>                    row.names<span class="op">=</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/row_colnames.html">colnames</a></span><span class="op">(</span><span class="va">phenoData</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">phenoData</span> <span class="op">=</span> <span class="fu">new</span><span class="op">(</span><span class="st">"AnnotatedDataFrame"</span>, data<span class="op">=</span><span class="va">phenoData</span>, varMetadata<span class="op">=</span><span class="va">mData</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">phenoData</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/methods/new.html">new</a></span><span class="op">(</span><span class="st">"AnnotatedDataFrame"</span>, data<span class="op">=</span><span class="va">phenoData</span>, varMetadata<span class="op">=</span><span class="va">mData</span><span class="op">)</span></span></code></pre></div>
 <p>After that, we join the matrix of the normalized betas with the annotated
 dataframe of the phenotypes and cellular compositions.
 We have to make sure that the sample IDs coincide in the two datasets.</p>
@@ -347,7 +347,7 @@ provide the eSet needed for the EWAS.</p>
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Introduction to Epigenome-Wide Association Studies (EWAS)</strong>" was written by Juan R. González, Mariona Bustamante, Sofía Aguilar &amp; Laura Balagué. It was last built on 2023-08-28.</p>
+    <p>"<strong>Introduction to Epigenome-Wide Association Studies (EWAS)</strong>" was written by Juan R. González, Mariona Bustamante, Sofía Aguilar &amp; Laura Balagué. It was last built on 2023-08-29.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

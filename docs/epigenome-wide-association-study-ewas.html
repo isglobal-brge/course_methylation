@@ -6,15 +6,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Chapter 3 Epigenome-wide association study (EWAS) | Introduction to Epigenome-Wide Association Studies (EWAS)</title>
 <meta name="author" content="Juan R. González, Mariona Bustamante, Sofía Aguilar &amp; Laura Balagué">
-<meta name="description" content="We will explain how to conduct an EWAS:  3.1 Statistical methods   3.2 Visualisation of results: QQ-plot, Manhattan, Volcano">
+<meta name="description" content='In this chapter we will run an Epigenome-wide association study (EWAS)  3.1 Install and load packages if (!require("BiocManager", quietly = TRUE))  install.packages("BiocManager")...'>
 <meta name="generator" content="bookdown 0.34 with bs4_book()">
 <meta property="og:title" content="Chapter 3 Epigenome-wide association study (EWAS) | Introduction to Epigenome-Wide Association Studies (EWAS)">
 <meta property="og:type" content="book">
 <meta property="og:url" content="https://isglobal-brge.github.io/course_methylation/epigenome-wide-association-study-ewas.html">
-<meta property="og:description" content="We will explain how to conduct an EWAS:  3.1 Statistical methods   3.2 Visualisation of results: QQ-plot, Manhattan, Volcano">
+<meta property="og:description" content='In this chapter we will run an Epigenome-wide association study (EWAS)  3.1 Install and load packages if (!require("BiocManager", quietly = TRUE))  install.packages("BiocManager")...'>
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Chapter 3 Epigenome-wide association study (EWAS) | Introduction to Epigenome-Wide Association Studies (EWAS)">
-<meta name="twitter:description" content="We will explain how to conduct an EWAS:  3.1 Statistical methods   3.2 Visualisation of results: QQ-plot, Manhattan, Volcano">
+<meta name="twitter:description" content='In this chapter we will run an Epigenome-wide association study (EWAS)  3.1 Install and load packages if (!require("BiocManager", quietly = TRUE))  install.packages("BiocManager")...'>
 <!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
 <script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.5.0/transition.js"></script><script src="libs/bs3compat-0.5.0/tabs.js"></script><script src="libs/bs3compat-0.5.0/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
@@ -64,17 +64,345 @@
 <h1>
 <span class="header-section-number">3</span> Epigenome-wide association study (EWAS)<a class="anchor" aria-label="anchor" href="#epigenome-wide-association-study-ewas"><i class="fas fa-link"></i></a>
 </h1>
-<p>We will explain how to conduct an EWAS:</p>
-<div id="statistical-methods" class="section level2" number="3.1">
+<p>In this chapter we will run an Epigenome-wide association study (EWAS)</p>
+<div id="install-and-load-packages" class="section level2" number="3.1">
 <h2>
-<span class="header-section-number">3.1</span> Statistical methods<a class="anchor" aria-label="anchor" href="#statistical-methods"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3.1</span> Install and load packages<a class="anchor" aria-label="anchor" href="#install-and-load-packages"><i class="fas fa-link"></i></a>
 </h2>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="st">"BiocManager"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span><span class="op">(</span><span class="st">"Biobase"</span><span class="op">)</span></span>
+<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span><span class="op">(</span><span class="st">"GenomicRanges"</span><span class="op">)</span></span>
+<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span><span class="op">(</span><span class="st">"karyoploteR"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"perishky/meffil"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"qqman"</span>,<span class="st">"ggplot2"</span>,<span class="st">"ggrepel"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://bioconductor.org/packages/Biobase">Biobase</a></span><span class="op">)</span><span class="co"># to be able to access and modify data in the ExpressionSet</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/perishky/meffil">meffil</a></span><span class="op">)</span> <span class="co"># to run the EWAS</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/stephenturner/qqman">qqman</a></span><span class="op">)</span> <span class="co"># to get QQ plots</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span><span class="co"># plots</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/slowkow/ggrepel">ggrepel</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://bioconductor.org/packages/GenomicRanges">GenomicRanges</a></span><span class="op">)</span> <span class="co"># prepare db for Manhattan plot</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/bernatgel/karyoploteR">karyoploteR</a></span><span class="op">)</span></span></code></pre></div>
 </div>
-<div id="visualisation-of-results-qq-plot-manhattan-volcano" class="section level2" number="3.2">
+<div id="load-dataset-and-extract-the-phenotypes-and-methylation-matrix" class="section level2" number="3.2">
 <h2>
-<span class="header-section-number">3.2</span> Visualisation of results: QQ-plot, Manhattan, Volcano<a class="anchor" aria-label="anchor" href="#visualisation-of-results-qq-plot-manhattan-volcano"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3.2</span> Load dataset and extract the phenotypes and methylation matrix<a class="anchor" aria-label="anchor" href="#load-dataset-and-extract-the-phenotypes-and-methylation-matrix"><i class="fas fa-link"></i></a>
 </h2>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">eset.cohort1</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="st">"H:/analyses/Course_Intro_to_EWAS/results/QC/subsets/GSE42861_norm_cohort1.Rds"</span><span class="op">)</span> </span>
+<span></span>
+<span><span class="va">pheno.cohort1</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/Biobase/man/phenoData.html">pData</a></span><span class="op">(</span><span class="va">eset.cohort1</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">pheno.cohort1</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [1] 294  10</code></pre>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">pheno.cohort1</span><span class="op">)</span></span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Celltype"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Age"],"name":[2],"type":["int"],"align":["right"]},{"label":["Sex"],"name":[3],"type":["chr"],"align":["left"]},{"label":["Smoking"],"name":[4],"type":["chr"],"align":["left"]},{"label":["Bcell"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["CD4T"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["CD8T"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["Mono"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["Neu"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["NK"],"name":[10],"type":["dbl"],"align":["right"]}],"data":[{"1":"PBL","2":"55","3":"M","4":"current","5":"0.05776289","6":"0.1247670","7":"0.1504868","8":"0.06491293","9":"0.5358684","10":"0.12265971","_rn_":"GSM1051533"},{"1":"PBL","2":"37","3":"M","4":"never","5":"0.04361658","6":"0.1745954","7":"0.1103084","8":"0.08771190","9":"0.5912413","10":"0.03415583","_rn_":"GSM1051534"},{"1":"PBL","2":"59","3":"M","4":"former","5":"0.08652383","6":"0.2567549","7":"0.1127774","8":"0.10776822","9":"0.3831736","10":"0.11577982","_rn_":"GSM1051536"},{"1":"PBL","2":"49","3":"M","4":"former","5":"0.05720053","6":"0.1568934","7":"0.1046096","8":"0.04774298","9":"0.6380837","10":"0.04546749","_rn_":"GSM1051537"},{"1":"PBL","2":"47","3":"M","4":"former","5":"0.03323647","6":"0.2066790","7":"0.0545260","8":"0.08125238","9":"0.5832287","10":"0.08392876","_rn_":"GSM1051538"},{"1":"PBL","2":"69","3":"M","4":"never","5":"0.03967494","6":"0.1508131","7":"0.1469707","8":"0.09975280","9":"0.5362770","10":"0.07770261","_rn_":"GSM1051539"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">methyl.cohort1</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/Biobase/man/exprs.html">exprs</a></span><span class="op">(</span><span class="va">eset.cohort1</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">methyl.cohort1</span><span class="op">)</span> </span></code></pre></div>
+<pre><code>## [1] 37842   294</code></pre>
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">methyl.cohort1</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span></code></pre></div>
+<pre><code>##            GSM1051533 GSM1051534 GSM1051536 GSM1051537 GSM1051538
+## cg02432075 0.09914671 0.05285574 0.11479000 0.09238820 0.05655322
+## cg03515901 0.90775178 0.91091962 0.91043927 0.89217759 0.91384704
+## cg04023335 0.64876572 0.53111687 0.57309345 0.37877619 0.59618924
+## cg08455548 0.07235159 0.07022040 0.09489939 0.08827584 0.06616870
+## cg00006815 0.04753770 0.05215979 0.04847625 0.06924370 0.03970845</code></pre>
+</div>
+<div id="run-ewas" class="section level2" number="3.3">
+<h2>
+<span class="header-section-number">3.3</span> Run EWAS<a class="anchor" aria-label="anchor" href="#run-ewas"><i class="fas fa-link"></i></a>
+</h2>
+<div id="option-1-never-vs-current" class="section level3" number="3.3.1">
+<h3>
+<span class="header-section-number">3.3.1</span> OPTION 1: Never vs Current<a class="anchor" aria-label="anchor" href="#option-1-never-vs-current"><i class="fas fa-link"></i></a>
+</h3>
+<div id="data-preparation" class="section level4" number="3.3.1.1">
+<h4>
+<span class="header-section-number">3.3.1.1</span> Data preparation<a class="anchor" aria-label="anchor" href="#data-preparation"><i class="fas fa-link"></i></a>
+</h4>
+<p>Subset the eset to never vs current smokers from Cohort1</p>
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">current</span> <span class="op">&lt;-</span> <span class="va">pheno.cohort1</span><span class="op">[</span><span class="va">pheno.cohort1</span><span class="op">$</span><span class="va">Smoking</span> <span class="op"><a href="https://rdrr.io/pkg/BiocGenerics/man/match.html">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'never'</span>,<span class="st">'current'</span><span class="op">)</span>,<span class="op">]</span> <span class="co">#subset the phenodata to individuals that never or current smoke</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">current</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [1] 188  10</code></pre>
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">eset.current</span> <span class="op">&lt;-</span> <span class="va">eset.cohort1</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/row_colnames.html">rownames</a></span><span class="op">(</span><span class="va">current</span><span class="op">)</span><span class="op">]</span> <span class="co">#subset the eset</span></span>
+<span><span class="va">eset.current</span></span></code></pre></div>
+<pre><code>## ExpressionSet (storageMode: lockedEnvironment)
+## assayData: 37842 features, 188 samples 
+##   element names: exprs 
+## protocolData: none
+## phenoData
+##   sampleNames: GSM1051533 GSM1051534 ... GSM1052213 (188 total)
+##   varLabels: Celltype Age ... NK (10 total)
+##   varMetadata: labelDescription
+## featureData: none
+## experimentData: use 'experimentData(object)'
+## Annotation:</code></pre>
+<p>Extract methylation</p>
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">methyl.current</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/Biobase/man/exprs.html">exprs</a></span><span class="op">(</span><span class="va">eset.current</span><span class="op">)</span></span></code></pre></div>
+<p>Extract phenodata with never and current smokers</p>
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">pheno.current</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/Biobase/man/phenoData.html">pData</a></span><span class="op">(</span><span class="va">eset.current</span><span class="op">)</span></span>
+<span><span class="va">pheno.current</span><span class="op">$</span><span class="va">Smoking</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/character.html">as.character</a></span><span class="op">(</span><span class="va">pheno.current</span><span class="op">$</span><span class="va">Smoking</span><span class="op">)</span></span>
+<span><span class="va">pheno.current</span><span class="op">$</span><span class="va">Smoking</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">pheno.current</span><span class="op">$</span><span class="va">Smoking</span><span class="op">)</span></span></code></pre></div>
+<p>Check the levels. We want “never” to be the reference level</p>
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/S4Vectors/man/Factor-class.html">levels</a></span><span class="op">(</span><span class="va">pheno.current</span><span class="op">$</span><span class="va">Smoking</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [1] "current" "never"</code></pre>
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">pheno.current</span><span class="op">$</span><span class="va">Smoking</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/relevel.html">relevel</a></span><span class="op">(</span><span class="va">pheno.current</span><span class="op">$</span><span class="va">Smoking</span>, <span class="st">"never"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/S4Vectors/man/Factor-class.html">levels</a></span><span class="op">(</span><span class="va">pheno.current</span><span class="op">$</span><span class="va">Smoking</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [1] "never"   "current"</code></pre>
+<p>Select the exposure variable</p>
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">variable</span> <span class="op">&lt;-</span> <span class="va">pheno.current</span><span class="op">$</span><span class="va">Smoking</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">variable</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [1] "factor"</code></pre>
+<p>Select the covariates of interest for the EWAS. We are interested in sex, age
+and cell type proportions</p>
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">pheno.current</span><span class="op">$</span><span class="va">Age</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [1] "integer"</code></pre>
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">pheno.current</span><span class="op">$</span><span class="va">Sex</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [1] "character"</code></pre>
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">pheno.current</span><span class="op">$</span><span class="va">Bcell</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [1] "numeric"</code></pre>
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">pheno.current</span><span class="op">$</span><span class="va">CD4T</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [1] "numeric"</code></pre>
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">pheno.current</span><span class="op">$</span><span class="va">CD8T</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [1] "numeric"</code></pre>
+<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">pheno.current</span><span class="op">$</span><span class="va">Mono</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [1] "numeric"</code></pre>
+<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">pheno.current</span><span class="op">$</span><span class="va">Neu</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [1] "numeric"</code></pre>
+<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">pheno.current</span><span class="op">$</span><span class="va">NK</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [1] "numeric"</code></pre>
+<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">pheno.current</span><span class="op">$</span><span class="va">Sex</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">pheno.current</span><span class="op">$</span><span class="va">Sex</span><span class="op">)</span></span>
+<span><span class="va">covariates</span> <span class="op">&lt;-</span> <span class="va">pheno.current</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Age"</span>,<span class="st">"Sex"</span>,<span class="st">"Bcell"</span>,<span class="st">"CD4T"</span>,<span class="st">"CD8T"</span>,<span class="st">"Mono"</span>,<span class="st">"Neu"</span>,<span class="st">"NK"</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
+<p>Check order of the samples between the pheno and the mehtylation matrix.</p>
+<div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/table.html">table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/row_colnames.html">rownames</a></span><span class="op">(</span><span class="va">pheno.current</span><span class="op">)</span><span class="op">==</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/row_colnames.html">colnames</a></span><span class="op">(</span><span class="va">methyl.current</span><span class="op">)</span>,<span class="st">"Matched"</span>,<span class="st">"--NOT MATCHED--"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## 
+## Matched 
+##     188</code></pre>
+</div>
+<div id="ewas" class="section level4" number="3.3.1.2">
+<h4>
+<span class="header-section-number">3.3.1.2</span> EWAS<a class="anchor" aria-label="anchor" href="#ewas"><i class="fas fa-link"></i></a>
+</h4>
+<p>To run the EWAS we will use the function meffil.ewas from meffil R package. We need as arguments:</p>
+<ul>
+<li>Methylattion matrix</li>
+<li>vector with the exposure variables</li>
+<li>A vector with the name of the covariables that we want to include</li>
+<li>As we want to run a robust linear regression model, we need to specify “TRUE” in the argument “rlm”</li>
+<li>To reduce the impact of severe outliers in the DNA methylation data, we will winsorize the methylation beta values (1%), with 0.5% at upper and lower ends of the distribution (Ghosh &amp; Vogt, 2012)</li>
+<li>SVA variables. Argument sva (by default TRUE). This function will calculate surrogate variables to adjust our model.</li>
+</ul>
+<div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ewas.current</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/meffil/man/meffil.ewas.html">meffil.ewas</a></span><span class="op">(</span><span class="va">methyl.current</span>,</span>
+<span>                            variable<span class="op">=</span><span class="va">variable</span>,</span>
+<span>                            covariates<span class="op">=</span><span class="va">covariates</span>,</span>
+<span>                            rlm<span class="op">=</span><span class="cn">TRUE</span>,</span>
+<span>                            winsorize.pct<span class="op">=</span><span class="fl">0.05</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## Number of significant surrogate variables is:  31 
+## Iteration (out of 5 ):1  2  3  4  5</code></pre>
+</div>
+<div id="results" class="section level4" number="3.3.1.3">
+<h4>
+<span class="header-section-number">3.3.1.3</span> Results<a class="anchor" aria-label="anchor" href="#results"><i class="fas fa-link"></i></a>
+</h4>
+<p>We obtain an object with different information</p>
+<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">ewas.current</span><span class="op">)</span></span></code></pre></div>
+<pre><code>##                    Length Class           Mode     
+## class                   1 -none-          character
+## version                 1 package_version list     
+## samples               188 -none-          character
+## variable              188 factor          numeric  
+## covariates              8 data.frame      list     
+## winsorize.pct           1 -none-          numeric  
+## batch                   0 -none-          NULL     
+## robust                  1 -none-          logical  
+## rlm                     1 -none-          logical  
+## weights                 0 -none-          NULL     
+## outlier.iqr.factor      1 -none-          logical  
+## most.variable           1 -none-          numeric  
+## p.value            113526 -none-          numeric  
+## coefficient        113526 -none-          numeric  
+## analyses                3 -none-          list     
+## random.seed             1 -none-          numeric  
+## sva.ret                 4 -none-          list</code></pre>
+<p>We are interested in the EWAS results. This function calculated the results without adjusted for covariates, adjusted for the covariates we specified above
+and also adjusted by the surrogate variables to correct the batch (noise)</p>
+<div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">ewas.current</span><span class="op">$</span><span class="va">analyses</span><span class="op">)</span></span></code></pre></div>
+<pre><code>##      Length Class  Mode
+## none 5      -none- list
+## all  5      -none- list
+## sva  5      -none- list</code></pre>
+<p>We will use the results from the analysis adjusted for SVA</p>
+<div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">res.current</span><span class="op">&lt;-</span><span class="va">ewas.current</span><span class="op">$</span><span class="va">analyses</span><span class="op">$</span><span class="va">sva</span></span>
+<span><span class="va">res.current</span><span class="op">&lt;-</span><span class="va">res.current</span><span class="op">$</span><span class="va">table</span></span></code></pre></div>
+<p>Create a column with the Probe ID, which is in the rows of the results dataframe</p>
+<div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">res.current</span><span class="op">$</span><span class="va">probeID</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/row_colnames.html">rownames</a></span><span class="op">(</span><span class="va">res.current</span><span class="op">)</span></span></code></pre></div>
+<p>We order the results by p.value</p>
+<div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">res.current.ord</span><span class="op">&lt;-</span><span class="va">res.current</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/order.html">order</a></span><span class="op">(</span><span class="va">res.current</span><span class="op">$</span><span class="va">p.value</span><span class="op">)</span>,<span class="op">]</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">res.current.ord</span><span class="op">)</span></span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["p.value"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["fdr"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["p.holm"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["t.statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["coefficient"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["coefficient.ci.high"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["coefficient.ci.low"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["coefficient.se"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["n"],"name":[9],"type":["int"],"align":["right"]},{"label":["chromosome"],"name":[10],"type":["chr"],"align":["left"]},{"label":["position"],"name":[11],"type":["int"],"align":["right"]},{"label":["probeID"],"name":[12],"type":["chr"],"align":["left"]}],"data":[{"1":"3.449766e-31","2":"1.305460e-26","3":"1.305460e-26","4":"-14.86574","5":"-0.15723240","6":"-0.13633175","7":"-0.17813305","8":"0.010576833","9":"188","10":"chr5","11":"373378","12":"cg05575921","_rn_":"cg05575921"},{"1":"8.297569e-26","2":"1.569983e-21","3":"3.139883e-21","4":"-12.82375","5":"-0.11908682","6":"-0.10073611","7":"-0.13743753","8":"0.009286429","9":"188","10":"chr2","11":"233284661","12":"cg21566642","_rn_":"cg21566642"},{"1":"1.396044e-25","2":"1.760970e-21","3":"5.282632e-21","4":"-12.73874","5":"-0.07262148","6":"-0.06135618","7":"-0.08388678","8":"0.005700836","9":"188","10":"chr19","11":"17000585","12":"cg03636183","_rn_":"cg03636183"},{"1":"2.110764e-24","2":"1.996888e-20","3":"7.986920e-20","4":"-12.29542","5":"-0.09316890","6":"-0.07819510","7":"-0.10814269","8":"0.007577530","9":"188","10":"chr2","11":"233284402","12":"cg05951221","_rn_":"cg05951221"},{"1":"1.992495e-23","2":"1.508000e-19","3":"7.539204e-19","4":"-11.92927","5":"-0.07652157","6":"-0.06384580","7":"-0.08919733","8":"0.006414607","9":"188","10":"chr2","11":"233284934","12":"cg01940273","_rn_":"cg01940273"},{"1":"1.392884e-21","2":"8.784917e-18","3":"5.270253e-17","4":"-11.23603","5":"-0.16467216","6":"-0.13571130","7":"-0.19363302","8":"0.014655727","9":"188","10":"chr5","11":"373299","12":"cg23576855","_rn_":"cg23576855"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<div class="sourceCode" id="cb76"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/row_colnames.html">colnames</a></span><span class="op">(</span><span class="va">res.current.ord</span><span class="op">)</span></span></code></pre></div>
+<pre><code>##  [1] "p.value"             "fdr"                 "p.holm"              "t.statistic"         "coefficient"        
+##  [6] "coefficient.ci.high" "coefficient.ci.low"  "coefficient.se"      "n"                   "chromosome"         
+## [11] "position"            "probeID"</code></pre>
+<p>The column names stand for:
+- p.value: pval significance of the association
+- fdr: p.value corrected by the FALSE DISCOVERY RATE method
+- p.holm: we are not going to use. p.value corrected by Holm-Bonferroni method
+- “t.statistic”<br>
+- coefficient: coefficient of the association. In this case is OR. the effect or beta
+- coefficient.ci.high: confidence interval up
+- coefficient.ci.low: confindence interval down
+- coefficient.se: standard error of the coefficient
+- n: sample size included in the analysis
+- chromosome
+- position: position of the CpG in the genome (hg19)</p>
+<p>We can save the results</p>
+<div class="sourceCode" id="cb78"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html">write.table</a></span><span class="op">(</span><span class="va">res.current.ord</span>,</span>
+<span>            <span class="st">"H:/analyses/Course_Intro_to_EWAS/results/Results.EWAS.cohort1.NeverVScurrent.txt"</span>,</span>
+<span>            sep<span class="op">=</span><span class="st">","</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div id="report" class="section level4" number="3.3.1.4">
+<h4>
+<span class="header-section-number">3.3.1.4</span> Report<a class="anchor" aria-label="anchor" href="#report"><i class="fas fa-link"></i></a>
+</h4>
+<p>For this report you will need to specify the CpGs you are interested in. Today
+we will select “cg05575921” that is annotated to AHRR gene and it is well known
+for its association with tabbacco.</p>
+<div class="sourceCode" id="cb79"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ewas.parameters</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/meffil/man/meffil.ewas.parameters.html">meffil.ewas.parameters</a></span><span class="op">(</span>max.plots <span class="op">=</span> <span class="fl">1</span>,model<span class="op">=</span><span class="st">"sva"</span><span class="op">)</span> <span class="co">#by default uses pval/ number of tests</span></span>
+<span><span class="va">candidate.site</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"cg05575921"</span><span class="op">)</span></span>
+<span><span class="va">ewas.summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/meffil/man/meffil.ewas.summary.html">meffil.ewas.summary</a></span><span class="op">(</span><span class="va">ewas.current</span>,</span>
+<span>                                    <span class="va">methyl.current</span>,</span>
+<span>                                    selected.cpg.sites<span class="op">=</span><span class="va">candidate.site</span>,</span>
+<span>                                    parameters<span class="op">=</span><span class="va">ewas.parameters</span><span class="op">)</span>                             </span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/meffil/man/meffil.ewas.report.html">meffil.ewas.report</a></span><span class="op">(</span><span class="va">ewas.summary</span>, output.file<span class="op">=</span><span class="st">"H:/analyses/Course_Intro_to_EWAS/results/EWAS.results/Reports/Report.EWAS.cohort1.NeverVScurrent.html"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div id="plots" class="section level4" number="3.3.1.5">
+<h4>
+<span class="header-section-number">3.3.1.5</span> Plots<a class="anchor" aria-label="anchor" href="#plots"><i class="fas fa-link"></i></a>
+</h4>
+<p>Lambda and QQplot</p>
+<div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">pvals.current</span><span class="op">&lt;-</span><span class="va">res.current.ord</span><span class="op">$</span><span class="va">p.value</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/qqman/man/qq.html">qq</a></span><span class="op">(</span><span class="va">pvals.current</span>,main<span class="op">=</span><span class="op">(</span><span class="st">"QQPlot EWAS cohort 1 smoking Never VS Current"</span><span class="op">)</span><span class="op">)</span> </span></code></pre></div>
+<div class="inline-figure"><img src="_main_files/figure-html/qqplot-1.png" width="576" style="display: block; margin: auto;"></div>
+<div class="sourceCode" id="cb81"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">res.current.sig</span><span class="op">&lt;-</span><span class="va">res.current.ord</span><span class="op">[</span><span class="va">res.current.ord</span><span class="op">$</span><span class="va">fdr</span> <span class="op">&lt;</span> <span class="fl">0.05</span>,<span class="op">]</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">res.current.sig</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [1] 289  12</code></pre>
+<div class="sourceCode" id="cb83"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">res.current.sig</span><span class="op">)</span></span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["p.value"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["fdr"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["p.holm"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["t.statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["coefficient"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["coefficient.ci.high"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["coefficient.ci.low"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["coefficient.se"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["n"],"name":[9],"type":["int"],"align":["right"]},{"label":["chromosome"],"name":[10],"type":["chr"],"align":["left"]},{"label":["position"],"name":[11],"type":["int"],"align":["right"]},{"label":["probeID"],"name":[12],"type":["chr"],"align":["left"]}],"data":[{"1":"3.449766e-31","2":"1.305460e-26","3":"1.305460e-26","4":"-14.86574","5":"-0.15723240","6":"-0.13633175","7":"-0.17813305","8":"0.010576833","9":"188","10":"chr5","11":"373378","12":"cg05575921","_rn_":"cg05575921"},{"1":"8.297569e-26","2":"1.569983e-21","3":"3.139883e-21","4":"-12.82375","5":"-0.11908682","6":"-0.10073611","7":"-0.13743753","8":"0.009286429","9":"188","10":"chr2","11":"233284661","12":"cg21566642","_rn_":"cg21566642"},{"1":"1.396044e-25","2":"1.760970e-21","3":"5.282632e-21","4":"-12.73874","5":"-0.07262148","6":"-0.06135618","7":"-0.08388678","8":"0.005700836","9":"188","10":"chr19","11":"17000585","12":"cg03636183","_rn_":"cg03636183"},{"1":"2.110764e-24","2":"1.996888e-20","3":"7.986920e-20","4":"-12.29542","5":"-0.09316890","6":"-0.07819510","7":"-0.10814269","8":"0.007577530","9":"188","10":"chr2","11":"233284402","12":"cg05951221","_rn_":"cg05951221"},{"1":"1.992495e-23","2":"1.508000e-19","3":"7.539204e-19","4":"-11.92927","5":"-0.07652157","6":"-0.06384580","7":"-0.08919733","8":"0.006414607","9":"188","10":"chr2","11":"233284934","12":"cg01940273","_rn_":"cg01940273"},{"1":"1.392884e-21","2":"8.784917e-18","3":"5.270253e-17","4":"-11.23603","5":"-0.16467216","6":"-0.13571130","7":"-0.19363302","8":"0.014655727","9":"188","10":"chr5","11":"373299","12":"cg23576855","_rn_":"cg23576855"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<div class="sourceCode" id="cb84"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">res.current.sig</span><span class="op">[</span><span class="va">res.current.sig</span><span class="op">$</span><span class="va">coefficient</span> <span class="op">&lt;</span><span class="fl">0</span>,<span class="op">]</span><span class="op">)</span> </span></code></pre></div>
+<pre><code>## [1] 164  12</code></pre>
+<div class="sourceCode" id="cb86"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">res.current.sig</span><span class="op">[</span><span class="va">res.current.sig</span><span class="op">$</span><span class="va">coefficient</span> <span class="op">&gt;</span><span class="fl">0</span>,<span class="op">]</span><span class="op">)</span> </span></code></pre></div>
+<pre><code>## [1] 125  12</code></pre>
+<p>Volcano plot</p>
+<div class="sourceCode" id="cb88"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">res.current.ord</span><span class="op">)</span></span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["p.value"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["fdr"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["p.holm"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["t.statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["coefficient"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["coefficient.ci.high"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["coefficient.ci.low"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["coefficient.se"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["n"],"name":[9],"type":["int"],"align":["right"]},{"label":["chromosome"],"name":[10],"type":["chr"],"align":["left"]},{"label":["position"],"name":[11],"type":["int"],"align":["right"]},{"label":["probeID"],"name":[12],"type":["chr"],"align":["left"]}],"data":[{"1":"3.449766e-31","2":"1.305460e-26","3":"1.305460e-26","4":"-14.86574","5":"-0.15723240","6":"-0.13633175","7":"-0.17813305","8":"0.010576833","9":"188","10":"chr5","11":"373378","12":"cg05575921","_rn_":"cg05575921"},{"1":"8.297569e-26","2":"1.569983e-21","3":"3.139883e-21","4":"-12.82375","5":"-0.11908682","6":"-0.10073611","7":"-0.13743753","8":"0.009286429","9":"188","10":"chr2","11":"233284661","12":"cg21566642","_rn_":"cg21566642"},{"1":"1.396044e-25","2":"1.760970e-21","3":"5.282632e-21","4":"-12.73874","5":"-0.07262148","6":"-0.06135618","7":"-0.08388678","8":"0.005700836","9":"188","10":"chr19","11":"17000585","12":"cg03636183","_rn_":"cg03636183"},{"1":"2.110764e-24","2":"1.996888e-20","3":"7.986920e-20","4":"-12.29542","5":"-0.09316890","6":"-0.07819510","7":"-0.10814269","8":"0.007577530","9":"188","10":"chr2","11":"233284402","12":"cg05951221","_rn_":"cg05951221"},{"1":"1.992495e-23","2":"1.508000e-19","3":"7.539204e-19","4":"-11.92927","5":"-0.07652157","6":"-0.06384580","7":"-0.08919733","8":"0.006414607","9":"188","10":"chr2","11":"233284934","12":"cg01940273","_rn_":"cg01940273"},{"1":"1.392884e-21","2":"8.784917e-18","3":"5.270253e-17","4":"-11.23603","5":"-0.16467216","6":"-0.13571130","7":"-0.19363302","8":"0.014655727","9":"188","10":"chr5","11":"373299","12":"cg23576855","_rn_":"cg23576855"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<div class="sourceCode" id="cb89"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">res.current.ord</span><span class="op">$</span><span class="va">diffexpressed</span> <span class="op">&lt;-</span> <span class="st">"NO"</span></span>
+<span><span class="va">res.current.ord</span><span class="op">$</span><span class="va">diffexpressed</span><span class="op">[</span><span class="va">res.current.ord</span><span class="op">$</span><span class="va">coefficient</span> <span class="op">&gt;</span> <span class="fl">0</span> <span class="op">&amp;</span> <span class="va">res.current.ord</span><span class="op">$</span><span class="va">fdr</span> <span class="op">&lt;</span><span class="fl">0.05</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"POSITIVE"</span></span>
+<span><span class="va">res.current.ord</span><span class="op">$</span><span class="va">diffexpressed</span><span class="op">[</span><span class="va">res.current.ord</span><span class="op">$</span><span class="va">coefficient</span> <span class="op">&lt;</span> <span class="fl">0</span> <span class="op">&amp;</span> <span class="va">res.current.ord</span><span class="op">$</span><span class="va">fdr</span> <span class="op">&lt;</span><span class="fl">0.05</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"NEGATIVE"</span></span>
+<span></span>
+<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">res.current.ord</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">res.current.ord</span><span class="op">$</span><span class="va">coefficient</span>, y<span class="op">=</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">log10</a></span><span class="op">(</span><span class="va">res.current.ord</span><span class="op">$</span><span class="va">p.value</span><span class="op">)</span>, col<span class="op">=</span><span class="va">res.current.ord</span><span class="op">$</span><span class="va">diffexpressed</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html">xlim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.3</span>,<span class="fl">0.3</span><span class="op">)</span><span class="op">)</span><span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html">ylim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">35</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">" "</span>, x <span class="op">=</span> <span class="st">"beta"</span>, y <span class="op">=</span> <span class="st">"-log10(P-value)"</span>, colour <span class="op">=</span> <span class="st">"Effect"</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>axis.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span>, color <span class="op">=</span> <span class="st">"black"</span>,vjust<span class="op">=</span><span class="fl">0.5</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span>,face<span class="op">=</span><span class="st">"bold"</span>,color<span class="op">=</span><span class="st">"black"</span>, hjust<span class="op">=</span> <span class="fl">0.5</span>, vjust<span class="op">=</span><span class="fl">0.5</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>legend.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"black"</span>, size <span class="op">=</span> <span class="fl">14</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span><span class="co"># Add lines as before...</span></span>
+<span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_hline</a></span><span class="op">(</span>yintercept<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">log10</a></span><span class="op">(</span><span class="fl">3.8e-04</span><span class="op">)</span><span class="op">)</span>, col<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"red"</span><span class="op">)</span>,linetype <span class="op">=</span> <span class="st">"dashed"</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>axis.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">mycolors</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"#157F8D"</span>,<span class="st">"#AF8D9B"</span>, <span class="st">"grey"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">mycolors</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"POSITIVE"</span>, <span class="st">"NEGATIVE"</span>, <span class="st">"NO"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">p3</span> <span class="op">&lt;-</span> <span class="va">p2</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_colour_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="va">mycolors</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">p3</span></span></code></pre></div>
+<div class="inline-figure">
+<img src="_main_files/figure-html/volcano-1.png" width="576" style="display: block; margin: auto;">
+Manhattan plot</div>
+<div class="sourceCode" id="cb90"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Create a dataframe with chr, start, end and pval</span></span>
+<span><span class="va">df.current</span><span class="op">&lt;-</span><span class="va">res.current.ord</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"chromosome"</span>,<span class="st">"position"</span>,<span class="st">"p.value"</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">df.current</span><span class="op">)</span></span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["chromosome"],"name":[1],"type":["chr"],"align":["left"]},{"label":["position"],"name":[2],"type":["int"],"align":["right"]},{"label":["p.value"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"chr5","2":"373378","3":"3.449766e-31","_rn_":"cg05575921"},{"1":"chr2","2":"233284661","3":"8.297569e-26","_rn_":"cg21566642"},{"1":"chr19","2":"17000585","3":"1.396044e-25","_rn_":"cg03636183"},{"1":"chr2","2":"233284402","3":"2.110764e-24","_rn_":"cg05951221"},{"1":"chr2","2":"233284934","3":"1.992495e-23","_rn_":"cg01940273"},{"1":"chr5","2":"373299","3":"1.392884e-21","_rn_":"cg23576855"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<div class="sourceCode" id="cb91"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">df.current</span><span class="op">$</span><span class="va">start</span><span class="op">&lt;-</span><span class="va">df.current</span><span class="op">$</span><span class="va">position</span> </span>
+<span><span class="va">df.current</span><span class="op">$</span><span class="va">end</span><span class="op">&lt;-</span><span class="va">df.current</span><span class="op">$</span><span class="va">position</span> <span class="op">+</span> <span class="fl">1</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/row_colnames.html">colnames</a></span><span class="op">(</span><span class="va">df.current</span><span class="op">)</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"chr"</span>,<span class="st">"position"</span>,<span class="st">"p.value"</span>,<span class="st">"start"</span>,<span class="st">"end"</span><span class="op">)</span></span>
+<span><span class="va">df.current</span><span class="op">&lt;-</span><span class="va">df.current</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"chr"</span>,<span class="st">"start"</span>,<span class="st">"end"</span>,<span class="st">"p.value"</span><span class="op">)</span><span class="op">]</span></span>
+<span></span>
+<span><span class="co"># Create GRanges object needed </span></span>
+<span><span class="va">df.GRanges</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/GenomicRanges/man/makeGRangesFromDataFrame.html">makeGRangesFromDataFrame</a></span><span class="op">(</span><span class="va">df.current</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">kp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/karyoploteR/man/plotKaryotype.html">plotKaryotype</a></span><span class="op">(</span>plot.type<span class="op">=</span><span class="fl">4</span>, labels.plotter <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span><span class="va">kp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/karyoploteR/man/kpAddChromosomeNames.html">kpAddChromosomeNames</a></span><span class="op">(</span><span class="va">kp</span>, cex<span class="op">=</span><span class="fl">0.6</span>, srt<span class="op">=</span><span class="fl">45</span><span class="op">)</span></span>
+<span><span class="va">kp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/karyoploteR/man/kpPlotManhattan.html">kpPlotManhattan</a></span><span class="op">(</span><span class="va">kp</span>, data<span class="op">=</span><span class="va">df.GRanges</span>,pval<span class="op">=</span><span class="va">df.current</span><span class="op">$</span><span class="va">p.value</span>, ymax<span class="op">=</span><span class="fl">40</span>,genomewideline <span class="op">=</span><span class="fl">3.42</span><span class="op">)</span></span>
+<span><span class="va">kp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/karyoploteR/man/kpAxis.html">kpAxis</a></span><span class="op">(</span><span class="va">kp</span>, ymin<span class="op">=</span><span class="fl">0</span>, ymax<span class="op">=</span><span class="fl">40</span>, cex<span class="op">=</span><span class="fl">0.7</span><span class="op">)</span></span></code></pre></div>
+<div class="inline-figure"><img src="_main_files/figure-html/manhattan-1.png" width="100%" style="display: block; margin: auto;"></div>
 
+</div>
+</div>
 </div>
 </div>
   <div class="chapter-nav">
@@ -84,8 +412,11 @@
     <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
       <ul class="nav navbar-nav">
 <li><a class="nav-link" href="#epigenome-wide-association-study-ewas"><span class="header-section-number">3</span> Epigenome-wide association study (EWAS)</a></li>
-<li><a class="nav-link" href="#statistical-methods"><span class="header-section-number">3.1</span> Statistical methods</a></li>
-<li><a class="nav-link" href="#visualisation-of-results-qq-plot-manhattan-volcano"><span class="header-section-number">3.2</span> Visualisation of results: QQ-plot, Manhattan, Volcano</a></li>
+<li><a class="nav-link" href="#install-and-load-packages"><span class="header-section-number">3.1</span> Install and load packages</a></li>
+<li><a class="nav-link" href="#load-dataset-and-extract-the-phenotypes-and-methylation-matrix"><span class="header-section-number">3.2</span> Load dataset and extract the phenotypes and methylation matrix</a></li>
+<li>
+<a class="nav-link" href="#run-ewas"><span class="header-section-number">3.3</span> Run EWAS</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#option-1-never-vs-current"><span class="header-section-number">3.3.1</span> OPTION 1: Never vs Current</a></li></ul>
+</li>
 </ul>
 
       <div class="book-extra">
@@ -104,7 +435,7 @@
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Introduction to Epigenome-Wide Association Studies (EWAS)</strong>" was written by Juan R. González, Mariona Bustamante, Sofía Aguilar &amp; Laura Balagué. It was last built on 2023-08-28.</p>
+    <p>"<strong>Introduction to Epigenome-Wide Association Studies (EWAS)</strong>" was written by Juan R. González, Mariona Bustamante, Sofía Aguilar &amp; Laura Balagué. It was last built on 2023-08-29.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

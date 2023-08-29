@@ -1,6 +1,234 @@
 # Epigenome-wide association study (EWAS)
-We will explain how to conduct an EWAS:
+In this chapter we will run an Epigenome-wide association study (EWAS)
 
-## Statistical methods
-## Visualisation of results: QQ-plot, Manhattan, Volcano
+## Install and load packages
+```{r librariesinstall, eval=FALSE}
+if (!require("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+
+BiocManager::install("Biobase")
+BiocManager::install("GenomicRanges")
+BiocManager::install("karyoploteR")
+
+install.packages("devtools")
+devtools::install_github("perishky/meffil")
+install.packages(c("qqman","ggplot2","ggrepel"))
+```
+```{r librariesload}
+library(Biobase)# to be able to access and modify data in the ExpressionSet
+library(meffil) # to run the EWAS
+library(qqman) # to get QQ plots
+library(ggplot2)# plots
+library(ggrepel)
+library(GenomicRanges) # prepare db for Manhattan plot
+library(karyoploteR)
+```
+
+## Load dataset and extract the phenotypes and methylation matrix
+```{r load}
+eset.cohort1<-readRDS("H:/analyses/Course_Intro_to_EWAS/results/QC/subsets/GSE42861_norm_cohort1.Rds") 
+
+pheno.cohort1<-pData(eset.cohort1)
+dim(pheno.cohort1)
+head(pheno.cohort1)
+
+methyl.cohort1<-exprs(eset.cohort1)
+dim(methyl.cohort1) 
+methyl.cohort1[1:5,1:5]
+```
+
+## Run EWAS
+### OPTION 1: Never vs Current
+#### Data preparation
+Subset the eset to never vs current smokers from Cohort1 
+```{r subset}
+current <- pheno.cohort1[pheno.cohort1$Smoking %in% c('never','current'),] #subset the phenodata to individuals that never or current smoke
+dim(current)
+eset.current <- eset.cohort1[,rownames(current)] #subset the eset
+eset.current
+```
+
+Extract methylation
+```{r methylcurrent}
+methyl.current<-exprs(eset.current)
+```
+
+Extract phenodata with never and current smokers
+```{r phenocurrent}
+pheno.current<-pData(eset.current)
+pheno.current$Smoking<-as.character(pheno.current$Smoking)
+pheno.current$Smoking<-as.factor(pheno.current$Smoking)
+```
+
+Check the levels. We want "never" to be the reference level
+```{r levels}
+levels(pheno.current$Smoking)
+pheno.current$Smoking <- relevel(pheno.current$Smoking, "never")
+levels(pheno.current$Smoking)
+```
+Select the exposure variable
+```{r variable}
+variable <- pheno.current$Smoking
+class(variable)
+```
+Select the covariates of interest for the EWAS. We are interested in sex, age 
+and cell type proportions
+```{r covs}
+class(pheno.current$Age)
+class(pheno.current$Sex)
+class(pheno.current$Bcell)
+class(pheno.current$CD4T)
+class(pheno.current$CD8T)
+class(pheno.current$Mono)
+class(pheno.current$Neu)
+class(pheno.current$NK)
+pheno.current$Sex<-as.factor(pheno.current$Sex)
+covariates <- pheno.current[,c("Age","Sex","Bcell","CD4T","CD8T","Mono","Neu","NK")]
+```
+
+Check order of the samples between the pheno and the mehtylation matrix.
+```{r check}
+table(ifelse(rownames(pheno.current)==colnames(methyl.current),"Matched","--NOT MATCHED--"))
+```
+#### EWAS
+To run the EWAS we will use the function meffil.ewas from meffil R package. We need as arguments:
+
+- Methylattion matrix
+- vector with the exposure variables
+- A vector with the name of the covariables that we want to include
+- As we want to run a robust linear regression model, we need to specify "TRUE" in the argument "rlm"
+- To reduce the impact of severe outliers in the DNA methylation data, we will winsorize the methylation beta values (1%), with 0.5% at upper and lower ends of the distribution (Ghosh & Vogt, 2012)
+- SVA variables. Argument sva (by default TRUE). This function will calculate surrogate variables to adjust our model. 
+
+```{r ewas, warning=FALSE, message=FALSE}
+ewas.current <- meffil.ewas(methyl.current,
+                            variable=variable,
+                            covariates=covariates,
+                            rlm=TRUE,
+                            winsorize.pct=0.05)
+```
+
+#### Results
+We obtain an object with different information
+```{r summary1, warning=FALSE, message=FALSE}
+summary(ewas.current)
+```
+We are interested in the EWAS results. This function calculated the results  without adjusted for covariates, adjusted for the covariates we specified above
+and also adjusted by the surrogate variables to correct the batch (noise)
+```{r summary2}
+summary(ewas.current$analyses)
+```
+We will use the results from the analysis adjusted for SVA
+```{r res}
+res.current<-ewas.current$analyses$sva
+res.current<-res.current$table
+```
+Create a column with the Probe ID, which is in the rows of the results dataframe
+```{r probeid}
+res.current$probeID<-rownames(res.current)
+```
+
+We order the results by p.value
+```{r order}
+res.current.ord<-res.current[order(res.current$p.value),]
+head(res.current.ord)
+colnames(res.current.ord)
+```
+The column names stand for:
+- p.value: pval significance of the association
+- fdr: p.value corrected by the FALSE DISCOVERY RATE method
+- p.holm: we are not going to use. p.value corrected by Holm-Bonferroni method
+- "t.statistic"   
+- coefficient: coefficient of the association. In this case is OR. the effect or beta
+- coefficient.ci.high: confidence interval up 
+- coefficient.ci.low: confindence interval down
+- coefficient.se:  standard error of the coefficient
+- n: sample size included in the analysis
+- chromosome
+- position: position of the CpG in the genome (hg19)         
+
+We can save the results
+```{r saveewas, eval=FALSE}
+write.table(res.current.ord,
+            "H:/analyses/Course_Intro_to_EWAS/results/Results.EWAS.cohort1.NeverVScurrent.txt",
+            sep=",")
+
+```
+
+#### Report
+For this report you will need to specify the CpGs you are interested in. Today
+we will select "cg05575921" that is annotated to AHRR gene and it is well known
+for its association with tabbacco. 
+
+```{r report, eval=FALSE}
+ewas.parameters <- meffil.ewas.parameters(max.plots = 1,model="sva") #by default uses pval/ number of tests
+candidate.site <- c("cg05575921")
+ewas.summary <- meffil.ewas.summary(ewas.current,
+                                    methyl.current,
+                                    selected.cpg.sites=candidate.site,
+                                    parameters=ewas.parameters)								
+meffil.ewas.report(ewas.summary, output.file="H:/analyses/Course_Intro_to_EWAS/results/EWAS.results/Reports/Report.EWAS.cohort1.NeverVScurrent.html")
+```
+
+#### Plots
+Lambda and QQplot
+```{r qqplot}
+pvals.current<-res.current.ord$p.value
+qq(pvals.current,main=("QQPlot EWAS cohort 1 smoking Never VS Current")) 
+
+res.current.sig<-res.current.ord[res.current.ord$fdr < 0.05,]
+dim(res.current.sig)
+head(res.current.sig)
+     
+dim(res.current.sig[res.current.sig$coefficient <0,]) 
+dim(res.current.sig[res.current.sig$coefficient >0,]) 
+
+```
+
+Volcano plot
+```{r volcano, warnings=FALSE, message=FALSE}
+head(res.current.ord)
+
+res.current.ord$diffexpressed <- "NO"
+res.current.ord$diffexpressed[res.current.ord$coefficient > 0 & res.current.ord$fdr <0.05] <- "POSITIVE"
+res.current.ord$diffexpressed[res.current.ord$coefficient < 0 & res.current.ord$fdr <0.05] <- "NEGATIVE"
+
+p <- ggplot(data=res.current.ord, aes(x=res.current.ord$coefficient, y=-log10(res.current.ord$p.value), col=res.current.ord$diffexpressed)) +
+  xlim(c(-0.3,0.3))+ ylim(c(0,35)) + 
+  geom_point(size = 2) + theme_minimal() +
+  labs(title = " ", x = "beta", y = "-log10(P-value)", colour = "Effect") + 
+  theme(axis.title = element_text(size = 14, color = "black",vjust=0.5)) + 
+  theme(plot.title = element_text(size = 14,face="bold",color="black", hjust= 0.5, vjust=0.5)) + 
+  theme(legend.title = element_text(color = "black", size = 14))
+
+
+# Add lines as before...
+p2 <- p + geom_hline(yintercept=c(-log10(3.8e-04)), col=c("red"),linetype = "dashed") + 
+  theme(axis.text = element_text(size = 14))
+mycolors<-c("#157F8D","#AF8D9B", "grey")
+names(mycolors) <- c("POSITIVE", "NEGATIVE", "NO")
+
+p3 <- p2 + scale_colour_manual(values = mycolors)
+
+p3
+
+```
+Manhattan plot
+```{r manhattan, out.width="100%"}
+# Create a dataframe with chr, start, end and pval
+df.current<-res.current.ord[,c("chromosome","position","p.value")]
+head(df.current)
+df.current$start<-df.current$position 
+df.current$end<-df.current$position + 1
+colnames(df.current)<-c("chr","position","p.value","start","end")
+df.current<-df.current[,c("chr","start","end","p.value")]
+
+# Create GRanges object needed 
+df.GRanges<-makeGRangesFromDataFrame(df.current)
+
+kp <- plotKaryotype(plot.type=4, labels.plotter = NULL)
+kp <- kpAddChromosomeNames(kp, cex=0.6, srt=45)
+kp <- kpPlotManhattan(kp, data=df.GRanges,pval=df.current$p.value, ymax=40,genomewideline =3.42)
+kp <- kpAxis(kp, ymin=0, ymax=40, cex=0.7)
+```
 

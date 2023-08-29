@@ -17,8 +17,15 @@ creation-of-a-expression-set
 estimation-of-cell-type-proportions
 assembling
 epigenome-wide-association-study-ewas
-statistical-methods
-visualisation-of-results-qq-plot-manhattan-volcano
+install-and-load-packages
+load-dataset-and-extract-the-phenotypes-and-methylation-matrix
+run-ewas
+option-1-never-vs-current
+data-preparation
+ewas
+results
+report
+plots
 meta-analysis-of-epigenome-wide-association-studies-metaewas
 quality-control-of-results-from-different-studies
 statistical-methods-to-combine-results-from-different-studies

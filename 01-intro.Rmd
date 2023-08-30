@@ -19,12 +19,12 @@ genomic data
 Packages, vignettes, work flows
 
 - 2230 packages (Apr'23); including ...
-    - 'Software' packages -- statistical methods, pipelines, ...
-    - 'Annotation' packages -- static data bases of identifier maps,
-      gene models, pathways, etc; e.g., [TxDb.Hsapiens.UCSC.hg19.knownGene](https://bioconductor.org/packages/release/data/annotation/html/TxDb.Hsapiens.UCSC.hg19.knownGene.html)
-    - 'Experiment packages -- data sets used to illustrate software
-      functionality, e.g., [airway](https://bioconductor.org/packages/release/data/experiment/html/airway.html)
-- Discover and navigate via [biocViews](https://bioconductor.org/packages/release/bioc/html/biocViews.html)
+- 'Software' packages -- statistical methods, pipelines, ...
+- 'Annotation' packages -- static data bases of identifier maps,
+gene models, pathways, etc; e.g., [TxDb.Hsapiens.UCSC.hg19.knownGene][]
+- 'Experiment packages -- data sets used to illustrate software
+      functionality, e.g., [airway][]
+- Discover and navigate via [biocViews][]
 - Package 'landing page'
     - Title, author / maintainer, short description, citation,
       installation instructions, ..., download statistics
@@ -41,7 +41,7 @@ Packages, vignettes, work flows
 Package installation and use
 
 - A package needs to be installed once, using the instructions on the
-  package landing page (e.g., [DESeq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html)).
+  package landing page (e.g., [DESeq2][]).
 
     ```{r install_2, eval=FALSE}
     require(BiocManager)
@@ -52,13 +52,13 @@ Package installation and use
     BiocManager::install("DESeq2")
     ```
 
-- older versions can be installed by
+older versions can be installed by
 
     ```{r install_old, eval=FALSE}
     BiocManager::install("DESeq2", version = "3.8")
     ```
 
-- `install()` install _Bioconductor_ and [CRAN](https://cran.r-project.org/) 
+- `install()` install _Bioconductor_ and [CRAN][] 
 
 - Github packages can be install by
 
@@ -81,11 +81,23 @@ Package installation and use
     ?GRanges
     ```
 
-## Gene Expression Omnibus (GEO) repository
 
-[GEO](https://www.ncbi.nlm.nih.gov/geo/) (Gene Expression Omnibus) is an international public repository that hosts and freely distribute an extensive collection of high-throughput gene expression data generated through technologies like microarrays and RNA sequencing. Researchers from diverse fields can upload their data to GEO, making it accessible to the scientific community for further analysis and interpretation. One of the notable benefits of GEO is its role in validating results from other studies. By comparing and contrasting their findings with existing datasets, researchers can corroborate their conclusions and ensure the reproducibility of their experiments. This validation process is essential for building a robust foundation of knowledge in molecular biology and fostering scientific progress through collaborative efforts and data-driven insights.
+## ExpressionSet and GenomicRatioSet (and others: GRanges)
 
-GEO was initially designed to deal with transcriptomic data, but it can also be used as a repository for epigenomic data. For example, we can further investigate the methylation differences in cases diagnoses with Alzheimer's disease and controls using publicly available data. The study with accession number GSE80970, is a case/control ($N=148/138$) study of epigenomic data, measured with the Illumina Infinium Human 450K Methylation Array. Data is retrieved directly from the GEO website with the accession number. 
+`ExpressionSet`was one of the first implementations of Bioconductor to manage *omic* experiments. This figure illustrates how it is implemented
+
+```{r eSetfig, fig.cap='ExpressionSet scheme.', out.width='100%', fig.align='center', echo=FALSE}
+knitr::include_graphics('images/eSet_vs_dataframe.png')
+```
+
+Although its use is discouraged in Bioconductor's guidelines for the development of current and future packages (Summarized Experiments are preferred), most publicly data are available in this structure while future packages are still required to be able to upload and operate with it. This is the case of [GEO](https://www.ncbi.nlm.nih.gov/geo/) (Gene Expression Omnibus) which is an international public repository that hosts and freely distribute an extensive collection of high-throughput gene expression data generated through technologies like microarrays and RNA sequencing. 
+
+
+### Gene Expression Omnibus (GEO) repository
+
+Researchers from diverse fields can upload their data to GEO, making it accessible to the scientific community for further analysis and interpretation. One of the notable benefits of GEO is its role in validating results from other studies. By comparing and contrasting their findings with existing datasets, researchers can corroborate their conclusions and ensure the reproducibility of their experiments. This validation process is essential for building a robust foundation of knowledge in molecular biology and fostering scientific progress through collaborative efforts and data-driven insights.
+
+GEO was initially designed to deal with transcriptomic data, but it can also be used as a repository for *epigenomic data*. For example, we can further investigate the methylation differences in cases diagnoses with Alzheimer's disease and controls using publicly available data. The study with accession number GSE80970, is a case/control ($N=148/138$) study of epigenomic data, measured with the Illumina Infinium Human 450K Methylation Array. Data is retrieved directly from the GEO website with the accession number. 
 
 Data for specific accessions in GEO can be downloaded in `R` using the `getGEO` of the Bioconductor's package `GEOquery`
 
@@ -103,31 +115,49 @@ gsm <- gsm[[1]]
 This function downloads a data file called `GSE80970\_series\_matrix.txt.gz` that is retrieved automatically in an `ExpressionSet` object (this objects will be explain latter) that we have named `gms.expr`
 
 ```{r geoquery2}
+class(gsm)
 gsm
 ```
 
-The data stores different tables including the expression profiles for each probe and subject `assayData`, phenotype data with traits measurements and covariates of interest `pData`, and feature data with information about the probe's used in the expression (or methylation) array `fData` Specific data is retrieved using the necessary functions. In particular,  \Rfun{exprs} and  \Rfun{phenoData} extract data tables for subjects' expression levels and phenotypes respectively. 
+An object of class `ExpressionSet` stores different tables including the expression profiles for each probe and subject `assayData`, phenotype data with traits measurements and covariates of interest `pData`, and feature data with information about the probe's used in the expression (or methylation) array `fData` (e.g. annotation). Specific data is retrieved using the necessary functions. In particular,  `exprs ()` and  `phenoData ()` extract data tables for subjects' expression levels and phenotypes/covariates, respectively.  There are three other slots `protocolData`, `experimentData` and `annotation` (that uses Bioconductor databases as annotation data - i.e. it does not requires `fData`) that specify equipment-generated information about protocols, resulting publications and the platform on which the samples were assayed. Methods are implemented to extract the data from each slot of the object. 
+
+Let us see how it works. The function `exprs ()` extracts the epigenetic data in a matrix where subjects are columns and probes are rows
+
+
 
 ```{r getdata}
-#get transcriptomic data and apply log2
+#get epigenetic data 
 expr <- exprs(gsm)
 dim(expr)
 expr[1:10, 1:5]
+```
 
+Phenotypes and/or covariates can be accessed using `phenoData ()` function
+
+```{r getPheno}
 #get phenotype data
 pheno <- pData(phenoData(gsm))
 head(pheno)
 
-#main variable used to be stored in 
+#main variable used to be stored in: 
 table(pheno$characteristics_ch1)
 ```
-       
-We can the, for instance, look at the CpGs located in the APP gene
+
+Note that `phenoData()` retrieves the subjects' phenotypes in an  `AnnotatedDataFrame` object  which is converted to a data.frame by the function `pData()`    
+
+
+
+We can the, for instance, look at the CpGs located in the APP gene. To this end, the function `fData ()` is used
 
 ```{r app}
 
-#locate CpGs in APP
-genesIDs <- fData(gsm)$UCSC_RefGene_Name
+#get the annotation
+annot <- fData(gsm)
+
+colnames(annot)
+
+#access to the names of genes in UCSC format
+geneIDs <- annot$UCSC_RefGene_Name
 genesIDs <- as.character(unlist(genesIDs))
 
 selAPP <- grep("APP;APP",genesIDs)
@@ -136,49 +166,6 @@ length(selAPP)
 
 After that we can run different analyses. Also, several packages in Bioconductor have as input `ExpressionSet` objects. 
 
-## ExpressionSet and GenomicRatioSet (and others: GRanges)
-
-`ExpressionSet`was one of the first implementations of Bioconductor to manage *omic* experiments. This figure illustrates how it is implemented
-
-```{r eSetfig, fig.cap='ExpressionSet scheme.', out.width='100%', fig.align='center', echo=FALSE}
-knitr::include_graphics('images/eSet_vs_dataframe.png')
-```
-
-Although its use is discouraged in Bioconductor's guidelines for the development of current and future packages, most publicly available data is available in this structure while future packages are still required to be able to upload and operate with it. The GEO repository contains thousands of transcriptomic experiments that are available in `ExpressionSet` format. Data available in [GEO repository](https://www.ncbi.nlm.nih.gov/geo/) can be donwloaded into R as an `ExpressionSet` using `GEOquery` package. Let us donwload the experiment with accession number GSE63061 from the GEO website
-
-```{r genoquerych3}
-library(GEOquery)
-gsm.expr <- getGEO("GSE63061", destdir = ".")[[1]]
-gsm.expr 
-```
- 
-`gsm.expr` is an object of class `ExpressionSet` that has three main slots. Transcriptomic data is stored in the `assayData` slot, phenotypes are in `phenoData` and probe annotation in `featuredData`. There are three other slots `protocolData`, `experimentData` and `annotation` that specify equipment-generated information about protocols, resulting publications and the platform on which the samples were assayed. Methods are implemented to extract the data from each slot of the object. For instance `exprs` extracts the transcriptomic data in a matrix where subjects are columns and probes are rows
-
-```{r exprgetdatach3}
-expr <- exprs(gsm.expr)
-dim(expr)
-expr[1:5,1:5]
-``` 
-
-`phenoData()` retrieves the subjects' phenotypes in an  `AnnotatedDataFrame` object  which is converted to a data.frame by the function `pData()`    
-
-```{r phenogetdatach3}
-#get phenotype data
-pheno <- phenoData(gsm.expr)
-pheno
-phenoDataFrame <- pData(gsm.expr)
-phenoDataFrame[1:5,1:4]
-
-#Alzheimer's case control variable
-table(phenoDataFrame$characteristics_ch1)
-```
-
-Finally the `fData()` function gets the probes' annotationin a data.frame 
-
-```{r fDatagetdatach3}
-probes <- fData(gsm.expr)
-probes[1:5, 1:5]
-```
 
 ### `SummarizedExperiment`
 
@@ -191,7 +178,7 @@ Information is coordinated across the object's slots. For instance, subsetting s
 
 Data is retrieved from a `SummarizedExperiment` by using specific methods or accessors. We illustrate the functions with  `brge_methy` which includes real methylation data and is available from the Bioconductor's  `brgedata` package. The data is made available by loading of the package
 
-```{r summexp_example, warning=FALSE, message=FALSE}
+```{r summexp_example}
 library(brgedata)
 brge_methy
 extends("GenomicRatioSet")
@@ -205,8 +192,8 @@ betas[1:5, 1:4]
 ```
 
 The assay slot of a `SummarizedExperiment` object can contain any type of data (i.e. numeric, character, factor...), structure or large on-disk representations, such as a HDF5Array. Feature annotation data is accessed with the function `rowData()`:
-
-```{r get_features}
+  
+  ```{r get_features}
 rowData(brge_methy)[,2:5]
 ```
 
@@ -242,8 +229,8 @@ gr[1]
 ```
 
 However, there are also specific functions to access and modify information. For instance, `seqnames()` extract the chromosomes defined in our examples, whose first element can be redefined accordingly:
-
-```{r gr2}
+  
+  ```{r gr2}
 seqnames(gr)
 seqnames(gr)[1] <- "chr2"
 gr
@@ -294,7 +281,7 @@ disjoin(gr, ignore.strand=TRUE)
 
 `reduce()` creates the smallest range set of unique, non-overlapping intervals. Strand information is also taken into account by default and can also be turned off
 
-```{r gr6, eval=FALSE}
+```{r gr6}
 reduce(gr, ignore.strand=TRUE)
 ```
 

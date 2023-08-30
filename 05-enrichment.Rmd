@@ -1,9 +1,13 @@
 # Biological interpretation of findings
 In this chapter we will explain the steps for the biological interpretation of
-the findings. We will need to load some libraries:
+the findings. A file with the theory
+can be downloaded [here](./Theory/ISG_summer_school_EWAS5.pptx)
+
+We will need to load some libraries:
 ```{r libs_annot, eval=FALSE}
 library(clusterProfiler)
 library(org.Hs.eg.db)
+library(enrichplot)
 ```
 
 
@@ -37,8 +41,8 @@ kegg_gene_list = unique(sort(dfk$gene_id))
 ```
 
 
-And then run the analyses for each one
-```{r go, eval=FALSE}
+And then run the analyses for each one and keep the most interesting results.
+```{r results, eval=FALSE}
 ans.go <- enrichGO(gene = entrez, ont = "BP",
                    OrgDb ="org.Hs.eg.db",
                    universe = go_gene_list,
@@ -48,6 +52,21 @@ ans.go <- enrichGO(gene = entrez, ont = "BP",
 tab.go <- as.data.frame(ans.go)
 tab.go<- subset(tab.go, Count>5)
 
+ans.kegg <- enrichKEGG(gene = entrez,
+                       organism = 'hsa',
+                       universe = kegg_gene_list,
+                       pvalueCutoff = 0.05)
+tab.kegg <- as.data.frame(ans.kegg)
+tab.kegg<- subset(tab.kegg, Count>5)
+
 ```
 
-## Comparison with EWAS Atlas and EWAS Catalog
+Finally we can perform different type of plots to see the results in a graphical way
+```{r plots, eval=FALSE}
+p1 <- barplot(ans.go, showCategory=10) + ggtitle('GO - no MCH') + theme(plot.title = element_text(size = 25))
+p1
+ans.go <- pairwise_termsim(ans.go)
+p5 <- emapplot(ans.go) + ggtitle('GO - no MCH') + theme(plot.title = element_text(size = 25))
+p5
+```
+

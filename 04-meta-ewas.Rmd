@@ -1,6 +1,305 @@
 # Meta-analysis of epigenome-wide association studies (metaEWAS)
-We will explain how to conduct a metaEWAS:
+
+In this chapter we will run a meta-analysis of epigenome-wide association studies (metaEWAS).
+A file with the theory can be downloaded [here](./Theory/ISG_summer_school_EWAS4.pptx)
+
+
+## Install and load packages
+Today we will load these packages
 
 ## Quality control of results from different studies
 ## Statistical methods to combine results from different studies
 ## Visualization of results: QQ-plot, Manhattan, Volcano
+# Epigenome-wide association study (EWAS)
+In this chapter we will run an Epigenome-Wide Association Study (EWAS)
+
+## Install and load packages
+Today we will load these packages
+
+```{r librariesload}
+library(data.table)
+library(qqman)
+library(metafor)
+library(reshape)
+library(plyr)
+#library(IlluminaHumanMethylation450kanno.ilmn12.hg19)
+library(ggplot2)# plots
+library(ggrepel)
+library(GenomicRanges) # prepare db for Manhattan plot
+library(karyoploteR)
+```
+
+
+## Load EWAS results by cohort
+
+Here we will show an example to run the metaEWAS testing never smokers against 
+current smokers. Nevertheless, the same code can be applied to run other
+analyses testing never vs former or current vs former. 
+
+We begin loading the Never vs Current EWAS results from 3 cohorts: 
+cohort1, cohort2 and cohort3. 
+```{r load_metaewas, eval=FALSE}
+EWASres.cohort1 <- read.table(file = "Results.EWAS.cohort1.NeverVScurrent.txt",sep=",",header = TRUE)
+EWASres.cohort2 <- read.table(file = "Results.EWAS.cohort2.NeverVScurrent.txt",sep=",",header = TRUE)
+EWASres.cohort3 <- read.table(file = "Results.EWAS.cohort3.NeverVScurrent.txt",sep=",",header = TRUE)
+```
+
+## Quality control of EWAS results from the different studies
+
+Before running the metaEWAS, it is really important to check the quality of the
+EWAS results that we want combine through a meta-analysis. 
+This includes: 
+- examining inflation
+- create a beta's box plot
+- create a precision plot 
+
+```{r MAfolder, eval=FALSE}
+#Set wd
+
+#res.dir<-"V:/analyses/Course_Intro_to_EWAS/results"
+#setwd(res.dir)
+
+#Create the directory to save EWAS results
+dir.create("MA.results")
+
+setwd(paste0(res.dir,"/MA.results"))
+dir.create("QC")
+setwd(paste0(res.dir,"/MA.results/QC"))
+```
+### Lambda and qqplot
+We look to the lambda and the QQplot to examine inflation
+```{r lambdas, eval=FALSE}
+lambda.cohort1<- qchisq(median(EWASres.cohort1$p.value,na.rm=T), df = 1, lower.tail = F)/qchisq(0.5, 1) 
+lambda.cohort2<- qchisq(median(EWASres.cohort2$p.value,na.rm=T), df = 1, lower.tail = F)/qchisq(0.5, 1)
+lambda.cohort3<- qchisq(median(EWASres.cohort3$p.value,na.rm=T), df = 1, lower.tail = F)/qchisq(0.5, 1)
+
+lambdas<-cbind(lambda.cohort1,lambda.cohort2,lambda.cohort3)
+lambdas
+write.table(lambdas,"Lambdas.NeverVScurrent.txt",sep=",")
+```
+```{r QQlots, eval=FALSE}
+#cohort 1
+pvals.cohort1<-EWASres.cohort1$p.value
+qq(pvals.cohort1,main=("QQPlot EWAS cohort 1 smoking Never VS Current")) 
+ 
+#cohort 2
+pvals.cohort2<-EWASres.cohort2$p.value
+qq(pvals.cohort2,main=("QQPlot EWAS cohort 2 smoking Never VS Current")) 
+ 
+#cohort 3
+pvals.cohort3<-EWASres.cohort3$p.value
+qq(pvals.cohort3,main=("QQPlot EWAS cohort 3 smoking Never VS Current")) 
+```
+### Box plot and Precision plot
+
+We will create a beta’s box plot and a precision plot comparing the different EWAS results
+
+First, we will prepare a dataframe with the beta information of the three cohorts.
+```{r BoxPlotdf, eval=FALSE}
+#create df for Box plot
+
+QCPlot_cohort1<-EWASres.cohort1[,c("probeID","coefficient")]
+QCPlot_cohort1$Cohort<-"cohort1"
+head(QCPlot_cohort1)
+
+QCPlot_cohort2<-EWASres.cohort2[,c("probeID","coefficient")]
+QCPlot_cohort2$Cohort<-"cohort2"
+head(QCPlot_cohort2)
+
+QCPlot_cohort3<-EWASres.cohort3[,c("probeID","coefficient")]
+QCPlot_cohort3$Cohort<-"cohort3"
+head(QCPlot_cohort3)
+
+QCPlot.df<-rbind(QCPlot_cohort1,QCPlot_cohort2,QCPlot_cohort3)
+```
+Beta's Box plot
+```{r BoxPlot, eval=FALSE}
+p1<-ggplot(data=QCPlot.df,aes(x=Cohort, y=coefficient, fill=Cohort)) +
+  geom_boxplot() 
+p1
+```
+Precision plot
+
+By plotting 1 divided by the median of the effect SE against the square root of the sample size for each cohort.
+```{r PrecisionPlotdf, eval=FALSE}
+invSE_cohort1<-1/median(EWASres.cohort1$coefficient.se)
+invSE_cohort2<-1/median(EWASres.cohort2$coefficient.se)
+invSE_cohort3<-1/median(EWASres.cohort3$coefficient.se)
+                        
+
+precision <- data.frame(
+  Cohort = c("cohort1","cohort2","cohort3"),
+  N = c(188, 176, 166),
+  invSE= c(invSE_cohort1,invSE_cohort2,invSE_cohort3))
+  
+precision$sqrt_N<-sqrt(precision$N)
+head(precision)
+```
+
+```{r PrecisionPlot, eval=FALSE}
+p2<-ggplot(data=precision,aes(x=sqrt_N, y=invSE, color=Cohort)) +  geom_point() 
+p2
+```
+
+## Statistical methods to combine results from different studies
+
+We will combine the results through a fixed-effect weight meta-analysis using Metafor R package
+
+### Data preparation
+
+We want to create a dataframe merging the EWAS results from the three cohorts
+(probeID, coefficient, se, p.value, n)
+
+First, we subset the EWAS results to probeID, coefficient, se .p.value and n
+and we change the name of the column in order to merge these results in a dataframe
+
+```{r subsetEWASresults, eval=FALSE}
+# sample_list <- c("Results.EWAS.cohort1.NeverVScurrent.txt","Results.EWAS.cohort2.NeverVScurrent.txt","Results.EWAS.cohort3.NeverVScurrent.txt")
+# 
+# translation.table <- matrix(c("probeID", "probeID","probeID", "BETA","BETA","BETA", "SE", "SE","SE", "P_VAL", "P_VAL","P_VAL"), ncol=2, byrow=TRUE)
+# write.table(translation.table, "translation.table.txt")
+
+# EWASres.cohort1$N<-188
+# EWASres.cohort1$N<-176
+# EWASres.cohort1$N<-166
+
+EWASres.cohort1<-EWASres.cohort1[,c("probeID","coefficient", "coefficient.se","p.value","n")]
+EWASres.cohort2<-EWASres.cohort2[,c("probeID","coefficient", "coefficient.se","p.value","n")]
+EWASres.cohort3<-EWASres.cohort3[,c("probeID","coefficient", "coefficient.se","p.value","n")]
+#sample_N <- data.frame(file = sample_list, N = c(188,176,166), stringsAsFactors = FALSE)
+names(EWASres.cohort1)<- c("probe", "coef_cohort1", "se_cohort1", "P_VAL_cohort1", "N_for_probe_cohort1")
+names(EWASres.cohort2)<- c("probe", "coef_cohort2", "se_cohort2", "P_VAL_cohort2", "N_for_probe_cohort2")
+names(EWASres.cohort3)<- c("probe", "coef_cohort3", "se_cohort3", "P_VAL_cohort3", "N_for_probe_cohort3")
+```
+
+Second, we merge the EWAS results of the 3 cohorts
+```{r mergeEWASresults, eval=FALSE}
+dat <- merge(EWASres.cohort1, EWASres.cohort2, by="probe", all.x=TRUE, all.y=TRUE)
+dat <- merge(dat, EWASres.cohort3, by="probe", all.x=TRUE, all.y=TRUE)
+dim(dat)
+head(dat)
+```
+Then, we create a new column with the total N of the metaEWAS and remove those 
+probes present in <50% of the cohorts
+
+```{r totalN, eval=FALSE}
+dat$N <- rowSums(dat[,c("N_for_probe_cohort1", "N_for_probe_cohort2", "N_for_probe_cohort3")], na.rm=TRUE)
+totN = sum(max(dat$N_for_probe_cohort1, na.rm=TRUE), max(dat$N_for_probe_cohort2, na.rm=TRUE), max(dat$N_for_probe_cohort3, na.rm=TRUE))
+datN <- dat[,c("probe", "N_for_probe_cohort1", "N_for_probe_cohort2", "N_for_probe_cohort3")]
+datN <- datN[which(rowMeans(!is.na(datN[-1]))>=0.5),]
+dat <- dat[which(dat$probe %in% datN$probe),]
+dat<-dat[which(dat$N >= totN/2),]
+dat <- droplevels(dat)
+studies <- c("cohort1","cohort2","cohort3")
+head(dat)
+
+```
+
+### Run fixed effect meta-analysis
+
+```{r fixed.effects.meta.analysisFunction, eval=FALSE}
+fixed.effects.meta.analysis <- function(list.of.studies,data){
+  require(metafor)
+  coefs = data[,c("probe",paste0("coef_",list.of.studies))]
+  ses = data[,c("probe",paste0("se_",list.of.studies))]
+  require(reshape)
+  coefs = melt(coefs)
+  coefs = cbind(coefs, colsplit(coefs$variable, "_", names = c("var", "study")))
+  coefs <- coefs[,c("probe","study","value")]
+  names(coefs) <- c("probe","study","coef")
+  ses = melt(ses)
+  data.long = cbind(coefs,ses[,"value"])
+  names(data.long)<-c("probe","study","coef","se")
+  res = split(data.long, f=data$probe)
+  res = lapply(res, function(x) rma.uni(slab=x$study, yi=x$coef,sei=x$se,method="FE",weighted=TRUE))
+  res
+}
+```
+
+```{r extract.and.merge.meta.analysisFuntion, eval=FALSE}
+extract.and.merge.meta.analysis <-function(meta.res,data){
+  require(plyr)
+  data.meta = ldply(lapply(meta.res, function(x) unlist(c(x$b[[1]],x[c("se","pval","QE","QEp","I2","H2")]))))
+  colnames(data.meta)<-c("probe","coef.fe","se.fe","p.fe","q.fe","het.p.fe","i2.fe","h2.fe")
+  data = merge(data,data.meta,by="probe",all.x=T)
+  data
+}
+```
+
+To run the Never vs Current metaEWAS, we will use tha above functions (without edition)
+
+- fixed.effects.meta.analysis function
+- extract.and.merge.meta.analysis function
+
+```{r RunMetaEWAS, eval=FALSE}
+meta.results.current <- fixed.effects.meta.analysis(list.of.studies = studies, data = dat)
+dat.current <- extract.and.merge.meta.analysis(meta.res = meta.results.current, data = dat)
+dat.current$fdr<-p.adjust(dat.current$p.fe, method = "fdr")
+head(dat.current)
+```
+
+### Explore the results
+
+We order the results by the metaEWAS p.value
+```{r order, eval=FALSE}
+dat.current.ord<-dat.current[order(dat.current$p.fe),]
+dim(dat.current.ord)
+
+write.table(xxxx)
+```
+
+Significant hits 
+Our results were corrected for multiple testing using FDR method. Significance 
+was defined at FDR p-value < 0.05. 
+
+```{r significant, eval=FALSE}
+sig.current<-dat.current.ord[dat.current.ord$fdr <0.05,]
+dim(sig.current)
+head(sig.current)
+```
+Lambda and QQplot
+```{r lambda, eval=FALSE}
+lambda.current<- qchisq(median(dat.current.ord$p.fe,na.rm=T), df = 1, lower.tail = F)/qchisq(0.5, 1)
+lambda.current 
+```
+
+```{r qqplot, eval=FALSE}
+pvals.current<-dat.current.ord$p.fe
+qq(pvals.current,main=("QQPlot metaEWAS smoking Never VS Current")) 
+```
+
+Volcano plot
+```{r VolcanoPlot, eval=FALSE}
+dat.current.ord$diffexpressed <- "NO"
+dat.current.ord$diffexpressed[dat.current.ord$coef.fe  > 0 & dat.current.ord$fdr <0.05] <- "POSITIVE"
+dat.current.ord$diffexpressed[dat.current.ord$coef.fe  < 0 & dat.current.ord$fdr <0.05] <- "NEGATIVE"
+
+p <- ggplot(data=dat.current.ord, aes(x=dat.current.ord$coef.fe, y=-log10(dat.current.ord$p.fe), col=dat.current.ord$diffexpressed)) +
+  xlim(c(-0.3,0.3))+ ylim(c(0,130)) + 
+  geom_point(size = 2) + theme_minimal() +
+  labs(title = " ", x = "beta", y = "-log10(P-value)", colour = "Effect") + 
+  theme(axis.title = element_text(family = "Helvetica", size = 14, color = "black",vjust=0.5)) + 
+  theme(plot.title = element_text(family = "Helvetica",size=14,face="bold",color="black", hjust= 0.5, vjust=0.5)) + 
+  theme(legend.title = element_text(family = "Helvetica", color = "black", size = 14))
+
+p2 <- p + geom_hline(yintercept=c(-log10(0.012)), col=c("red"),linetype = "dashed") + 
+  theme(axis.text = element_text(size = 14))
+mycolors<-c("#157F8D","#AF8D9B", "grey")
+names(mycolors) <- c("POSITIVE", "NEGATIVE", "NO")
+
+p3 <- p2 + scale_colour_manual(values = mycolors)
+
+p3
+```
+Forest plot
+```{r ForestPlot, eval=FALSE}
+#Forest plots
+
+X<-"cg05575921"
+G<-"AHRR"
+I2<-dat.current.ord$i2.fe
+forest(meta.results.current$cg05575921,digits=4,
+       xlab=expression(paste("Change in DNA methylation never vs current")),
+       mlab="Fixed-effects meta-analysis",col="deepskyblue2",border="deepskyblue2",cex=0.8)
+#title(paste0("Forest plot for probe:\n", X," (",G,"), I-squared: ",I2,""),line=-2)
+```

@@ -1,7 +1,8 @@
 # Pre-processing of DNA methylation data
 
 In this chapter will explain the steps for the pre-processing of
-DNA methylation data with the meffil R package.
+DNA methylation data with the meffil R package. A file with the theory
+can be downloaded [here](./Theory/ISG_summer_school_EWAS2.pptx)
 
 ## Creation of the Sample Sheet
 After loading the meffil library, we need to create a sample sheet from the IDAT files.

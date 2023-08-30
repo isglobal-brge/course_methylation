@@ -1,24 +1,26 @@
 # Epigenome-wide association study (EWAS)
-In this chapter we will run an Epigenome-Wide Association Study (EWAS)
+In this chapter we will run an Epigenome-Wide Association Study (EWAS).
+A file with the theory can be downloaded [here](./Theory/ISG_summer_school_EWAS3.pptx)
+
 
 ## Install and load packages
 Today we will load these packages
-```{r librariesload}
+```{r libload}
 library(Biobase)# to be able to access and modify data in the ExpressionSet
 library(meffil) # to run the EWAS
 library(qqman) # to get QQ plots
 library(ggplot2)# plots
 library(ggrepel)
 library(GenomicRanges) # prepare db for Manhattan plot
-library(karyoploteR)
+library(karyoploteR) #  Manhattan plot 
 ```
 
 ## Load dataset and extract the phenotypes and methylation matrix
 
 We begin loading the output from the last step, which is the ExpressionSet that
 contains the normalised betas together with the phenotypes.
-```{r load}
-eset.cohort1<-readRDS("H:/analyses/Course_Intro_to_EWAS/results/QC/subsets/GSE42861_norm_cohort1bis.Rds") 
+```{r loaddataset}
+eset.cohort1<-readRDS("H:/analyses/Course_Intro_to_EWAS/results/QC/subsets/GSE42861_norm_cohort1.Rds") 
 pheno.cohort1<-pData(eset.cohort1)
 dim(pheno.cohort1)
 head(pheno.cohort1)
@@ -32,8 +34,8 @@ table(eset.cohort1$Smoking)
 
 ## Run EWAS
 ### Data preparation
-Here we will show an example to run the analysis testing current smokers against 
-never smokers. Nevertheless, the same code can be applied to run other
+Here we will show an example to run the analysis testing never smokers against 
+current smokers. Nevertheless, the same code can be applied to run other
 analyses testing never vs former or current vs former. 
 
 The first step is to subset the ExpressionSet with only the samples that we need.
@@ -50,6 +52,7 @@ table(eset.current$Smoking)
 Extract methylation
 ```{r methylcurrent}
 methyl.current<-exprs(eset.current)
+methyl.current[1:5,1:5]
 ```
 
 Extract phenodata with never and current smokers
@@ -65,13 +68,14 @@ levels(pheno.current$Smoking)
 pheno.current$Smoking <- relevel(pheno.current$Smoking, "never")
 levels(pheno.current$Smoking)
 ```
-Select the exposure variable
+Select the exposure variable.
 ```{r variable}
 variable <- pheno.current$Smoking
 class(variable)
 ```
 Select the covariates of interest for the EWAS. We are interested in sex, age 
-and cell type proportions
+and cell type proportions. 
+Check the class of these covariates before running the EWAS
 ```{r covs}
 class(pheno.current$Age)
 class(pheno.current$Sex)
@@ -85,19 +89,22 @@ pheno.current$Sex<-as.factor(pheno.current$Sex)
 covariates <- pheno.current[,c("Age","Sex","Bcell","CD4T","CD8T","Mono","Neu","NK")]
 ```
 
-Check order of the samples between the pheno and the mehtylation matrix.
+Check order of the samples between the pheno and the mehtylation matrix. 
+If you do not order samples as they are in the ExpressionSet, you could 
+incorrectly assign the values of the variables to the samples and therefore also
+to the methylation.
 ```{r check}
 table(ifelse(rownames(pheno.current)==colnames(methyl.current),"Matched","--NOT MATCHED--"))
 ```
 ### EWAS
 To run the EWAS we will use the function meffil.ewas from meffil R package. We need as arguments:
 
-- Methylattion matrix
-- vector with the exposure variables
-- A vector with the name of the covariables that we want to include
-- As we want to run a robust linear regression model, we need to specify "TRUE" in the argument "rlm"
-- To reduce the impact of severe outliers in the DNA methylation data, we will winsorize the methylation beta values (1%), with 0.5% at upper and lower ends of the distribution (Ghosh & Vogt, 2012)
-- SVA variables. Argument sva (by default TRUE). This function will calculate surrogate variables to adjust our model. 
+- beta: Methylattion matrix
+- variable: vector with the exposure variable. 
+- covariates: A dataframe with the covariates to include in the regression model
+- rlm: As we want to run a robust linear regression model, we need to specify "TRUE" in the argument "rlm"
+- winsorize.pct: To reduce the impact of severe outliers in the DNA methylation data, we will winsorize the methylation beta values (1%), with 0.5% at upper and lower ends of the distribution (Ghosh & Vogt, 2012)
+- sva (by default TRUE). This function will apply Surrogate Variable Analysis (SVA) to the methylation levels and covariates and include the resulting variables as covariates in the regression model
 
 ```{r ewas, warning=FALSE, message=FALSE}
 ewas.current <- meffil.ewas(methyl.current,
@@ -105,6 +112,7 @@ ewas.current <- meffil.ewas(methyl.current,
                             covariates=covariates,
                             rlm=TRUE,
                             winsorize.pct=0.05)
+
 ```
 
 ### Results
@@ -128,7 +136,7 @@ res.current$probeID<-rownames(res.current)
 ```
 
 We order the results by p.value
-```{r order}
+```{r orderres}
 res.current.ord<-res.current[order(res.current$p.value),]
 head(res.current.ord)
 colnames(res.current.ord)
@@ -136,14 +144,14 @@ colnames(res.current.ord)
 The column names stand for:
 - p.value: pval significance of the association
 - fdr: p.value corrected by the FALSE DISCOVERY RATE method
-- p.holm: we are not going to use. p.value corrected by Holm-Bonferroni method
-- "t.statistic"   
-- coefficient: coefficient of the association. In this case is OR. the effect or beta
+- p.holm: p.value corrected by Holm-Bonferroni method (we are not going to use it)
+- t.statistic 
+- coefficient: coefficient of the association. In this case is odd ratio (OR), which is a statistical measure to quantify the strength of association of a binary variable (the effect or beta)
 - coefficient.ci.high: confidence interval up 
 - coefficient.ci.low: confindence interval down
 - coefficient.se:  standard error of the coefficient
 - n: sample size included in the analysis
-- chromosome
+- chromosome: chromosome in which the CpG is located in the genome (hg19)   
 - position: position of the CpG in the genome (hg19)         
 
 We can save the results
@@ -169,12 +177,24 @@ ewas.summary <- meffil.ewas.summary(ewas.current,
 meffil.ewas.report(ewas.summary, output.file="H:/analyses/Course_Intro_to_EWAS/results/EWAS.results/Reports/Report.EWAS.cohort1.NeverVScurrent.html")
 ```
 
-### Plots
+### Explore the results
 Lambda and QQplot
-```{r qqplot}
+We look to the lambda and the QQplot to examine inflation
+```{r lambda1}
+lambda.current<- qchisq(median(res.current.ord$p.value,na.rm=T), df = 1, lower.tail = F)/qchisq(0.5, 1)
+lambda.current 
+```
+
+```{r qqplot1}
 pvals.current<-res.current.ord$p.value
 qq(pvals.current,main=("QQPlot EWAS cohort 1 smoking Never VS Current")) 
+```
 
+Significant hits 
+Our results were corrected for multiple testing using FDR method. Significance 
+was defined at FDR p-value < 0.05. We tested 37,842 CpGs. 
+```{r significant_hits}
+dim(res.current.ord)
 res.current.sig<-res.current.ord[res.current.ord$fdr < 0.05,]
 dim(res.current.sig)
 head(res.current.sig)
@@ -186,15 +206,13 @@ dim(res.current.sig[res.current.sig$coefficient >0,])
 
 Volcano plot
 ```{r volcano, warnings=FALSE, message=FALSE}
-head(res.current.ord)
-
 res.current.ord$diffexpressed <- "NO"
 res.current.ord$diffexpressed[res.current.ord$coefficient > 0 & res.current.ord$fdr <0.05] <- "POSITIVE"
 res.current.ord$diffexpressed[res.current.ord$coefficient < 0 & res.current.ord$fdr <0.05] <- "NEGATIVE"
 
 p <- ggplot(data=res.current.ord, aes(x=res.current.ord$coefficient, y=-log10(res.current.ord$p.value), col=res.current.ord$diffexpressed)) +
   xlim(c(-0.3,0.3))+ ylim(c(0,35)) + 
-  geom_point(size = 2) + theme_minimal() +
+  geom_point(size = 1.5) + theme_minimal() +
   labs(title = " ", x = "beta", y = "-log10(P-value)", colour = "Effect") + 
   theme(axis.title = element_text(size = 14, color = "black",vjust=0.5)) + 
   theme(plot.title = element_text(size = 14,face="bold",color="black", hjust= 0.5, vjust=0.5)) + 
@@ -202,8 +220,8 @@ p <- ggplot(data=res.current.ord, aes(x=res.current.ord$coefficient, y=-log10(re
 
 
 # Add lines as before...
-p2 <- p + geom_hline(yintercept=c(-log10(3.8e-04)), col=c("red"),linetype = "dashed") + 
-  theme(axis.text = element_text(size = 14))
+p2 <- p + geom_hline(yintercept=c(-log10(3.86e-04)), col=c("red"),linetype = "dashed") + 
+  theme(axis.text = element_text(size = 14)) #threshold  FDR (0.05) = p.val 3.86-04
 mycolors<-c("#157F8D","#AF8D9B", "grey")
 names(mycolors) <- c("POSITIVE", "NEGATIVE", "NO")
 

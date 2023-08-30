@@ -1,18 +1,31 @@
 # Pre-processing of DNA methylation data
 
 In this chapter will explain the steps for the pre-processing of
-DNA methylation data with the meffil R package. A file with the theory
-can be downloaded [here](./Theory/ISG_summer_school_EWAS2.pptx)
+DNA methylation data with the meffil R package. A file with the slides
+can be downloaded [here](./Slides/ISG_summer_school_EWAS2.pptx)
+
+At the end of the practice, please answer these questions:
+
+1. Is there any sample that is excluded due to the low quality?
+2. Is there any sample that is excluded due to inconsistent sex?
+3. Which are the main biological and technical variables associated with PC1?
 
 ## Creation of the Sample Sheet
-After loading the meffil library, we need to create a sample sheet from the IDAT files.
+In these first steps we will work with a little subset of the data just to show
+how the code works and be able to run the commands in short time.
+Afterwards, we will load the complete data to keep going with the analyses. 
 
+These are the libraries that will be used:
 ```{r ss, message=FALSE, warning=FALSE, results=FALSE}
 library(meffil)
-samplesheet <- meffil.create.samplesheet("H:/analyses/Course_Intro_to_EWAS/db/GSE42861/Raw/G1", recursive=TRUE)
+library(Biobase)
 ```
+
+Then we need to create a sample sheet from the IDAT files.
 ```{r ssview}
-dim(samplesheet)
+samplesheet_sub <- meffil.create.samplesheet("./data/DAY2/Input/IDAT_cohort1_subset",
+                                         recursive=TRUE)
+dim(samplesheet_sub)
 ```
 
 The function automatically adds the sample name, slide, row, column and filename
@@ -23,23 +36,25 @@ remove the duplicates.
 
 First we load the phenotype data
 ```{r phenoload}
-pheno <- read.table("H:/analyses/Course_Intro_to_EWAS/db/GSE42861/Phenotype/GSE42861_pheno.txt", sep = '\t', header = T)
+pheno <- read.table("./data/DAY2/Input/GSE42861_pheno_cohort1.txt",
+                    sep = '\t', header = T)
 head(pheno)
 ```
 
 And then add the sex, the age and the smoking status variables, keeping only
 those samples with metadata
 ```{r phenoadd}
-samplesheet <- merge(samplesheet[,c('Sample_Name', 'Slide', 'sentrix_row', 'sentrix_col', 'Basename')], 
+samplesheet_sub <- merge(samplesheet_sub[,c('Sample_Name', 'Slide',
+                                    'sentrix_row', 'sentrix_col', 'Basename')], 
                      pheno[,c('Sample', 'Age', 'Sex', 'Smoking')], 
                      by.x = 'Sample_Name', 
                      by.y = 'Sample')
-head(samplesheet)
+head(samplesheet_sub)
 ```
 
 Finally we can save the sample sheet
-```{r save, eval=FALSE}
-save(samplesheet, file="H:/analyses/Course_Intro_to_EWAS/results/QC/SampleSheetG1.Rdata")
+```{r save}
+save(samplesheet_sub, file="./data/DAY2/Output/SampleSheet_cohort1_subset.RData")
 ```
 
 ## Sample and CpG quality control
@@ -47,20 +62,24 @@ Once we have the sample sheet, the first step for the QC is the creation of the
 QC objects. We specify the cell type reference (idol optimized)
 and the thresholds for detection and minimum number of beads. 
 
-**DO NOT RUN THIS STEP IN THE CLASS** - it is very time consuming. 
-```{r objects, eval=FALSE}
+```{r objects, message=FALSE, warning=FALSE, results=FALSE}
 # DO NOT RUN
 
 meffil.list.cell.type.references()
-qc.objects <- meffil.qc(samplesheet, cell.type.reference="blood idoloptimized", 
+qc.objects <- meffil.qc(samplesheet_sub,
+                        cell.type.reference="blood idoloptimized", 
                         verbose=TRUE,
                         detection.threshold	= 0.01,
                         bead.threshold = 3)
-save(qc.objects, file = 'H:/analyses/Course_Intro_to_EWAS/results/QC/QCObjects.RData')
+save(qc.objects,
+     file = './data/DAY2/Output/QCObjects_cohort1_subset.RData')
 ```
-Instead, load the QC Objects that we provide:
+
+As you can see, this step is very time-consuming. Now that we have learned to
+create the SampleSheet and run the first steps of the QC, we will continue
+working with the full dataset. We need to load the QC Objects:
 ```{r loadqc}
-load('H:/analyses/Course_Intro_to_EWAS/results/QC/QCObjects.RData')
+load('./data/DAY2/Output/QCObjects_cohort1.RData')
 ```
 
 After that, we setup the parameters for the QC
@@ -86,7 +105,8 @@ qc.summary <- meffil.qc.summary(
 
 To generate the QC report we can run:
 ```{r qcrep, eval=FALSE}
-meffil.qc.report(qc.summary, output.file="H:/analyses/Course_Intro_to_EWAS/results/QC/qc-report_whole.html")
+meffil.qc.report(qc.summary,
+                 output.file="./data/DAY2/Output/QCReport_cohort1.html")
 ```
 This line creates an html report with several QC tests. We need to examine it
 with detail.
@@ -142,13 +162,15 @@ norm.beta <- norm.beta[!rownames(norm.beta) %in% bad_cpgs, !colnames(norm.beta) 
 norm.objects <- norm.objects[!names(norm.objects)%in% bad_ids]
 gc(reset=TRUE)
 
-save(norm.objects, file = "H:/analyses/Course_Intro_to_EWAS/results/QC/norm_objects15.RData")
-save(norm.beta, file = "H:/analyses/Course_Intro_to_EWAS/results/QC/norm_beta15.Robj")
+save(norm.objects,
+     file = "./data/DAY2/Output/NormObjects_cohort1.RData")
+save(norm.beta,
+     file = "./data/DAY2/Output/NormBeta_cohort1.Robj")
 ```
 Instead, load the normalisation objects and the betas that we provide:
 ```{r load_norm}
-load("H:/analyses/Course_Intro_to_EWAS/results/QC/norm_objects15.RData")
-load("H:/analyses/Course_Intro_to_EWAS/results/QC/norm_beta15.Robj")
+load("./data/DAY2/Output/NormObjects_cohort1.RData")
+load("./data/DAY2/Output/NormBeta_cohort1.Robj")
 ```
 
 Now we can create a normalisation report. We need to convert to factor all the
@@ -176,8 +198,11 @@ pcs <- meffil.methylation.pcs(norm.beta,verbose=T, full.obj = T)
 
 Finally, we obtain the normalisation summary and report
 ```{r normsumm, eval=FALSE}
-norm.summary <- meffil.normalization.summary(norm.objects, pcs$x, parameters=norm.parameters)
-meffil.normalization.report(norm.summary, output.file="H:/analyses/Course_Intro_to_EWAS/results/QC/normalization-report.html")
+norm.summary <- meffil.normalization.summary(norm.objects,
+                                             pcs$x,
+                                             parameters=norm.parameters)
+meffil.normalization.report(norm.summary,
+                            output.file="./data/DAY2/Outout/NormReport_cohort1")
 ```
 ## Creation of a Expression Set
 
@@ -189,7 +214,9 @@ saved this way:
 ```{r cc}
 cc<-t(sapply(qc.objects, function(obj) obj$cell.counts$counts))
 cc<-data.frame(PatientID=row.names(cc),cc) 
-write.table(cc, file = "H:/analyses/Course_Intro_to_EWAS/results/QC/cellular_composition.txt", quote = F, row.names = F, sep = '\t')
+write.table(cc,
+            file = "./data/DAY2/Output/CellComp_cohort1.txt",
+            quote = F, row.names = F, sep = '\t')
 ```
 
 We add this information to the phenotype that we already have
@@ -208,10 +235,15 @@ phenotypes, which consists on a dataframe with the variables description.
 Then we create an Annotated Dataframe. 
 
 ```{r mdata, message=FALSE, results=FALSE}
-library(Biobase)
-mData <- data.frame(labelDescription=c("Sample cell type","Patient Age", "Patient Sex", "Smoking Status (never/current/former)",
-                                       "Percentage of B Lymphocytes", "Percentage of CD4T Lymphocytes",
-                                       "Percentage of CDBT Lymphocytes", "Percentage of Monocytes", "Percentage of Neutrophils",
+mData <- data.frame(labelDescription=c("Sample cell type",
+                                       "Patient Age",
+                                       "Patient Sex",
+                                       "Smoking Status (never/current/former)",
+                                       "Percentage of B Lymphocytes", 
+                                       "Percentage of CD4T Lymphocytes",
+                                       "Percentage of CDBT Lymphocytes", 
+                                       "Percentage of Monocytes",
+                                       "Percentage of Neutrophils",
                                        "Percentage of Natural Killer"),
                     row.names=colnames(phenoData))
 
@@ -235,6 +267,6 @@ phenotypes we are ready to run the EWAS.
 provide the eSet needed for the EWAS.
 ```{r saveeset, eval=FALSE}
 # DO NOT RUN
-saveRDS(eSet, 'H:/analyses/Course_Intro_to_EWAS/results/QC/GSE42861_full_norm.Rds')
+saveRDS(eSet, 'save_path')
 ```
 

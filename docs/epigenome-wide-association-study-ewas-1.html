@@ -93,7 +93,7 @@
 <span class="header-section-number">5.1</span> Install and load packages<a class="anchor" aria-label="anchor" href="#install-and-load-packages-2"><i class="fas fa-link"></i></a>
 </h2>
 <p>Today we will load these packages</p>
-<div class="sourceCode" id="cb180"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb176"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com">data.table</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/stephenturner/qqman">qqman</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://www.metafor-project.org">metafor</a></span><span class="op">)</span></span>
@@ -114,7 +114,7 @@ current smokers. Nevertheless, the same code can be applied to run other
 analyses testing never vs former or current vs former.</p>
 <p>We begin loading the Never vs Current EWAS results from 3 cohorts:
 cohort1, cohort2 and cohort3.</p>
-<div class="sourceCode" id="cb181"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb177"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">EWASres.cohort1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span><span class="op">(</span>file <span class="op">=</span> <span class="st">"Results.EWAS.cohort1.NeverVScurrent.txt"</span>,sep<span class="op">=</span><span class="st">","</span>,header <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">EWASres.cohort2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span><span class="op">(</span>file <span class="op">=</span> <span class="st">"Results.EWAS.cohort2.NeverVScurrent.txt"</span>,sep<span class="op">=</span><span class="st">","</span>,header <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">EWASres.cohort3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span><span class="op">(</span>file <span class="op">=</span> <span class="st">"Results.EWAS.cohort3.NeverVScurrent.txt"</span>,sep<span class="op">=</span><span class="st">","</span>,header <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
@@ -129,7 +129,7 @@ This includes:
 - examining inflation
 - create a beta’s box plot
 - create a precision plot</p>
-<div class="sourceCode" id="cb182"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb178"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#Set wd</span></span>
 <span></span>
 <span><span class="co">#res.dir&lt;-"V:/analyses/Course_Intro_to_EWAS/results"</span></span>
@@ -146,7 +146,7 @@ This includes:
 <span class="header-section-number">5.3.1</span> Lambda and qqplot<a class="anchor" aria-label="anchor" href="#lambda-and-qqplot"><i class="fas fa-link"></i></a>
 </h3>
 <p>We look to the lambda and the QQplot to examine inflation</p>
-<div class="sourceCode" id="cb183"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb179"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">lambda.cohort1</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Chisquare.html">qchisq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">(</span><span class="va">EWASres.cohort1</span><span class="op">$</span><span class="va">p.value</span>,na.rm<span class="op">=</span><span class="cn">T</span><span class="op">)</span>, df <span class="op">=</span> <span class="fl">1</span>, lower.tail <span class="op">=</span> <span class="cn">F</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/stats/Chisquare.html">qchisq</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">1</span><span class="op">)</span> </span>
 <span><span class="va">lambda.cohort2</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Chisquare.html">qchisq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">(</span><span class="va">EWASres.cohort2</span><span class="op">$</span><span class="va">p.value</span>,na.rm<span class="op">=</span><span class="cn">T</span><span class="op">)</span>, df <span class="op">=</span> <span class="fl">1</span>, lower.tail <span class="op">=</span> <span class="cn">F</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/stats/Chisquare.html">qchisq</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">lambda.cohort3</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Chisquare.html">qchisq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">(</span><span class="va">EWASres.cohort3</span><span class="op">$</span><span class="va">p.value</span>,na.rm<span class="op">=</span><span class="cn">T</span><span class="op">)</span>, df <span class="op">=</span> <span class="fl">1</span>, lower.tail <span class="op">=</span> <span class="cn">F</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/stats/Chisquare.html">qchisq</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">1</span><span class="op">)</span></span>
@@ -154,7 +154,7 @@ This includes:
 <span><span class="va">lambdas</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/cbind.html">cbind</a></span><span class="op">(</span><span class="va">lambda.cohort1</span>,<span class="va">lambda.cohort2</span>,<span class="va">lambda.cohort3</span><span class="op">)</span></span>
 <span><span class="va">lambdas</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html">write.table</a></span><span class="op">(</span><span class="va">lambdas</span>,<span class="st">"Lambdas.NeverVScurrent.txt"</span>,sep<span class="op">=</span><span class="st">","</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb184"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb180"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#cohort 1</span></span>
 <span><span class="va">pvals.cohort1</span><span class="op">&lt;-</span><span class="va">EWASres.cohort1</span><span class="op">$</span><span class="va">p.value</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/qqman/man/qq.html">qq</a></span><span class="op">(</span><span class="va">pvals.cohort1</span>,main<span class="op">=</span><span class="op">(</span><span class="st">"QQPlot EWAS cohort 1 smoking Never VS Current"</span><span class="op">)</span><span class="op">)</span> </span>
@@ -173,7 +173,7 @@ This includes:
 </h3>
 <p>We will create a beta’s box plot and a precision plot comparing the different EWAS results</p>
 <p>First, we will prepare a dataframe with the beta information of the three cohorts.</p>
-<div class="sourceCode" id="cb185"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb181"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#create df for Box plot</span></span>
 <span></span>
 <span><span class="va">QCPlot_cohort1</span><span class="op">&lt;-</span><span class="va">EWASres.cohort1</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"probeID"</span>,<span class="st">"coefficient"</span><span class="op">)</span><span class="op">]</span></span>
@@ -190,13 +190,13 @@ This includes:
 <span></span>
 <span><span class="va">QCPlot.df</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/cbind.html">rbind</a></span><span class="op">(</span><span class="va">QCPlot_cohort1</span>,<span class="va">QCPlot_cohort2</span>,<span class="va">QCPlot_cohort3</span><span class="op">)</span></span></code></pre></div>
 <p>Beta’s Box plot</p>
-<div class="sourceCode" id="cb186"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb182"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p1</span><span class="op">&lt;-</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">QCPlot.df</span>,<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">Cohort</span>, y<span class="op">=</span><span class="va">coefficient</span>, fill<span class="op">=</span><span class="va">Cohort</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html">geom_boxplot</a></span><span class="op">(</span><span class="op">)</span> </span>
 <span><span class="va">p1</span></span></code></pre></div>
 <p>Precision plot</p>
 <p>By plotting 1 divided by the median of the effect SE against the square root of the sample size for each cohort.</p>
-<div class="sourceCode" id="cb187"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb183"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">invSE_cohort1</span><span class="op">&lt;-</span><span class="fl">1</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">(</span><span class="va">EWASres.cohort1</span><span class="op">$</span><span class="va">coefficient.se</span><span class="op">)</span></span>
 <span><span class="va">invSE_cohort2</span><span class="op">&lt;-</span><span class="fl">1</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">(</span><span class="va">EWASres.cohort2</span><span class="op">$</span><span class="va">coefficient.se</span><span class="op">)</span></span>
 <span><span class="va">invSE_cohort3</span><span class="op">&lt;-</span><span class="fl">1</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">(</span><span class="va">EWASres.cohort3</span><span class="op">$</span><span class="va">coefficient.se</span><span class="op">)</span></span>
@@ -209,7 +209,7 @@ This includes:
 <span>  </span>
 <span><span class="va">precision</span><span class="op">$</span><span class="va">sqrt_N</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="va">precision</span><span class="op">$</span><span class="va">N</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">precision</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb188"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb184"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p2</span><span class="op">&lt;-</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">precision</span>,<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">sqrt_N</span>, y<span class="op">=</span><span class="va">invSE</span>, color<span class="op">=</span><span class="va">Cohort</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span> </span>
 <span><span class="va">p2</span></span></code></pre></div>
 </div>
@@ -227,7 +227,7 @@ This includes:
 (probeID, coefficient, se, p.value, n)</p>
 <p>First, we subset the EWAS results to probeID, coefficient, se .p.value and n
 and we change the name of the column in order to merge these results in a dataframe</p>
-<div class="sourceCode" id="cb189"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb185"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># sample_list &lt;- c("Results.EWAS.cohort1.NeverVScurrent.txt","Results.EWAS.cohort2.NeverVScurrent.txt","Results.EWAS.cohort3.NeverVScurrent.txt")</span></span>
 <span><span class="co"># </span></span>
 <span><span class="co"># translation.table &lt;- matrix(c("probeID", "probeID","probeID", "BETA","BETA","BETA", "SE", "SE","SE", "P_VAL", "P_VAL","P_VAL"), ncol=2, byrow=TRUE)</span></span>
@@ -245,14 +245,14 @@ and we change the name of the column in order to merge these results in a datafr
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">EWASres.cohort2</span><span class="op">)</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"probe"</span>, <span class="st">"coef_cohort2"</span>, <span class="st">"se_cohort2"</span>, <span class="st">"P_VAL_cohort2"</span>, <span class="st">"N_for_probe_cohort2"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">EWASres.cohort3</span><span class="op">)</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"probe"</span>, <span class="st">"coef_cohort3"</span>, <span class="st">"se_cohort3"</span>, <span class="st">"P_VAL_cohort3"</span>, <span class="st">"N_for_probe_cohort3"</span><span class="op">)</span></span></code></pre></div>
 <p>Second, we merge the EWAS results of the 3 cohorts</p>
-<div class="sourceCode" id="cb190"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb186"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/S4Vectors/man/Vector-merge.html">merge</a></span><span class="op">(</span><span class="va">EWASres.cohort1</span>, <span class="va">EWASres.cohort2</span>, by<span class="op">=</span><span class="st">"probe"</span>, all.x<span class="op">=</span><span class="cn">TRUE</span>, all.y<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/S4Vectors/man/Vector-merge.html">merge</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">EWASres.cohort3</span>, by<span class="op">=</span><span class="st">"probe"</span>, all.x<span class="op">=</span><span class="cn">TRUE</span>, all.y<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span></code></pre></div>
 <p>Then, we create a new column with the total N of the metaEWAS and remove those
 probes present in &lt;50% of the cohorts</p>
-<div class="sourceCode" id="cb191"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb187"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dat</span><span class="op">$</span><span class="va">N</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/colSums.html">rowSums</a></span><span class="op">(</span><span class="va">dat</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"N_for_probe_cohort1"</span>, <span class="st">"N_for_probe_cohort2"</span>, <span class="st">"N_for_probe_cohort3"</span><span class="op">)</span><span class="op">]</span>, na.rm<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">totN</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">dat</span><span class="op">$</span><span class="va">N_for_probe_cohort1</span>, na.rm<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">dat</span><span class="op">$</span><span class="va">N_for_probe_cohort2</span>, na.rm<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">dat</span><span class="op">$</span><span class="va">N_for_probe_cohort3</span>, na.rm<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">datN</span> <span class="op">&lt;-</span> <span class="va">dat</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"probe"</span>, <span class="st">"N_for_probe_cohort1"</span>, <span class="st">"N_for_probe_cohort2"</span>, <span class="st">"N_for_probe_cohort3"</span><span class="op">)</span><span class="op">]</span></span>
@@ -267,7 +267,7 @@ probes present in &lt;50% of the cohorts</p>
 <h3>
 <span class="header-section-number">5.4.2</span> Run fixed effect meta-analysis<a class="anchor" aria-label="anchor" href="#run-fixed-effect-meta-analysis"><i class="fas fa-link"></i></a>
 </h3>
-<div class="sourceCode" id="cb192"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb188"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fixed.effects.meta.analysis</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">list.of.studies</span>,<span class="va">data</span><span class="op">)</span><span class="op">{</span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="https://www.metafor-project.org">metafor</a></span><span class="op">)</span></span>
 <span>  <span class="va">coefs</span> <span class="op">=</span> <span class="va">data</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"probe"</span>,<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"coef_"</span>,<span class="va">list.of.studies</span><span class="op">)</span><span class="op">)</span><span class="op">]</span></span>
@@ -284,7 +284,7 @@ probes present in &lt;50% of the cohorts</p>
 <span>  <span class="va">res</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/lapply.html">lapply</a></span><span class="op">(</span><span class="va">res</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://wviechtb.github.io/metafor/reference/rma.uni.html">rma.uni</a></span><span class="op">(</span>slab<span class="op">=</span><span class="va">x</span><span class="op">$</span><span class="va">study</span>, yi<span class="op">=</span><span class="va">x</span><span class="op">$</span><span class="va">coef</span>,sei<span class="op">=</span><span class="va">x</span><span class="op">$</span><span class="va">se</span>,method<span class="op">=</span><span class="st">"FE"</span>,weighted<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="va">res</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<div class="sourceCode" id="cb193"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb189"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">extract.and.merge.meta.analysis</span> <span class="op">&lt;-</span><span class="kw">function</span><span class="op">(</span><span class="va">meta.res</span>,<span class="va">data</span><span class="op">)</span><span class="op">{</span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="http://had.co.nz/plyr">plyr</a></span><span class="op">)</span></span>
 <span>  <span class="va">data.meta</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/plyr/man/ldply.html">ldply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/lapply.html">lapply</a></span><span class="op">(</span><span class="va">meta.res</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/unlist.html">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">b</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>,<span class="va">x</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"se"</span>,<span class="st">"pval"</span>,<span class="st">"QE"</span>,<span class="st">"QEp"</span>,<span class="st">"I2"</span>,<span class="st">"H2"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
@@ -297,18 +297,18 @@ probes present in &lt;50% of the cohorts</p>
 <li>fixed.effects.meta.analysis function</li>
 <li>extract.and.merge.meta.analysis function</li>
 </ul>
-<div class="sourceCode" id="cb194"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb190"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">meta.results.current</span> <span class="op">&lt;-</span> <span class="fu">fixed.effects.meta.analysis</span><span class="op">(</span>list.of.studies <span class="op">=</span> <span class="va">studies</span>, data <span class="op">=</span> <span class="va">dat</span><span class="op">)</span></span>
 <span><span class="va">dat.current</span> <span class="op">&lt;-</span> <span class="fu">extract.and.merge.meta.analysis</span><span class="op">(</span>meta.res <span class="op">=</span> <span class="va">meta.results.current</span>, data <span class="op">=</span> <span class="va">dat</span><span class="op">)</span></span>
 <span><span class="va">dat.current</span><span class="op">$</span><span class="va">fdr</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/stats/p.adjust.html">p.adjust</a></span><span class="op">(</span><span class="va">dat.current</span><span class="op">$</span><span class="va">p.fe</span>, method <span class="op">=</span> <span class="st">"fdr"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">dat.current</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div id="explore-the-results-1" class="section level3" number="5.4.3">
+<div id="explore-the-results" class="section level3" number="5.4.3">
 <h3>
-<span class="header-section-number">5.4.3</span> Explore the results<a class="anchor" aria-label="anchor" href="#explore-the-results-1"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.4.3</span> Explore the results<a class="anchor" aria-label="anchor" href="#explore-the-results"><i class="fas fa-link"></i></a>
 </h3>
 <p>We order the results by the metaEWAS p.value</p>
-<div class="sourceCode" id="cb195"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb191"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dat.current.ord</span><span class="op">&lt;-</span><span class="va">dat.current</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/order.html">order</a></span><span class="op">(</span><span class="va">dat.current</span><span class="op">$</span><span class="va">p.fe</span><span class="op">)</span>,<span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">dat.current.ord</span><span class="op">)</span></span>
 <span></span>
@@ -316,19 +316,19 @@ probes present in &lt;50% of the cohorts</p>
 <p>Significant hits
 Our results were corrected for multiple testing using FDR method. Significance
 was defined at FDR p-value &lt; 0.05.</p>
-<div class="sourceCode" id="cb196"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb192"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sig.current</span><span class="op">&lt;-</span><span class="va">dat.current.ord</span><span class="op">[</span><span class="va">dat.current.ord</span><span class="op">$</span><span class="va">fdr</span> <span class="op">&lt;</span><span class="fl">0.05</span>,<span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">sig.current</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">sig.current</span><span class="op">)</span></span></code></pre></div>
 <p>Lambda and QQplot</p>
-<div class="sourceCode" id="cb197"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb193"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">lambda.current</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Chisquare.html">qchisq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">(</span><span class="va">dat.current.ord</span><span class="op">$</span><span class="va">p.fe</span>,na.rm<span class="op">=</span><span class="cn">T</span><span class="op">)</span>, df <span class="op">=</span> <span class="fl">1</span>, lower.tail <span class="op">=</span> <span class="cn">F</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/stats/Chisquare.html">qchisq</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">lambda.current</span> </span></code></pre></div>
-<div class="sourceCode" id="cb198"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb194"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pvals.current</span><span class="op">&lt;-</span><span class="va">dat.current.ord</span><span class="op">$</span><span class="va">p.fe</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/qqman/man/qq.html">qq</a></span><span class="op">(</span><span class="va">pvals.current</span>,main<span class="op">=</span><span class="op">(</span><span class="st">"QQPlot metaEWAS smoking Never VS Current"</span><span class="op">)</span><span class="op">)</span> </span></code></pre></div>
 <p>Volcano plot</p>
-<div class="sourceCode" id="cb199"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb195"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dat.current.ord</span><span class="op">$</span><span class="va">diffexpressed</span> <span class="op">&lt;-</span> <span class="st">"NO"</span></span>
 <span><span class="va">dat.current.ord</span><span class="op">$</span><span class="va">diffexpressed</span><span class="op">[</span><span class="va">dat.current.ord</span><span class="op">$</span><span class="va">coef.fe</span>  <span class="op">&gt;</span> <span class="fl">0</span> <span class="op">&amp;</span> <span class="va">dat.current.ord</span><span class="op">$</span><span class="va">fdr</span> <span class="op">&lt;</span><span class="fl">0.05</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"POSITIVE"</span></span>
 <span><span class="va">dat.current.ord</span><span class="op">$</span><span class="va">diffexpressed</span><span class="op">[</span><span class="va">dat.current.ord</span><span class="op">$</span><span class="va">coef.fe</span>  <span class="op">&lt;</span> <span class="fl">0</span> <span class="op">&amp;</span> <span class="va">dat.current.ord</span><span class="op">$</span><span class="va">fdr</span> <span class="op">&lt;</span><span class="fl">0.05</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"NEGATIVE"</span></span>
@@ -350,7 +350,7 @@ was defined at FDR p-value &lt; 0.05.</p>
 <span></span>
 <span><span class="va">p3</span></span></code></pre></div>
 <p>Forest plot</p>
-<div class="sourceCode" id="cb200"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb196"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#Forest plots</span></span>
 <span></span>
 <span><span class="va">X</span><span class="op">&lt;-</span><span class="st">"cg05575921"</span></span>
@@ -383,7 +383,7 @@ was defined at FDR p-value &lt; 0.05.</p>
 <a class="nav-link" href="#statistical-methods-to-combine-results-from-different-studies-1"><span class="header-section-number">5.4</span> Statistical methods to combine results from different studies</a><ul class="nav navbar-nav">
 <li><a class="nav-link" href="#data-preparation-1"><span class="header-section-number">5.4.1</span> Data preparation</a></li>
 <li><a class="nav-link" href="#run-fixed-effect-meta-analysis"><span class="header-section-number">5.4.2</span> Run fixed effect meta-analysis</a></li>
-<li><a class="nav-link" href="#explore-the-results-1"><span class="header-section-number">5.4.3</span> Explore the results</a></li>
+<li><a class="nav-link" href="#explore-the-results"><span class="header-section-number">5.4.3</span> Explore the results</a></li>
 </ul>
 </li>
 </ul>

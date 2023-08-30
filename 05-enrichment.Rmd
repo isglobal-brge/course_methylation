@@ -1,13 +1,30 @@
 # Biological interpretation of findings
 In this chapter we will explain the steps for the biological interpretation of
-the findings. A file with the theory
-can be downloaded [here](./Theory/ISG_summer_school_EWAS5.pptx)
+the findings. A file with the slides can be downloaded [here](./Slides/ISG_summer_school_EWAS5.pptx)
+
+At the end of the practice, please answer these questions:
+
+1. Which are the enriched GO terms in current smokers? and in former smokers?
+2. Which are the enriched KEGG pathways in current smokers? and in former smokers?
+3. Which are the enriched tissues in current smokers? and informer smokers?
+
 
 We will need to load some libraries:
 ```{r libs_annot, eval=FALSE}
+library(IlluminaHumanMethylation450kanno.ilmn12.hg19)
+library(biomaRt)
 library(clusterProfiler)
 library(org.Hs.eg.db)
 library(enrichplot)
+```
+
+## Load MetaEWAS results
+We begin loading the Never vs Current FDR significant metaEWAS results 
+```{r loadenrich}
+metaEWAS.FDRsig <- read.table(file = "./data/DAY5/Input/MA.Smoking.NeverVScurrent.FDRsig.txt",
+                              sep=" ",
+                              header = TRUE)
+head(metaEWAS.FDRsig)
 ```
 
 
@@ -15,9 +32,39 @@ library(enrichplot)
 Once we have obtained a list with the CpGs that are significant in our analysis,
 we need to locate them in the genome and try to know which structures 
 surround them. The annotation consists in obtaining this information:
-```{r annot}
 
+First we load the annotation from `IlluminaHumanMethylation450kanno.ilmn12.hg19`
+R package and select the columns of interest
+```{r IlluminaAnnotation}
+data("IlluminaHumanMethylation450kanno.ilmn12.hg19")
+annotation.table<- getAnnotation(IlluminaHumanMethylation450kanno.ilmn12.hg19)
+dim(annotation.table)
+annotation.table<-as.data.frame(annotation.table[,c("chr","pos","strand",
+                                                    "Name","Islands_Name",
+                                                    "Relation_to_Island",
+                                                    "UCSC_RefGene_Name",
+                                                    "UCSC_RefGene_Group")])
+head(annotation.table)
 ```
+
+Merge our significant metaEWAS results with the annotation. 
+```{r merge}
+metaEWAS.ann<-merge(metaEWAS.FDRsig, annotation.table,by.x="probe",by.y="Name")
+metaEWAS.ann.ord<-metaEWAS.ann[order(metaEWAS.ann$p.fe),]
+
+head(metaEWAS.ann.ord)
+```
+
+Create list of Genes for Enrichment and save list of FDR CpGs and FDR genes
+```{r listGenes}
+ann.genes.current<-metaEWAS.ann.ord$UCSC_RefGene_Name
+ann.genes.current <- unlist(lapply(strsplit(ann.genes.current, ";"), unique))
+
+### 4.4. Save results 
+write.table(metaEWAS.FDRsig$probe,"./data/DAY5/Output/list.cpgs.MA.Smoking.NeverVScurrent.txt")
+write.table(ann.genes.current,"./data/DAY5/Output/list.genes.MA.Smoking.NeverVScurrent.txt")
+```
+
 
 ## Functional enrichment analysis
 The idea is to compare the list of genes that overlap our CpGs with the list of 
@@ -29,8 +76,18 @@ Genes and Genomes (KEGG) databases. The GO database allows us to see if a
 specific gene function is overrepresented in our gene list. The KEGG database
 will show if a specific pathway is overrepresented in our gene list. 
 
+First we need to convert Gene Names to Entrez Gene IDs
+```{r nameconversion}
+ensembl = useMart(biomart="ENSEMBL_MART_ENSEMBL", host="grch37.ensembl.org", path="/biomart/martservice" ,dataset="hsapiens_gene_ensembl")
+attributes = c('hgnc_symbol','entrezgene_id')
+filters = c('hgnc_symbol')
+
+entrez <- getBM(attributes=attributes, filters=filters, values=ann.genes.current, mart=ensembl)
+entrezid <- entrez$entrezgene_id
+```
+
 First we need to obtain the list of all human genes that are curated in the databases
-```{r genelist, eval=FALSE}
+```{r genelist}
 # GO
 df = as.data.frame(org.Hs.egGO)
 go_gene_list = unique(sort(df$gene_id))
@@ -40,10 +97,10 @@ dfk = as.data.frame(org.Hs.egPATH)
 kegg_gene_list = unique(sort(dfk$gene_id))
 ```
 
-
+### GO
 And then run the analyses for each one and keep the most interesting results.
-```{r results, eval=FALSE}
-ans.go <- enrichGO(gene = entrez, ont = "BP",
+```{r goresults}
+ans.go <- enrichGO(gene = entrezid, ont = "BP",
                    OrgDb ="org.Hs.eg.db",
                    universe = go_gene_list,
                    readable=TRUE,
@@ -52,21 +109,33 @@ ans.go <- enrichGO(gene = entrez, ont = "BP",
 tab.go <- as.data.frame(ans.go)
 tab.go<- subset(tab.go, Count>5)
 
-ans.kegg <- enrichKEGG(gene = entrez,
+```
+
+Finally we can perform different type of plots to see the results in a graphical way
+```{r goplots}
+p1 <- barplot(ans.go, showCategory=10) + ggtitle('Never vs Current Smokers') + theme(plot.title = element_text(size = 25))
+p1
+ans.go <- pairwise_termsim(ans.go)
+p2 <- emapplot(ans.go) + ggtitle('Never vs Current Smokers') + theme(plot.title = element_text(size = 25))
+p2
+```
+
+### KEGG
+And the same for the KEGG database
+```{r keggresults, eval=FALSE}
+ans.kegg <- enrichKEGG(gene = entrezid,
                        organism = 'hsa',
                        universe = kegg_gene_list,
                        pvalueCutoff = 0.05)
 tab.kegg <- as.data.frame(ans.kegg)
 tab.kegg<- subset(tab.kegg, Count>5)
-
 ```
+```{r keggplots, eval=FALSE}
 
-Finally we can perform different type of plots to see the results in a graphical way
-```{r plots, eval=FALSE}
-p1 <- barplot(ans.go, showCategory=10) + ggtitle('GO - no MCH') + theme(plot.title = element_text(size = 25))
-p1
+p3 <- barplot(ans.kegg, showCategory=10) + ggtitle('Never vs Current Smokers') + theme(plot.title = element_text(size = 25))
+p3
 ans.go <- pairwise_termsim(ans.go)
-p5 <- emapplot(ans.go) + ggtitle('GO - no MCH') + theme(plot.title = element_text(size = 25))
-p5
+p4 <- emapplot(ans.kegg) + ggtitle('Never vs Current Smokers') + theme(plot.title = element_text(size = 25))
+p4
 ```
 

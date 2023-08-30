@@ -6,15 +6,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Chapter 4 Meta-analysis of epigenome-wide association studies (metaEWAS) | Introduction to Epigenome-Wide Association Studies (EWAS)</title>
 <meta name="author" content="Juan R. González, Mariona Bustamante, Sofía Aguilar &amp; Laura Balagué">
-<meta name="description" content="In this chapter we will run a meta-analysis of epigenome-wide association studies (metaEWAS). A file with the theory can be downloaded here  4.1 Install and load packages Today we will load these...">
+<meta name="description" content="In this chapter we will run a meta-analysis of epigenome-wide association studies (metaEWAS) A file with the slides can be downloaded here At the end of the practice, please answer these...">
 <meta name="generator" content="bookdown 0.34 with bs4_book()">
 <meta property="og:title" content="Chapter 4 Meta-analysis of epigenome-wide association studies (metaEWAS) | Introduction to Epigenome-Wide Association Studies (EWAS)">
 <meta property="og:type" content="book">
 <meta property="og:url" content="https://isglobal-brge.github.io/course_methylation/meta-analysis-of-epigenome-wide-association-studies-metaewas.html">
-<meta property="og:description" content="In this chapter we will run a meta-analysis of epigenome-wide association studies (metaEWAS). A file with the theory can be downloaded here  4.1 Install and load packages Today we will load these...">
+<meta property="og:description" content="In this chapter we will run a meta-analysis of epigenome-wide association studies (metaEWAS) A file with the slides can be downloaded here At the end of the practice, please answer these...">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Chapter 4 Meta-analysis of epigenome-wide association studies (metaEWAS) | Introduction to Epigenome-Wide Association Studies (EWAS)">
-<meta name="twitter:description" content="In this chapter we will run a meta-analysis of epigenome-wide association studies (metaEWAS). A file with the theory can be downloaded here  4.1 Install and load packages Today we will load these...">
+<meta name="twitter:description" content="In this chapter we will run a meta-analysis of epigenome-wide association studies (metaEWAS) A file with the slides can be downloaded here At the end of the practice, please answer these...">
 <!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
 <script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.5.0/transition.js"></script><script src="libs/bs3compat-0.5.0/tabs.js"></script><script src="libs/bs3compat-0.5.0/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
@@ -73,8 +73,7 @@
 <li><a class="" href="pre-processing-of-dna-methylation-data.html"><span class="header-section-number">2</span> Pre-processing of DNA methylation data</a></li>
 <li><a class="" href="epigenome-wide-association-study-ewas.html"><span class="header-section-number">3</span> Epigenome-wide association study (EWAS)</a></li>
 <li><a class="active" href="meta-analysis-of-epigenome-wide-association-studies-metaewas.html"><span class="header-section-number">4</span> Meta-analysis of epigenome-wide association studies (metaEWAS)</a></li>
-<li><a class="" href="epigenome-wide-association-study-ewas-1.html"><span class="header-section-number">5</span> Epigenome-wide association study (EWAS)</a></li>
-<li><a class="" href="biological-interpretation-of-findings.html"><span class="header-section-number">6</span> Biological interpretation of findings</a></li>
+<li><a class="" href="biological-interpretation-of-findings.html"><span class="header-section-number">5</span> Biological interpretation of findings</a></li>
 <li><a class="" href="references.html">References</a></li>
 </ul>
 
@@ -87,41 +86,443 @@
 <h1>
 <span class="header-section-number">4</span> Meta-analysis of epigenome-wide association studies (metaEWAS)<a class="anchor" aria-label="anchor" href="#meta-analysis-of-epigenome-wide-association-studies-metaewas"><i class="fas fa-link"></i></a>
 </h1>
-<p>In this chapter we will run a meta-analysis of epigenome-wide association studies (metaEWAS).
-A file with the theory can be downloaded <a href="./Theory/ISG_summer_school_EWAS4.pptx">here</a></p>
+<p>In this chapter we will run a meta-analysis of epigenome-wide association studies (metaEWAS)
+A file with the slides can be downloaded <a href="./Slides/ISG_summer_school_EWAS4.pptx">here</a></p>
+<p>At the end of the practice, please answer these questions:</p>
+<ol style="list-style-type: decimal">
+<li>What does the precision plot show?</li>
+<li>How many FDR CpGs are associated with current smoking? and how many with former smoking?</li>
+<li>Which is the CpG with the lowest p-value for current smoking? Does it show increased or decreased methylation? Does it show heterogeneity across studies? Is the effect size of this CpG similar between current and never smokers and between former and never smokers?</li>
+</ol>
 <div id="install-and-load-packages-1" class="section level2" number="4.1">
 <h2>
 <span class="header-section-number">4.1</span> Install and load packages<a class="anchor" aria-label="anchor" href="#install-and-load-packages-1"><i class="fas fa-link"></i></a>
 </h2>
 <p>Today we will load these packages</p>
+<div class="sourceCode" id="cb177"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/stephenturner/qqman">qqman</a></span><span class="op">)</span> <span class="co">#qqplots</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://www.metafor-project.org">metafor</a></span><span class="op">)</span> <span class="co">#MA and forest plot</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://had.co.nz/reshape">reshape</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://had.co.nz/plyr">plyr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span><span class="co"># plots</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/slowkow/ggrepel">ggrepel</a></span><span class="op">)</span><span class="co"># plots</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://bioconductor.org/packages/GenomicRanges">GenomicRanges</a></span><span class="op">)</span> <span class="co"># prepare db for Manhattan plot</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/bernatgel/karyoploteR">karyoploteR</a></span><span class="op">)</span></span></code></pre></div>
 </div>
-<div id="quality-control-of-results-from-different-studies" class="section level2" number="4.2">
+<div id="load-ewas-results-by-cohort" class="section level2" number="4.2">
 <h2>
-<span class="header-section-number">4.2</span> Quality control of results from different studies<a class="anchor" aria-label="anchor" href="#quality-control-of-results-from-different-studies"><i class="fas fa-link"></i></a>
+<span class="header-section-number">4.2</span> Load EWAS results by cohort<a class="anchor" aria-label="anchor" href="#load-ewas-results-by-cohort"><i class="fas fa-link"></i></a>
 </h2>
+<p>Here we will show an example to run the metaEWAS testing never smokers against
+current smokers. Nevertheless, the same code can be applied to run other
+analyses testing never vs former. To do that, we would need to substitute all
+‘current’ for ‘former’.</p>
+<p>We begin loading the Never vs Current EWAS results from 3 cohorts:
+cohort1, cohort2 and cohort3.</p>
+<div class="sourceCode" id="cb178"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">EWASres.cohort1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span><span class="op">(</span>file <span class="op">=</span> <span class="st">"./data/DAY4/Input/Results.EWAS.cohort1.NeverVScurrent.txt"</span>,</span>
+<span>                              sep<span class="op">=</span><span class="st">","</span>,header <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">EWASres.cohort2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span><span class="op">(</span>file <span class="op">=</span> <span class="st">"./data/DAY4/Input/Results.EWAS.cohort2.NeverVScurrent.txt"</span>,</span>
+<span>                              sep<span class="op">=</span><span class="st">","</span>,header <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">EWASres.cohort3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span><span class="op">(</span>file <span class="op">=</span> <span class="st">"./data/DAY4/Input/Results.EWAS.cohort3.NeverVScurrent.txt"</span>,</span>
+<span>                              sep<span class="op">=</span><span class="st">","</span>,header <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div id="statistical-methods-to-combine-results-from-different-studies" class="section level2" number="4.3">
+<div id="quality-control-of-ewas-results-from-the-different-studies" class="section level2" number="4.3">
 <h2>
-<span class="header-section-number">4.3</span> Statistical methods to combine results from different studies<a class="anchor" aria-label="anchor" href="#statistical-methods-to-combine-results-from-different-studies"><i class="fas fa-link"></i></a>
+<span class="header-section-number">4.3</span> Quality control of EWAS results from the different studies<a class="anchor" aria-label="anchor" href="#quality-control-of-ewas-results-from-the-different-studies"><i class="fas fa-link"></i></a>
 </h2>
+<p>Before running the metaEWAS, it is really important to check the quality of the
+EWAS results that we want to combine through a meta-analysis.
+This includes:</p>
+<ul>
+<li>examining inflation (lambda and QQplot)</li>
+<li>create a beta’s box plot</li>
+<li>create a precision plot</li>
+</ul>
+<div id="lambda-and-qqplot" class="section level3" number="4.3.1">
+<h3>
+<span class="header-section-number">4.3.1</span> Lambda and qqplot<a class="anchor" aria-label="anchor" href="#lambda-and-qqplot"><i class="fas fa-link"></i></a>
+</h3>
+<p>We look to the lambda and the QQplot to examine inflation</p>
+<p>First, we will calculate the lambda for the 3 cohorts:</p>
+<div class="sourceCode" id="cb179"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">lambda.cohort1</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Chisquare.html">qchisq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">(</span><span class="va">EWASres.cohort1</span><span class="op">$</span><span class="va">p.value</span>,na.rm<span class="op">=</span><span class="cn">T</span><span class="op">)</span>, df <span class="op">=</span> <span class="fl">1</span>, </span>
+<span>                        lower.tail <span class="op">=</span> <span class="cn">F</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/stats/Chisquare.html">qchisq</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">1</span><span class="op">)</span> </span>
+<span><span class="va">lambda.cohort2</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Chisquare.html">qchisq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">(</span><span class="va">EWASres.cohort2</span><span class="op">$</span><span class="va">p.value</span>,na.rm<span class="op">=</span><span class="cn">T</span><span class="op">)</span>, df <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>                        lower.tail <span class="op">=</span> <span class="cn">F</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/stats/Chisquare.html">qchisq</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">lambda.cohort3</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Chisquare.html">qchisq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">(</span><span class="va">EWASres.cohort3</span><span class="op">$</span><span class="va">p.value</span>,na.rm<span class="op">=</span><span class="cn">T</span><span class="op">)</span>, df <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>                        lower.tail <span class="op">=</span> <span class="cn">F</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/stats/Chisquare.html">qchisq</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">1</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">lambdas</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/cbind.html">cbind</a></span><span class="op">(</span><span class="va">lambda.cohort1</span>,<span class="va">lambda.cohort2</span>,<span class="va">lambda.cohort3</span><span class="op">)</span></span>
+<span><span class="va">lambdas</span></span></code></pre></div>
+<pre><code>##      lambda.cohort1 lambda.cohort2 lambda.cohort3
+## [1,]       1.529736       1.468459       1.509258</code></pre>
+<div class="sourceCode" id="cb181"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html">write.table</a></span><span class="op">(</span><span class="va">lambdas</span>,<span class="st">"./data/DAY4/Output/Lambdas.NeverVScurrent.txt"</span>,sep<span class="op">=</span><span class="st">","</span><span class="op">)</span></span></code></pre></div>
+<p>Then, we will create a QQplot for each of the 3 cohorts:</p>
+<div class="sourceCode" id="cb182"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#cohort 1</span></span>
+<span><span class="va">pvals.cohort1</span><span class="op">&lt;-</span><span class="va">EWASres.cohort1</span><span class="op">$</span><span class="va">p.value</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/qqman/man/qq.html">qq</a></span><span class="op">(</span><span class="va">pvals.cohort1</span>,main<span class="op">=</span><span class="op">(</span><span class="st">"QQPlot EWAS cohort 1 smoking Never VS Current"</span><span class="op">)</span><span class="op">)</span> </span></code></pre></div>
+<div class="inline-figure"><img src="_main_files/figure-html/QQlots-1.png" width="576" style="display: block; margin: auto;"></div>
+<div class="sourceCode" id="cb183"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#cohort 2</span></span>
+<span><span class="va">pvals.cohort2</span><span class="op">&lt;-</span><span class="va">EWASres.cohort2</span><span class="op">$</span><span class="va">p.value</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/qqman/man/qq.html">qq</a></span><span class="op">(</span><span class="va">pvals.cohort2</span>,main<span class="op">=</span><span class="op">(</span><span class="st">"QQPlot EWAS cohort 2 smoking Never VS Current"</span><span class="op">)</span><span class="op">)</span> </span></code></pre></div>
+<div class="inline-figure"><img src="_main_files/figure-html/QQlots-2.png" width="576" style="display: block; margin: auto;"></div>
+<div class="sourceCode" id="cb184"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#cohort 3</span></span>
+<span><span class="va">pvals.cohort3</span><span class="op">&lt;-</span><span class="va">EWASres.cohort3</span><span class="op">$</span><span class="va">p.value</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/qqman/man/qq.html">qq</a></span><span class="op">(</span><span class="va">pvals.cohort3</span>,main<span class="op">=</span><span class="op">(</span><span class="st">"QQPlot EWAS cohort 3 smoking Never VS Current"</span><span class="op">)</span><span class="op">)</span> </span></code></pre></div>
+<p><img src="_main_files/figure-html/QQlots-3.png" width="576" style="display: block; margin: auto;">
+THe plots can be found here (<a href="./../data/DAY4/Output/QQPlot.EWAS.cohort1.NeverVScurrent.jpg">cohort1</a>, <a href="./../data/DAY4/Output/QQPlot.EWAS.cohort2.NeverVScurrent.jpg">cohort2</a>, <a href="./../data/DAY4/Output/QQPlot.EWAS.cohort3.NeverVScurrent.jpg">cohort3</a>)</p>
 </div>
-<div id="visualization-of-results-qq-plot-manhattan-volcano" class="section level2" number="4.4">
+<div id="box-plot" class="section level3" number="4.3.2">
+<h3>
+<span class="header-section-number">4.3.2</span> Box plot<a class="anchor" aria-label="anchor" href="#box-plot"><i class="fas fa-link"></i></a>
+</h3>
+<p>First, we will prepare a dataframe with the coefficient (beta) information of
+the 3 cohorts.</p>
+<div class="sourceCode" id="cb185"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#create df for Box plot</span></span>
+<span><span class="va">QCPlot_cohort1</span><span class="op">&lt;-</span><span class="va">EWASres.cohort1</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"probeID"</span>,<span class="st">"coefficient"</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="va">QCPlot_cohort1</span><span class="op">$</span><span class="va">Cohort</span><span class="op">&lt;-</span><span class="st">"cohort1"</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">QCPlot_cohort1</span><span class="op">)</span></span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["probeID"],"name":[1],"type":["chr"],"align":["left"]},{"label":["coefficient"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Cohort"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"cg05575921","2":"-0.15723240","3":"cohort1","_rn_":"cg05575921"},{"1":"cg21566642","2":"-0.11908682","3":"cohort1","_rn_":"cg21566642"},{"1":"cg03636183","2":"-0.07262148","3":"cohort1","_rn_":"cg03636183"},{"1":"cg05951221","2":"-0.09316890","3":"cohort1","_rn_":"cg05951221"},{"1":"cg01940273","2":"-0.07652157","3":"cohort1","_rn_":"cg01940273"},{"1":"cg23576855","2":"-0.16467216","3":"cohort1","_rn_":"cg23576855"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<div class="sourceCode" id="cb186"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">QCPlot_cohort2</span><span class="op">&lt;-</span><span class="va">EWASres.cohort2</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"probeID"</span>,<span class="st">"coefficient"</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="va">QCPlot_cohort2</span><span class="op">$</span><span class="va">Cohort</span><span class="op">&lt;-</span><span class="st">"cohort2"</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">QCPlot_cohort2</span><span class="op">)</span></span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["probeID"],"name":[1],"type":["chr"],"align":["left"]},{"label":["coefficient"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Cohort"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"cg05575921","2":"-0.14101120","3":"cohort2","_rn_":"cg05575921"},{"1":"cg01940273","2":"-0.07737718","3":"cohort2","_rn_":"cg01940273"},{"1":"cg21566642","2":"-0.11343605","3":"cohort2","_rn_":"cg21566642"},{"1":"cg05951221","2":"-0.08917528","3":"cohort2","_rn_":"cg05951221"},{"1":"cg03636183","2":"-0.06041403","3":"cohort2","_rn_":"cg03636183"},{"1":"cg23576855","2":"-0.14054494","3":"cohort2","_rn_":"cg23576855"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<div class="sourceCode" id="cb187"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">QCPlot_cohort3</span><span class="op">&lt;-</span><span class="va">EWASres.cohort3</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"probeID"</span>,<span class="st">"coefficient"</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="va">QCPlot_cohort3</span><span class="op">$</span><span class="va">Cohort</span><span class="op">&lt;-</span><span class="st">"cohort3"</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">QCPlot_cohort3</span><span class="op">)</span></span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["probeID"],"name":[1],"type":["chr"],"align":["left"]},{"label":["coefficient"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Cohort"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"cg05575921","2":"-0.15591006","3":"cohort3","_rn_":"cg05575921"},{"1":"cg23576855","2":"-0.18243448","3":"cohort3","_rn_":"cg23576855"},{"1":"cg03636183","2":"-0.07531316","3":"cohort3","_rn_":"cg03636183"},{"1":"cg05951221","2":"-0.08449224","3":"cohort3","_rn_":"cg05951221"},{"1":"cg21566642","2":"-0.10619119","3":"cohort3","_rn_":"cg21566642"},{"1":"cg01940273","2":"-0.06864217","3":"cohort3","_rn_":"cg01940273"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<div class="sourceCode" id="cb188"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">QCPlot.df</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/cbind.html">rbind</a></span><span class="op">(</span><span class="va">QCPlot_cohort1</span>,<span class="va">QCPlot_cohort2</span>,<span class="va">QCPlot_cohort3</span><span class="op">)</span></span></code></pre></div>
+<p>Then, we will plot a Beta’s Box plot to compare the results from the 3 cohorts</p>
+<div class="sourceCode" id="cb189"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">p1</span><span class="op">&lt;-</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">QCPlot.df</span>,<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">Cohort</span>, y<span class="op">=</span><span class="va">coefficient</span>, fill<span class="op">=</span><span class="va">Cohort</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html">geom_boxplot</a></span><span class="op">(</span><span class="op">)</span> </span>
+<span><span class="va">p1</span></span></code></pre></div>
+<p><img src="_main_files/figure-html/BoxPlot-1.png" width="576" style="display: block; margin: auto;">
+The boxplot can be found <a href="./../data/DAY4/Output/BoxPlot.MA.Smoking.NeverVScurrent.png">here</a></p>
+</div>
+<div id="precision-plot" class="section level3" number="4.3.3">
+<h3>
+<span class="header-section-number">4.3.3</span> Precision plot<a class="anchor" aria-label="anchor" href="#precision-plot"><i class="fas fa-link"></i></a>
+</h3>
+<p>First, we will prepare a dataframe including the inverse SE (1 divided by the
+median of the effect SE) and the square root of the sample size for each cohort.</p>
+<div class="sourceCode" id="cb190"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">invSE_cohort1</span><span class="op">&lt;-</span><span class="fl">1</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">(</span><span class="va">EWASres.cohort1</span><span class="op">$</span><span class="va">coefficient.se</span><span class="op">)</span></span>
+<span><span class="va">invSE_cohort2</span><span class="op">&lt;-</span><span class="fl">1</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">(</span><span class="va">EWASres.cohort2</span><span class="op">$</span><span class="va">coefficient.se</span><span class="op">)</span></span>
+<span><span class="va">invSE_cohort3</span><span class="op">&lt;-</span><span class="fl">1</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">(</span><span class="va">EWASres.cohort3</span><span class="op">$</span><span class="va">coefficient.se</span><span class="op">)</span></span>
+<span>                        </span>
+<span></span>
+<span><span class="va">precision</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span></span>
+<span>  Cohort <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"cohort1"</span>,<span class="st">"cohort2"</span>,<span class="st">"cohort3"</span><span class="op">)</span>,</span>
+<span>  N <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">188</span>, <span class="fl">176</span>, <span class="fl">166</span><span class="op">)</span>,</span>
+<span>  invSE<span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">invSE_cohort1</span>,<span class="va">invSE_cohort2</span>,<span class="va">invSE_cohort3</span><span class="op">)</span><span class="op">)</span></span>
+<span>  </span>
+<span><span class="va">precision</span><span class="op">$</span><span class="va">sqrt_N</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="va">precision</span><span class="op">$</span><span class="va">N</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">precision</span><span class="op">)</span></span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Cohort"],"name":[1],"type":["chr"],"align":["left"]},{"label":["N"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["invSE"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["sqrt_N"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"cohort1","2":"188","3":"309.4299","4":"13.71131","_rn_":"1"},{"1":"cohort2","2":"176","3":"277.5064","4":"13.26650","_rn_":"2"},{"1":"cohort3","2":"166","3":"284.3518","4":"12.88410","_rn_":"3"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>Then, we will plot the precision plot of 1/median(SE) against square root of
+the sample size (N) for each cohort</p>
+<div class="sourceCode" id="cb191"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">p2</span><span class="op">&lt;-</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">precision</span>,<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">sqrt_N</span>, y<span class="op">=</span><span class="va">invSE</span>, color<span class="op">=</span><span class="va">Cohort</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span> </span>
+<span><span class="va">p2</span></span></code></pre></div>
+<p><img src="_main_files/figure-html/PrecisionPlot-1.png" width="576" style="display: block; margin: auto;">
+The precision plot can be found <a href="./../data/DAY4/Output/PrecisionPlot.MA.Smoking.NeverVScurrent.png">here</a></p>
+</div>
+</div>
+<div id="metaewas-statistical-methods-to-combine-results-from-different-studies" class="section level2" number="4.4">
 <h2>
-<span class="header-section-number">4.4</span> Visualization of results: QQ-plot, Manhattan, Volcano<a class="anchor" aria-label="anchor" href="#visualization-of-results-qq-plot-manhattan-volcano"><i class="fas fa-link"></i></a>
+<span class="header-section-number">4.4</span> MetaEWAS: Statistical methods to combine results from different studies<a class="anchor" aria-label="anchor" href="#metaewas-statistical-methods-to-combine-results-from-different-studies"><i class="fas fa-link"></i></a>
 </h2>
+<p>We will combine the EWAS results through a fixed-effect weight meta-analysis
+using Metafor R package</p>
+<div id="data-preparation-1" class="section level3" number="4.4.1">
+<h3>
+<span class="header-section-number">4.4.1</span> Data preparation<a class="anchor" aria-label="anchor" href="#data-preparation-1"><i class="fas fa-link"></i></a>
+</h3>
+<p>We want to create a dataframe merging the EWAS results from the 3 cohorts
+(probeID, coefficient, se, p.value, n)</p>
+<p>First, we subset the EWAS results to probeID, coefficient, se .p.value and n
+and we change the name of the column in order to merge these results in a dataframe</p>
+<div class="sourceCode" id="cb192"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">EWASres.cohort1</span><span class="op">&lt;-</span><span class="va">EWASres.cohort1</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"probeID"</span>,<span class="st">"coefficient"</span>,</span>
+<span>                                    <span class="st">"coefficient.se"</span>,<span class="st">"p.value"</span>,<span class="st">"n"</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="va">EWASres.cohort2</span><span class="op">&lt;-</span><span class="va">EWASres.cohort2</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"probeID"</span>,<span class="st">"coefficient"</span>,</span>
+<span>                                    <span class="st">"coefficient.se"</span>,<span class="st">"p.value"</span>,<span class="st">"n"</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="va">EWASres.cohort3</span><span class="op">&lt;-</span><span class="va">EWASres.cohort3</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"probeID"</span>,<span class="st">"coefficient"</span>,</span>
+<span>                                    <span class="st">"coefficient.se"</span>,<span class="st">"p.value"</span>,<span class="st">"n"</span><span class="op">)</span><span class="op">]</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">EWASres.cohort1</span><span class="op">)</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"probe"</span>, <span class="st">"coef_cohort1"</span>, <span class="st">"se_cohort1"</span>,</span>
+<span>                           <span class="st">"P_VAL_cohort1"</span>, <span class="st">"N_for_probe_cohort1"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">EWASres.cohort2</span><span class="op">)</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"probe"</span>, <span class="st">"coef_cohort2"</span>, <span class="st">"se_cohort2"</span>,</span>
+<span>                           <span class="st">"P_VAL_cohort2"</span>, <span class="st">"N_for_probe_cohort2"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">EWASres.cohort3</span><span class="op">)</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"probe"</span>, <span class="st">"coef_cohort3"</span>, <span class="st">"se_cohort3"</span>,</span>
+<span>                           <span class="st">"P_VAL_cohort3"</span>, <span class="st">"N_for_probe_cohort3"</span><span class="op">)</span></span></code></pre></div>
+<p>Second, we merge the EWAS results from the 3 cohorts</p>
+<div class="sourceCode" id="cb193"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/S4Vectors/man/Vector-merge.html">merge</a></span><span class="op">(</span><span class="va">EWASres.cohort1</span>, <span class="va">EWASres.cohort2</span>, by<span class="op">=</span><span class="st">"probe"</span>, all.x<span class="op">=</span><span class="cn">TRUE</span>, all.y<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/S4Vectors/man/Vector-merge.html">merge</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">EWASres.cohort3</span>, by<span class="op">=</span><span class="st">"probe"</span>, all.x<span class="op">=</span><span class="cn">TRUE</span>, all.y<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [1] 37842    13</code></pre>
+<div class="sourceCode" id="cb195"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["probe"],"name":[1],"type":["chr"],"align":["left"]},{"label":["coef_cohort1"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["se_cohort1"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["P_VAL_cohort1"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["N_for_probe_cohort1"],"name":[5],"type":["int"],"align":["right"]},{"label":["coef_cohort2"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["se_cohort2"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["P_VAL_cohort2"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["N_for_probe_cohort2"],"name":[9],"type":["int"],"align":["right"]},{"label":["coef_cohort3"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["se_cohort3"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["P_VAL_cohort3"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["N_for_probe_cohort3"],"name":[13],"type":["int"],"align":["right"]}],"data":[{"1":"cg00000714","2":"-0.0007607143","3":"0.002470539","4":"0.75857926","5":"188","6":"-2.919619e-03","7":"0.002868601","8":"0.31055599","9":"176","10":"0.0014847250","11":"0.002921607","12":"0.61219350","13":"166","_rn_":"1"},{"1":"cg00000734","2":"0.0005478456","3":"0.001536454","4":"0.72192399","5":"188","6":"1.196409e-03","7":"0.001652424","8":"0.47026782","9":"176","10":"0.0017315550","11":"0.001533687","12":"0.26099670","13":"166","_rn_":"2"},{"1":"cg00001854","2":"0.0009403487","3":"0.001613117","4":"0.56081919","5":"188","6":"1.839638e-03","7":"0.001641490","8":"0.26435115","9":"176","10":"0.0008274559","11":"0.001586387","12":"0.60284900","13":"166","_rn_":"3"},{"1":"cg00001930","2":"0.0045281731","3":"0.002523932","4":"0.07484775","5":"187","6":"6.117489e-03","7":"0.002997602","8":"0.04317224","9":"176","10":"0.0065971630","11":"0.002602325","12":"0.01245129","13":"165","_rn_":"4"},{"1":"cg00002033","2":"-0.0010865534","3":"0.009465430","4":"0.90876639","5":"187","6":"-5.352821e-05","7":"0.010680975","8":"0.99600865","9":"175","10":"-0.0048552690","11":"0.010743380","12":"0.65208710","13":"165","_rn_":"5"},{"1":"cg00002145","2":"-0.0012752116","3":"0.003544025","4":"0.71949318","5":"188","6":"-2.257798e-03","7":"0.003938378","8":"0.56738465","9":"176","10":"-0.0012335830","11":"0.003545488","12":"0.72846230","13":"166","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>Then, we create a new column with the total N of the metaEWAS and remove those
+probes present in &lt;50% of the cohorts</p>
+<div class="sourceCode" id="cb196"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">dat</span><span class="op">$</span><span class="va">N</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/colSums.html">rowSums</a></span><span class="op">(</span><span class="va">dat</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"N_for_probe_cohort1"</span>, <span class="st">"N_for_probe_cohort2"</span>,</span>
+<span>                        <span class="st">"N_for_probe_cohort3"</span><span class="op">)</span><span class="op">]</span>, na.rm<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">totN</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">dat</span><span class="op">$</span><span class="va">N_for_probe_cohort1</span>, na.rm<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>           <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">dat</span><span class="op">$</span><span class="va">N_for_probe_cohort2</span>, na.rm<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>           <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">dat</span><span class="op">$</span><span class="va">N_for_probe_cohort3</span>, na.rm<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">datN</span> <span class="op">&lt;-</span> <span class="va">dat</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"probe"</span>, <span class="st">"N_for_probe_cohort1"</span>, <span class="st">"N_for_probe_cohort2"</span>,</span>
+<span>               <span class="st">"N_for_probe_cohort3"</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="va">datN</span> <span class="op">&lt;-</span> <span class="va">datN</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/which.html">which</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/colSums.html">rowMeans</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">datN</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">)</span><span class="op">&gt;=</span><span class="fl">0.5</span><span class="op">)</span>,<span class="op">]</span></span>
+<span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="va">dat</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/which.html">which</a></span><span class="op">(</span><span class="va">dat</span><span class="op">$</span><span class="va">probe</span> <span class="op"><a href="https://rdrr.io/pkg/BiocGenerics/man/match.html">%in%</a></span> <span class="va">datN</span><span class="op">$</span><span class="va">probe</span><span class="op">)</span>,<span class="op">]</span></span>
+<span><span class="va">dat</span><span class="op">&lt;-</span><span class="va">dat</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/which.html">which</a></span><span class="op">(</span><span class="va">dat</span><span class="op">$</span><span class="va">N</span> <span class="op">&gt;=</span> <span class="va">totN</span><span class="op">/</span><span class="fl">2</span><span class="op">)</span>,<span class="op">]</span></span>
+<span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/droplevels.html">droplevels</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span>
+<span><span class="va">studies</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"cohort1"</span>,<span class="st">"cohort2"</span>,<span class="st">"cohort3"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["probe"],"name":[1],"type":["chr"],"align":["left"]},{"label":["coef_cohort1"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["se_cohort1"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["P_VAL_cohort1"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["N_for_probe_cohort1"],"name":[5],"type":["int"],"align":["right"]},{"label":["coef_cohort2"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["se_cohort2"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["P_VAL_cohort2"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["N_for_probe_cohort2"],"name":[9],"type":["int"],"align":["right"]},{"label":["coef_cohort3"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["se_cohort3"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["P_VAL_cohort3"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["N_for_probe_cohort3"],"name":[13],"type":["int"],"align":["right"]},{"label":["N"],"name":[14],"type":["dbl"],"align":["right"]}],"data":[{"1":"cg00000714","2":"-0.0007607143","3":"0.002470539","4":"0.75857926","5":"188","6":"-2.919619e-03","7":"0.002868601","8":"0.31055599","9":"176","10":"0.0014847250","11":"0.002921607","12":"0.61219350","13":"166","14":"530","_rn_":"1"},{"1":"cg00000734","2":"0.0005478456","3":"0.001536454","4":"0.72192399","5":"188","6":"1.196409e-03","7":"0.001652424","8":"0.47026782","9":"176","10":"0.0017315550","11":"0.001533687","12":"0.26099670","13":"166","14":"530","_rn_":"2"},{"1":"cg00001854","2":"0.0009403487","3":"0.001613117","4":"0.56081919","5":"188","6":"1.839638e-03","7":"0.001641490","8":"0.26435115","9":"176","10":"0.0008274559","11":"0.001586387","12":"0.60284900","13":"166","14":"530","_rn_":"3"},{"1":"cg00001930","2":"0.0045281731","3":"0.002523932","4":"0.07484775","5":"187","6":"6.117489e-03","7":"0.002997602","8":"0.04317224","9":"176","10":"0.0065971630","11":"0.002602325","12":"0.01245129","13":"165","14":"528","_rn_":"4"},{"1":"cg00002033","2":"-0.0010865534","3":"0.009465430","4":"0.90876639","5":"187","6":"-5.352821e-05","7":"0.010680975","8":"0.99600865","9":"175","10":"-0.0048552690","11":"0.010743380","12":"0.65208710","13":"165","14":"527","_rn_":"5"},{"1":"cg00002145","2":"-0.0012752116","3":"0.003544025","4":"0.71949318","5":"188","6":"-2.257798e-03","7":"0.003938378","8":"0.56738465","9":"176","10":"-0.0012335830","11":"0.003545488","12":"0.72846230","13":"166","14":"530","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="run-fixed-effect-meta-analysis" class="section level3" number="4.4.2">
+<h3>
+<span class="header-section-number">4.4.2</span> Run fixed effect meta-analysis<a class="anchor" aria-label="anchor" href="#run-fixed-effect-meta-analysis"><i class="fas fa-link"></i></a>
+</h3>
+<p>Load the functions for the metaEWAS</p>
+<p><code>fixed.effects.meta.analysis()</code> function</p>
+<div class="sourceCode" id="cb197"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">fixed.effects.meta.analysis</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">list.of.studies</span>,<span class="va">data</span><span class="op">)</span><span class="op">{</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="https://www.metafor-project.org">metafor</a></span><span class="op">)</span></span>
+<span>  <span class="va">coefs</span> <span class="op">=</span> <span class="va">data</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"probe"</span>,<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"coef_"</span>,<span class="va">list.of.studies</span><span class="op">)</span><span class="op">)</span><span class="op">]</span></span>
+<span>  <span class="va">ses</span> <span class="op">=</span> <span class="va">data</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"probe"</span>,<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"se_"</span>,<span class="va">list.of.studies</span><span class="op">)</span><span class="op">)</span><span class="op">]</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="http://had.co.nz/reshape">reshape</a></span><span class="op">)</span></span>
+<span>  <span class="va">coefs</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/reshape/man/melt-24.html">melt</a></span><span class="op">(</span><span class="va">coefs</span><span class="op">)</span></span>
+<span>  <span class="va">coefs</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/cbind.html">cbind</a></span><span class="op">(</span><span class="va">coefs</span>, <span class="fu"><a href="https://rdrr.io/pkg/reshape/man/colsplit-9h.html">colsplit</a></span><span class="op">(</span><span class="va">coefs</span><span class="op">$</span><span class="va">variable</span>, <span class="st">"_"</span>, names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"var"</span>, <span class="st">"study"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">coefs</span> <span class="op">&lt;-</span> <span class="va">coefs</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"probe"</span>,<span class="st">"study"</span>,<span class="st">"value"</span><span class="op">)</span><span class="op">]</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">coefs</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"probe"</span>,<span class="st">"study"</span>,<span class="st">"coef"</span><span class="op">)</span></span>
+<span>  <span class="va">ses</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/reshape/man/melt-24.html">melt</a></span><span class="op">(</span><span class="va">ses</span><span class="op">)</span></span>
+<span>  <span class="va">data.long</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/cbind.html">cbind</a></span><span class="op">(</span><span class="va">coefs</span>,<span class="va">ses</span><span class="op">[</span>,<span class="st">"value"</span><span class="op">]</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">data.long</span><span class="op">)</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"probe"</span>,<span class="st">"study"</span>,<span class="st">"coef"</span>,<span class="st">"se"</span><span class="op">)</span></span>
+<span>  <span class="va">res</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/S4Vectors/man/splitAsList.html">split</a></span><span class="op">(</span><span class="va">data.long</span>, f<span class="op">=</span><span class="va">data</span><span class="op">$</span><span class="va">probe</span><span class="op">)</span></span>
+<span>  <span class="va">res</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/lapply.html">lapply</a></span><span class="op">(</span><span class="va">res</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://wviechtb.github.io/metafor/reference/rma.uni.html">rma.uni</a></span><span class="op">(</span>slab<span class="op">=</span><span class="va">x</span><span class="op">$</span><span class="va">study</span>,</span>
+<span>                                        yi<span class="op">=</span><span class="va">x</span><span class="op">$</span><span class="va">coef</span>,sei<span class="op">=</span><span class="va">x</span><span class="op">$</span><span class="va">se</span>,method<span class="op">=</span><span class="st">"FE"</span>,</span>
+<span>                                        weighted<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">res</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<p><code>extract.and.merge.meta.analysis()</code> function</p>
+<div class="sourceCode" id="cb198"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">extract.and.merge.meta.analysis</span> <span class="op">&lt;-</span><span class="kw">function</span><span class="op">(</span><span class="va">meta.res</span>,<span class="va">data</span><span class="op">)</span><span class="op">{</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="http://had.co.nz/plyr">plyr</a></span><span class="op">)</span></span>
+<span>  <span class="va">data.meta</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/plyr/man/ldply.html">ldply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/lapply.html">lapply</a></span><span class="op">(</span><span class="va">meta.res</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/unlist.html">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">b</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>,<span class="va">x</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"se"</span>,<span class="st">"pval"</span>,<span class="st">"QE"</span>,<span class="st">"QEp"</span>,<span class="st">"I2"</span>,<span class="st">"H2"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/row_colnames.html">colnames</a></span><span class="op">(</span><span class="va">data.meta</span><span class="op">)</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"probe"</span>,<span class="st">"coef.fe"</span>,<span class="st">"se.fe"</span>,<span class="st">"p.fe"</span>,<span class="st">"q.fe"</span>,<span class="st">"het.p.fe"</span>,<span class="st">"i2.fe"</span>,<span class="st">"h2.fe"</span><span class="op">)</span></span>
+<span>  <span class="va">data</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/S4Vectors/man/Vector-merge.html">merge</a></span><span class="op">(</span><span class="va">data</span>,<span class="va">data.meta</span>,by<span class="op">=</span><span class="st">"probe"</span>,all.x<span class="op">=</span><span class="cn">T</span><span class="op">)</span></span>
+<span>  <span class="va">data</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<p>To run the Never vs Current metaEWAS, we will use the above functions (without edition)</p>
+<ul>
+<li>
+<p><code>fixed.effects.meta.analysis()</code> function:</p>
+<ul>
+<li>list.of.studies: vector with the name of the studies that we want to meta-analyse</li>
+<li>data: dataframe created above with the EWAS results of the cohorts that we want
+to meta-analyse</li>
+</ul>
+</li>
+<li>
+<p><code>extract.and.merge.meta.analysis()</code> function:</p>
+<ul>
+<li>meta.res: the output from the meta-analysis</li>
+<li>data: the dataframe with the EWAS results of the cohorts that we want to meta-analyse</li>
+</ul>
+</li>
+</ul>
+<p>Then, we will correct for multiple testing (FDR) using <code><a href="https://rdrr.io/r/stats/p.adjust.html">p.adjust()</a></code> function</p>
+<div class="sourceCode" id="cb199"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">meta.results.current</span> <span class="op">&lt;-</span> <span class="fu">fixed.effects.meta.analysis</span><span class="op">(</span>list.of.studies <span class="op">=</span> <span class="va">studies</span>, </span>
+<span>                                                    data <span class="op">=</span> <span class="va">dat</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## Using probe as id variables</code></pre>
+<pre><code>## Warning in type.convert.default(as.character(x)): 'as.is' should be specified by the caller; using
+## TRUE
+
+## Warning in type.convert.default(as.character(x)): 'as.is' should be specified by the caller; using
+## TRUE</code></pre>
+<pre><code>## Using probe as id variables</code></pre>
+<div class="sourceCode" id="cb203"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">dat.current</span> <span class="op">&lt;-</span> <span class="fu">extract.and.merge.meta.analysis</span><span class="op">(</span>meta.res <span class="op">=</span> <span class="va">meta.results.current</span>,</span>
+<span>                                               data <span class="op">=</span> <span class="va">dat</span><span class="op">)</span></span>
+<span><span class="va">dat.current</span><span class="op">$</span><span class="va">fdr</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/stats/p.adjust.html">p.adjust</a></span><span class="op">(</span><span class="va">dat.current</span><span class="op">$</span><span class="va">p.fe</span>, method <span class="op">=</span> <span class="st">"fdr"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">dat.current</span><span class="op">)</span></span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["probe"],"name":[1],"type":["chr"],"align":["left"]},{"label":["coef_cohort1"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["se_cohort1"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["P_VAL_cohort1"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["N_for_probe_cohort1"],"name":[5],"type":["int"],"align":["right"]},{"label":["coef_cohort2"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["se_cohort2"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["P_VAL_cohort2"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["N_for_probe_cohort2"],"name":[9],"type":["int"],"align":["right"]},{"label":["coef_cohort3"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["se_cohort3"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["P_VAL_cohort3"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["N_for_probe_cohort3"],"name":[13],"type":["int"],"align":["right"]},{"label":["N"],"name":[14],"type":["dbl"],"align":["right"]},{"label":["coef.fe"],"name":[15],"type":["dbl"],"align":["right"]},{"label":["se.fe"],"name":[16],"type":["dbl"],"align":["right"]},{"label":["p.fe"],"name":[17],"type":["dbl"],"align":["right"]},{"label":["q.fe"],"name":[18],"type":["dbl"],"align":["right"]},{"label":["het.p.fe"],"name":[19],"type":["dbl"],"align":["right"]},{"label":["i2.fe"],"name":[20],"type":["dbl"],"align":["right"]},{"label":["h2.fe"],"name":[21],"type":["dbl"],"align":["right"]},{"label":["fdr"],"name":[22],"type":["dbl"],"align":["right"]}],"data":[{"1":"cg00000714","2":"-0.0007607143","3":"0.002470539","4":"0.75857926","5":"188","6":"-2.919619e-03","7":"0.002868601","8":"0.31055599","9":"176","10":"0.0014847250","11":"0.002921607","12":"0.61219350","13":"166","14":"530","15":"-0.0007589643","16":"0.0015761897","17":"0.6301481362","18":"1.15709242","19":"0.5607129","20":"0","21":"0.57854621","22":"0.776551693","_rn_":"1"},{"1":"cg00000734","2":"0.0005478456","3":"0.001536454","4":"0.72192399","5":"188","6":"1.196409e-03","7":"0.001652424","8":"0.47026782","9":"176","10":"0.0017315550","11":"0.001533687","12":"0.26099670","13":"166","14":"530","15":"0.0011575394","16":"0.0009072289","17":"0.2019885067","18":"0.29809770","19":"0.8615270","20":"0","21":"0.14904885","22":"0.378454675","_rn_":"2"},{"1":"cg00001854","2":"0.0009403487","3":"0.001613117","4":"0.56081919","5":"188","6":"1.839638e-03","7":"0.001641490","8":"0.26435115","9":"176","10":"0.0008274559","11":"0.001586387","12":"0.60284900","13":"166","14":"530","15":"0.0011909530","16":"0.0009313783","17":"0.2010028703","18":"0.23280563","19":"0.8901166","20":"0","21":"0.11640281","22":"0.377409925","_rn_":"3"},{"1":"cg00001930","2":"0.0045281731","3":"0.002523932","4":"0.07484775","5":"187","6":"6.117489e-03","7":"0.002997602","8":"0.04317224","9":"176","10":"0.0065971630","11":"0.002602325","12":"0.01245129","13":"165","14":"528","15":"0.0056879495","16":"0.0015505575","17":"0.0002441443","18":"0.35375418","19":"0.8378828","20":"0","21":"0.17687709","22":"0.003045125","_rn_":"4"},{"1":"cg00002033","2":"-0.0010865534","3":"0.009465430","4":"0.90876639","5":"187","6":"-5.352821e-05","7":"0.010680975","8":"0.99600865","9":"175","10":"-0.0048552690","11":"0.010743380","12":"0.65208710","13":"165","14":"527","15":"-0.0019118888","16":"0.0059140607","17":"0.7464843221","18":"0.11293511","19":"0.9450971","20":"0","21":"0.05646755","22":"0.855003472","_rn_":"5"},{"1":"cg00002145","2":"-0.0012752116","3":"0.003544025","4":"0.71949318","5":"188","6":"-2.257798e-03","7":"0.003938378","8":"0.56738465","9":"176","10":"-0.0012335830","11":"0.003545488","12":"0.72846230","13":"166","14":"530","15":"-0.0015436650","16":"0.0021145872","17":"0.4653854676","18":"0.04626607","19":"0.9771325","20":"0","21":"0.02313303","22":"0.645568800","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="explore-the-results" class="section level3" number="4.4.3">
+<h3>
+<span class="header-section-number">4.4.3</span> Explore the results<a class="anchor" aria-label="anchor" href="#explore-the-results"><i class="fas fa-link"></i></a>
+</h3>
+<p>The metaEWAS results contain:</p>
+<ul>
+<li>probe</li>
+<li>coef, se, p.value and N from the cohorts included in the metaEWAS</li>
+<li>N: total N of the metaEWAS</li>
+<li>coef.fe: coefficient of the association of the metaEWAS</li>
+<li>se.fe: standard error of the coefficient of the association of the metaEWAS</li>
+<li>p.fe: p.value of the metaEWAS</li>
+<li>i2.fe: We calculated the I2 statistic to explore heterogeneity across cohorts</li>
+<li>fdr: p-value after correcting for multiple testing (FDR)</li>
+</ul>
+<p>We order the results by the metaEWAS p.value</p>
+<div class="sourceCode" id="cb204"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">dat.current.ord</span><span class="op">&lt;-</span><span class="va">dat.current</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/order.html">order</a></span><span class="op">(</span><span class="va">dat.current</span><span class="op">$</span><span class="va">p.fe</span><span class="op">)</span>,<span class="op">]</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">dat.current.ord</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [1] 37842    22</code></pre>
+<div class="sourceCode" id="cb206"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html">write.table</a></span><span class="op">(</span><span class="va">dat.current.ord</span>, <span class="st">"./data/DAY4/Output/MA.Smoking.NeverVScurrent.txt"</span><span class="op">)</span></span></code></pre></div>
+<p><strong>Significant hits </strong></p>
+<p>Our results were corrected for multiple testing using FDR method. Significance
+was defined at FDR p-value &lt; 0.05.</p>
+<div class="sourceCode" id="cb207"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sig.current</span><span class="op">&lt;-</span><span class="va">dat.current.ord</span><span class="op">[</span><span class="va">dat.current.ord</span><span class="op">$</span><span class="va">fdr</span> <span class="op">&lt;</span><span class="fl">0.05</span>,<span class="op">]</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">sig.current</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [1] 8194   22</code></pre>
+<div class="sourceCode" id="cb209"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">sig.current</span><span class="op">)</span></span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["probe"],"name":[1],"type":["chr"],"align":["left"]},{"label":["coef_cohort1"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["se_cohort1"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["P_VAL_cohort1"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["N_for_probe_cohort1"],"name":[5],"type":["int"],"align":["right"]},{"label":["coef_cohort2"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["se_cohort2"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["P_VAL_cohort2"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["N_for_probe_cohort2"],"name":[9],"type":["int"],"align":["right"]},{"label":["coef_cohort3"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["se_cohort3"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["P_VAL_cohort3"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["N_for_probe_cohort3"],"name":[13],"type":["int"],"align":["right"]},{"label":["N"],"name":[14],"type":["dbl"],"align":["right"]},{"label":["coef.fe"],"name":[15],"type":["dbl"],"align":["right"]},{"label":["se.fe"],"name":[16],"type":["dbl"],"align":["right"]},{"label":["p.fe"],"name":[17],"type":["dbl"],"align":["right"]},{"label":["q.fe"],"name":[18],"type":["dbl"],"align":["right"]},{"label":["het.p.fe"],"name":[19],"type":["dbl"],"align":["right"]},{"label":["i2.fe"],"name":[20],"type":["dbl"],"align":["right"]},{"label":["h2.fe"],"name":[21],"type":["dbl"],"align":["right"]},{"label":["fdr"],"name":[22],"type":["dbl"],"align":["right"]}],"data":[{"1":"cg05575921","2":"-0.15723240","3":"0.010576833","4":"3.449766e-31","5":"188","6":"-0.14101120","7":"0.011691620","8":"2.420781e-23","9":"176","10":"-0.15591006","11":"0.010843238","12":"1.583696e-28","13":"166","14":"530","15":"-0.15198539","16":"0.006355165","17":"2.125374e-126","18":"1.2581465","19":"0.5330856","20":"0.00000","21":"0.6290732","22":"8.042838e-122","_rn_":"8751"},{"1":"cg21566642","2":"-0.11908682","3":"0.009286429","4":"8.297569e-26","5":"188","6":"-0.11343605","7":"0.009707079","8":"2.230469e-22","9":"176","10":"-0.10619119","11":"0.009754165","12":"5.891175e-20","13":"166","14":"530","15":"-0.11311143","16":"0.005528416","17":"4.893221e-93","18":"0.9184917","19":"0.6317599","20":"0.00000","21":"0.4592459","22":"9.258464e-89","_rn_":"29988"},{"1":"cg03636183","2":"-0.07262148","3":"0.005700836","4":"1.396044e-25","5":"188","6":"-0.06041403","7":"0.006198676","8":"2.073011e-17","9":"176","10":"-0.07531316","11":"0.006123817","12":"1.881683e-23","13":"166","14":"530","15":"-0.06967483","16":"0.003461447","17":"4.127409e-90","18":"3.3469160","19":"0.1875972","20":"40.24350","21":"1.6734580","22":"5.206314e-86","_rn_":"5907"},{"1":"cg01940273","2":"-0.07652157","3":"0.006414607","4":"1.992495e-23","5":"188","6":"-0.07737718","7":"0.006436027","8":"3.038132e-23","9":"176","10":"-0.06864217","11":"0.006436418","12":"2.091962e-19","13":"166","14":"530","15":"-0.07418574","16":"0.003711781","17":"7.209404e-89","18":"1.1202947","19":"0.5711249","20":"0.00000","21":"0.5601474","22":"6.820456e-85","_rn_":"3198"},{"1":"cg23576855","2":"-0.16467216","3":"0.014655727","4":"1.392884e-21","5":"188","6":"-0.14054494","7":"0.016847122","8":"6.601338e-14","9":"176","10":"-0.18243448","11":"0.013150485","12":"2.632126e-27","13":"166","14":"530","15":"-0.16594019","16":"0.008463186","17":"1.339678e-85","18":"3.8529221","19":"0.1456628","20":"48.09135","21":"1.9264611","22":"1.013922e-81","_rn_":"32409"},{"1":"cg05951221","2":"-0.09316890","3":"0.007577530","4":"2.110764e-24","5":"188","6":"-0.08917528","7":"0.008786733","8":"1.961694e-18","9":"176","10":"-0.08449224","11":"0.007639413","12":"2.190787e-20","13":"166","14":"530","15":"-0.08895022","16":"0.004588173","17":"9.965739e-84","18":"0.6511411","19":"0.7221152","20":"0.00000","21":"0.3255706","22":"6.285392e-80","_rn_":"9317"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<div class="sourceCode" id="cb210"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html">write.table</a></span><span class="op">(</span><span class="va">sig.current</span>,</span>
+<span>            <span class="st">"./data/DAY4/Output/MA.Smoking.NeverVScurrent.FDRsig.txt"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div id="lambda-and-qqplot-1" class="section level3" number="4.4.4">
+<h3>
+<span class="header-section-number">4.4.4</span> Lambda and QQplot<a class="anchor" aria-label="anchor" href="#lambda-and-qqplot-1"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb211"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">lambda.current</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Chisquare.html">qchisq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">(</span><span class="va">dat.current.ord</span><span class="op">$</span><span class="va">p.fe</span>,na.rm<span class="op">=</span><span class="cn">T</span><span class="op">)</span>,</span>
+<span>                        df <span class="op">=</span> <span class="fl">1</span>, lower.tail <span class="op">=</span> <span class="cn">F</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/stats/Chisquare.html">qchisq</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">lambda.current</span> </span></code></pre></div>
+<pre><code>## [1] 4.196554</code></pre>
+<div class="sourceCode" id="cb213"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">pvals.current</span><span class="op">&lt;-</span><span class="va">dat.current.ord</span><span class="op">$</span><span class="va">p.fe</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/qqman/man/qq.html">qq</a></span><span class="op">(</span><span class="va">pvals.current</span>,main<span class="op">=</span><span class="op">(</span><span class="st">"QQPlot metaEWAS smoking Never VS Current"</span><span class="op">)</span><span class="op">)</span> </span></code></pre></div>
+<p><img src="_main_files/figure-html/qqplot-1.png" width="576" style="display: block; margin: auto;">
+The QQPlot plot can be found <a href="./../data/DAY4/Output/QQPlot.MA.Smoking.NeverVSformer.jpg">here</a></p>
+</div>
+<div id="volcano-plot" class="section level3" number="4.4.5">
+<h3>
+<span class="header-section-number">4.4.5</span> Volcano plot<a class="anchor" aria-label="anchor" href="#volcano-plot"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb214"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">dat.current.ord</span><span class="op">$</span><span class="va">diffexpressed</span> <span class="op">&lt;-</span> <span class="st">"NO"</span></span>
+<span><span class="va">dat.current.ord</span><span class="op">$</span><span class="va">diffexpressed</span><span class="op">[</span><span class="va">dat.current.ord</span><span class="op">$</span><span class="va">coef.fe</span>  <span class="op">&gt;</span> <span class="fl">0</span> <span class="op">&amp;</span> <span class="va">dat.current.ord</span><span class="op">$</span><span class="va">fdr</span> <span class="op">&lt;</span><span class="fl">0.05</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"POSITIVE"</span></span>
+<span><span class="va">dat.current.ord</span><span class="op">$</span><span class="va">diffexpressed</span><span class="op">[</span><span class="va">dat.current.ord</span><span class="op">$</span><span class="va">coef.fe</span>  <span class="op">&lt;</span> <span class="fl">0</span> <span class="op">&amp;</span> <span class="va">dat.current.ord</span><span class="op">$</span><span class="va">fdr</span> <span class="op">&lt;</span><span class="fl">0.05</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"NEGATIVE"</span></span>
+<span></span>
+<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">dat.current.ord</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">dat.current.ord</span><span class="op">$</span><span class="va">coef.fe</span>, y<span class="op">=</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">log10</a></span><span class="op">(</span><span class="va">dat.current.ord</span><span class="op">$</span><span class="va">p.fe</span><span class="op">)</span>, col<span class="op">=</span><span class="va">dat.current.ord</span><span class="op">$</span><span class="va">diffexpressed</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html">xlim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.3</span>,<span class="fl">0.3</span><span class="op">)</span><span class="op">)</span><span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html">ylim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">130</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">" "</span>, x <span class="op">=</span> <span class="st">"beta"</span>, y <span class="op">=</span> <span class="st">"-log10(P-value)"</span>, colour <span class="op">=</span> <span class="st">"Effect"</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>axis.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>family <span class="op">=</span> <span class="st">"Helvetica"</span>, size <span class="op">=</span> <span class="fl">14</span>, color <span class="op">=</span> <span class="st">"black"</span>,vjust<span class="op">=</span><span class="fl">0.5</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>family <span class="op">=</span> <span class="st">"Helvetica"</span>,size<span class="op">=</span><span class="fl">14</span>,face<span class="op">=</span><span class="st">"bold"</span>,color<span class="op">=</span><span class="st">"black"</span>, hjust<span class="op">=</span> <span class="fl">0.5</span>, vjust<span class="op">=</span><span class="fl">0.5</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>legend.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>family <span class="op">=</span> <span class="st">"Helvetica"</span>, color <span class="op">=</span> <span class="st">"black"</span>, size <span class="op">=</span> <span class="fl">14</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_hline</a></span><span class="op">(</span>yintercept<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">log10</a></span><span class="op">(</span><span class="fl">0.012</span><span class="op">)</span><span class="op">)</span>, col<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"red"</span><span class="op">)</span>,linetype <span class="op">=</span> <span class="st">"dashed"</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>axis.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">mycolors</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"#157F8D"</span>,<span class="st">"#AF8D9B"</span>, <span class="st">"grey"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">mycolors</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"POSITIVE"</span>, <span class="st">"NEGATIVE"</span>, <span class="st">"NO"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">p3</span> <span class="op">&lt;-</span> <span class="va">p2</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_colour_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="va">mycolors</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">p3</span></span></code></pre></div>
+<p><img src="_main_files/figure-html/VolcanoPlot-1.png" width="576" style="display: block; margin: auto;">
+The volcano plot can be found <a href="./../data/DAY4/Output/VolcanoPlot.MA.Smoking.NeverVScurrent.png">here</a></p>
+</div>
+<div id="forest-plot" class="section level3" number="4.4.6">
+<h3>
+<span class="header-section-number">4.4.6</span> Forest plot<a class="anchor" aria-label="anchor" href="#forest-plot"><i class="fas fa-link"></i></a>
+</h3>
+<p>We will create a forest plot with our metaEWAS results and the cohort EWAS results
+for a specific CpG site.
+Today we will select our top significant CpG “cg05575921” that is annotated
+to AHRR gene and it is well known for its association with tabbacco.</p>
+<div class="sourceCode" id="cb215"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#Forest plots</span></span>
+<span></span>
+<span><span class="va">X</span><span class="op">&lt;-</span><span class="st">"cg05575921"</span></span>
+<span><span class="va">G</span><span class="op">&lt;-</span><span class="st">"AHRR"</span></span>
+<span><span class="va">I2</span><span class="op">&lt;-</span><span class="va">dat.current.ord</span><span class="op">$</span><span class="va">i2.fe</span></span>
+<span><span class="fu"><a href="https://wviechtb.github.io/metafor/reference/forest.html">forest</a></span><span class="op">(</span><span class="va">meta.results.current</span><span class="op">$</span><span class="va">cg05575921</span>,digits<span class="op">=</span><span class="fl">4</span>,</span>
+<span>       xlab<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/expression.html">expression</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/paste.html">paste</a></span><span class="op">(</span><span class="st">"Change in DNA methylation never vs current"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>       mlab<span class="op">=</span><span class="st">"Fixed-effects meta-analysis"</span>,col<span class="op">=</span><span class="st">"deepskyblue2"</span>,border<span class="op">=</span><span class="st">"deepskyblue2"</span>,cex<span class="op">=</span><span class="fl">0.8</span><span class="op">)</span></span></code></pre></div>
+<p><img src="_main_files/figure-html/ForestPlot-1.png" width="576" style="display: block; margin: auto;">
+The forest plot can be found <a href="./../data/DAY4/Output/ForestPlot.MA.Smoking.NeverVScurrent.png">here</a></p>
+
+</div>
 </div>
 </div>
   <div class="chapter-nav">
 <div class="prev"><a href="epigenome-wide-association-study-ewas.html"><span class="header-section-number">3</span> Epigenome-wide association study (EWAS)</a></div>
-<div class="next"><a href="epigenome-wide-association-study-ewas-1.html"><span class="header-section-number">5</span> Epigenome-wide association study (EWAS)</a></div>
+<div class="next"><a href="biological-interpretation-of-findings.html"><span class="header-section-number">5</span> Biological interpretation of findings</a></div>
 </div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
     <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
       <ul class="nav navbar-nav">
 <li><a class="nav-link" href="#meta-analysis-of-epigenome-wide-association-studies-metaewas"><span class="header-section-number">4</span> Meta-analysis of epigenome-wide association studies (metaEWAS)</a></li>
 <li><a class="nav-link" href="#install-and-load-packages-1"><span class="header-section-number">4.1</span> Install and load packages</a></li>
-<li><a class="nav-link" href="#quality-control-of-results-from-different-studies"><span class="header-section-number">4.2</span> Quality control of results from different studies</a></li>
-<li><a class="nav-link" href="#statistical-methods-to-combine-results-from-different-studies"><span class="header-section-number">4.3</span> Statistical methods to combine results from different studies</a></li>
-<li><a class="nav-link" href="#visualization-of-results-qq-plot-manhattan-volcano"><span class="header-section-number">4.4</span> Visualization of results: QQ-plot, Manhattan, Volcano</a></li>
+<li><a class="nav-link" href="#load-ewas-results-by-cohort"><span class="header-section-number">4.2</span> Load EWAS results by cohort</a></li>
+<li>
+<a class="nav-link" href="#quality-control-of-ewas-results-from-the-different-studies"><span class="header-section-number">4.3</span> Quality control of EWAS results from the different studies</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#lambda-and-qqplot"><span class="header-section-number">4.3.1</span> Lambda and qqplot</a></li>
+<li><a class="nav-link" href="#box-plot"><span class="header-section-number">4.3.2</span> Box plot</a></li>
+<li><a class="nav-link" href="#precision-plot"><span class="header-section-number">4.3.3</span> Precision plot</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#metaewas-statistical-methods-to-combine-results-from-different-studies"><span class="header-section-number">4.4</span> MetaEWAS: Statistical methods to combine results from different studies</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#data-preparation-1"><span class="header-section-number">4.4.1</span> Data preparation</a></li>
+<li><a class="nav-link" href="#run-fixed-effect-meta-analysis"><span class="header-section-number">4.4.2</span> Run fixed effect meta-analysis</a></li>
+<li><a class="nav-link" href="#explore-the-results"><span class="header-section-number">4.4.3</span> Explore the results</a></li>
+<li><a class="nav-link" href="#lambda-and-qqplot-1"><span class="header-section-number">4.4.4</span> Lambda and QQplot</a></li>
+<li><a class="nav-link" href="#volcano-plot"><span class="header-section-number">4.4.5</span> Volcano plot</a></li>
+<li><a class="nav-link" href="#forest-plot"><span class="header-section-number">4.4.6</span> Forest plot</a></li>
+</ul>
+</li>
 </ul>
 
       <div class="book-extra">

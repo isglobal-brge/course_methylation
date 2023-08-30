@@ -1,0 +1,2 @@
+"lambda.cohort1","lambda.cohort2","lambda.cohort3"
+"1",1.48107772918805,1.53361887047055,1.47517573521276

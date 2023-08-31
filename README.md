@@ -13,5 +13,5 @@ methylation data obtained from arrays. The course is a comprehensive program des
 To enhance the learning experience, the course will include practical sessions where participants will work on real-world methylation datasets, addressing key research questions and challenges in the field. Participants will receive guidance from experienced instructors who will provide hands-on demonstrations and offer personalized assistance throughout the course.
 
 ## Material 
-- The data to reproduce the vignettes (input and output files) and data for practical sessions can be donwloaded [here]()
-- The R code for practical session can be found [here](https://isglobal-brge.github.io/course_methylation/)
+- The data to reproduce the vignettes (input and output files) and data for practical sessions can be downloaded [here](https://mega.nz/folder/Y3EDAD6Y#pQB_HeqEfAYTg6UixU-k5A)
+- The R code for practical sessions can be found [here](https://isglobal-brge.github.io/course_methylation/)

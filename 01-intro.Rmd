@@ -3,6 +3,14 @@
 
 This section offers a summary of the main data structures that are implemented in [Bioconductor](https://bioconductor.org/) for dealing epigenomic data data.  `Omic` data is typically composed of three datasets: one containing the actual high-dimensional data of omic variables per individuals, annotation data that specifies the characteristics of the variables and phenotypic information that encodes the subject's traits of interest, covariates and sampling characteristics. Bioconductor can effectively deal with this data using (among others) `ExpressionSet` objects which is a data structure that contains the beta values of individuals at each CpG, their genomic information and the phenotypes of the individuals. Specific data is accessed, processed and analyzed with specific functions from diverse packages, conceived as methods acting on the `ExpressionSet` object. 
 
+We will need these libraries:
+```{r load_intro, warning=FALSE, message=FALSE}
+library(BiocManager)
+library(GenomicRanges)
+library(GEOquery)
+library(brgedata)
+```
+
 
 ## Bioconductor
 [Bioconductor](https://bioconductor.org/): Analysis and comprehension of high-throughput
@@ -230,7 +238,7 @@ gr[1]
 
 However, there are also specific functions to access and modify information. For instance, `seqnames()` extract the chromosomes defined in our examples, whose first element can be redefined accordingly:
   
-  ```{r gr2}
+```{r gr2}
 seqnames(gr)
 seqnames(gr)[1] <- "chr2"
 gr
@@ -262,10 +270,10 @@ gr
 
 ```{r gr4}
 #shift: move all intervals 10 base pair towards the end
-shift(gr, 10)
+GenomicRanges::shift(gr, 10)
 
 #shift: move each intervals individually
-shift(gr, seq(10,100, length=8))
+GenomicRanges::shift(gr, seq(10,100, length=8))
 
 #flank:  recover regions next to the input set. 
 #        For a 50 base stretch upstream (negative value for

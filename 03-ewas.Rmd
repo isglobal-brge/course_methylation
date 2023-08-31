@@ -225,7 +225,7 @@ The report can be found [here](./data/DAY3/Output/Report.EWAS.cohort1.NeverVScur
 
 **Volcano plot**
 
-The plot that you should obtain can be found [here](./../data/DAY3/Output/VolcanoPlot.EWAS.cohort1.NeverVScurrent)
+The plot that you should obtain can be found [here](./data/DAY3/Output/VolcanoPlot.EWAS.cohort1.NeverVScurrent.png)
 ```{r volcano, warnings=FALSE, message=FALSE}
 res.current.ord$diffexpressed <- "NO"
 res.current.ord$diffexpressed[res.current.ord$coefficient > 0
@@ -259,7 +259,7 @@ p3
 
 **Manhattan plot**
 
-The plot that you should obtain can be found [here](./data/DAY3/Output/ManhattanPlot.EWAS.cohort1.NeverVScurrent)
+The plot that you should obtain can be found [here](./data/DAY3/Output/ManhattanPlot.EWAS.cohort1.NeverVScurrent.png)
 ```{r manhattan, out.width="100%"}
 # Create a dataframe with chr, start, end and pval
 df.current<-res.current.ord[,c("chromosome","position","p.value")]

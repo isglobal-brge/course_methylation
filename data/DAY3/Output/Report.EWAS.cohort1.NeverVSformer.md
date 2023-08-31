@@ -8,7 +8,7 @@
 
 ```
 ## $sig.threshold
-## [1] 0.000386
+## [1] 0.0001893
 ## 
 ## $max.plots
 ## [1] 1
@@ -20,8 +20,8 @@
 ## [1] "median"
 ## 
 ## $practical.threshold
-##   cg21566642 
-## 8.297569e-26 
+##  cg01940273 
+## 1.60629e-13 
 ## 
 ## $winsorize.pct
 ## [1] 0.05
@@ -39,7 +39,7 @@
 ## [1] 20161123
 ## 
 ## $sample.size
-## [1] 188
+## [1] 205
 ```
 
 ## Sample characteristics
@@ -51,19 +51,19 @@ of samples with the given "value" and the
 "var" column the percentage of samples with the given "value".
 
 
-|variable             |value   |mean       |var        |
-|:--------------------|:-------|:----------|:----------|
-|variable of interest |never   |99         |52.7       |
-|variable of interest |current |89         |47.3       |
-|Age                  |        |52.73936   |11.63027   |
-|Sex                  |F       |144        |76.6       |
-|Sex                  |M       |44         |23.4       |
-|Bcell                |        |0.06601765 |0.02948774 |
-|CD4T                 |        |0.188321   |0.06010949 |
-|CD8T                 |        |0.1090449  |0.04596973 |
-|Mono                 |        |0.09398571 |0.02091805 |
-|Neu                  |        |0.5042772  |0.0978032  |
-|NK                   |        |0.08488758 |0.03298624 |
+|variable             |value  |mean       |var        |
+|:--------------------|:------|:----------|:----------|
+|variable of interest |never  |99         |48.3       |
+|variable of interest |former |106        |51.7       |
+|Age                  |       |53.94146   |11.22613   |
+|Sex                  |F      |144        |70.2       |
+|Sex                  |M      |61         |29.8       |
+|Bcell                |       |0.06650484 |0.02367547 |
+|CD4T                 |       |0.1860588  |0.05755281 |
+|CD8T                 |       |0.1098392  |0.04420296 |
+|Mono                 |       |0.09768935 |0.0203169  |
+|Neu                  |       |0.4975204  |0.09298999 |
+|NK                   |       |0.09133433 |0.03464189 |
 
 ## Covariate associations
 
@@ -76,17 +76,17 @@ of samples with the given "value" and the
 statistics
 
 
-|var1     |var2 |         F|   p-value|          R|   p-value|
-|:--------|:----|---------:|---------:|----------:|---------:|
-|variable |Age  | 0.0001012| 0.9919836| -0.0271044| 0.7119591|
+|var1     |var2 |        F|   p-value|         R|   p-value|
+|:--------|:----|--------:|---------:|---------:|---------:|
+|variable |Age  | 2.178336| 0.1415151| 0.0693262| 0.3232903|
 
 cases
 
 
-|variable |     mean|      var|  n|     t.stat|   p.value|
-|:--------|--------:|--------:|--:|----------:|---------:|
-|never    | 52.74747| 156.7621| 99|  0.0101488| 0.9919135|
-|current  | 52.73034| 112.8583| 89| -0.0101488| 0.9919135|
+|variable |     mean|       var|   n|    t.stat|   p.value|
+|:--------|--------:|---------:|---:|---------:|---------:|
+|never    | 52.74747| 156.76211|  99| -1.463778| 0.1449471|
+|former   | 55.05660|  95.93962| 106|  1.463778| 0.1449471|
 
 
 
@@ -102,25 +102,25 @@ cases
 statistics
 
 
-|var1     |var2 |        R|   p-value|
-|:--------|:----|--------:|---------:|
-|variable |Sex  | 0.054606| 0.4567064|
+|var1     |var2 |         R|   p-value|
+|:--------|:----|---------:|---------:|
+|variable |Sex  | 0.1806061| 0.0095581|
 
 frequencies
 
 
-|        |  F|  M|
-|:-------|--:|--:|
-|never   | 78| 21|
-|current | 66| 23|
+|       |  F|  M|
+|:------|--:|--:|
+|never  | 78| 21|
+|former | 66| 40|
 
 enrichment p-values
 
 
-|        |         F|         M|
-|:-------|---------:|---------:|
-|never   | 0.2820187| 0.8215467|
-|current | 0.8215467| 0.2820187|
+|       |         F|         M|
+|:------|---------:|---------:|
+|never  | 0.0072320| 0.9970825|
+|former | 0.9970825| 0.0072320|
 
 
 
@@ -138,15 +138,15 @@ statistics
 
 |var1     |var2  |         F|   p-value|          R|   p-value|
 |:--------|:-----|---------:|---------:|----------:|---------:|
-|variable |Bcell | 0.2366181| 0.6272321| -0.1165057| 0.1113357|
+|variable |Bcell | 0.0873176| 0.7679175| -0.0527863| 0.4522388|
 
 cases
 
 
-|variable |      mean|       var|  n|     t.stat|   p.value|
-|:--------|---------:|---------:|--:|----------:|---------:|
-|never    | 0.0670116| 0.0004847| 99|  0.4746479| 0.6357655|
-|current  | 0.0649121| 0.0013056| 89| -0.4746479| 0.6357655|
+|variable |      mean|       var|   n|     t.stat|   p.value|
+|:--------|---------:|---------:|---:|----------:|---------:|
+|never    | 0.0670116| 0.0004847|  99|  0.2968685| 0.7668718|
+|former   | 0.0660316| 0.0006362| 106| -0.2968685| 0.7668718|
 
 
 
@@ -162,17 +162,17 @@ cases
 statistics
 
 
-|var1     |var2 |        F|   p-value|         R|   p-value|
-|:--------|:----|--------:|---------:|---------:|---------:|
-|variable |CD4T | 1.708011| 0.1928572| 0.0797971| 0.2763471|
+|var1     |var2 |         F|   p-value|         R|   p-value|
+|:--------|:----|---------:|---------:|---------:|---------:|
+|variable |CD4T | 0.5759586| 0.4487811| 0.0414043| 0.5555616|
 
 cases
 
 
-|variable |      mean|       var|  n|    t.stat|   p.value|
-|:--------|---------:|---------:|--:|---------:|---------:|
-|never    | 0.1828989| 0.0033585| 99| -1.301991| 0.1945799|
-|current  | 0.1943523| 0.0038679| 89|  1.301991| 0.1945799|
+|variable |      mean|       var|   n|     t.stat|   p.value|
+|:--------|---------:|---------:|---:|----------:|---------:|
+|never    | 0.1828989| 0.0033585|  99| -0.7586215| 0.4489645|
+|former   | 0.1890100| 0.0032826| 106|  0.7586215| 0.4489645|
 
 
 
@@ -190,15 +190,15 @@ statistics
 
 |var1     |var2 |        F|   p-value|          R|   p-value|
 |:--------|:----|--------:|---------:|----------:|---------:|
-|variable |CD8T | 3.076023| 0.0811016| -0.1161131| 0.1125543|
+|variable |CD8T | 2.224449| 0.1373934| -0.0673026| 0.3376488|
 
 cases
 
 
-|variable |      mean|       var|  n|    t.stat|   p.value|
-|:--------|---------:|---------:|--:|---------:|---------:|
-|never    | 0.1145895| 0.0023595| 99|  1.766782| 0.0789065|
-|current  | 0.1028774| 0.0017899| 89| -1.766782| 0.0789065|
+|variable |      mean|       var|   n|    t.stat|  p.value|
+|:--------|---------:|---------:|---:|---------:|--------:|
+|never    | 0.1145895| 0.0023595|  99|  1.480943| 0.140288|
+|former   | 0.1054026| 0.0015528| 106| -1.480943| 0.140288|
 
 
 
@@ -214,17 +214,17 @@ cases
 statistics
 
 
-|var1     |var2 |        F|   p-value|          R|   p-value|
-|:--------|:----|--------:|---------:|----------:|---------:|
-|variable |Mono | 6.977278| 0.0089576| -0.1655813| 0.0231534|
+|var1     |var2 |         F|   p-value|         R|  p-value|
+|:--------|:----|---------:|---------:|---------:|--------:|
+|variable |Mono | 0.0015309| 0.9688275| 0.0161658| 0.818046|
 
 cases
 
 
-|variable |      mean|       var|  n|    t.stat|   p.value|
-|:--------|---------:|---------:|--:|---------:|---------:|
-|never    | 0.0977469| 0.0004783| 99|  2.660786| 0.0084779|
-|current  | 0.0898019| 0.0003635| 89| -2.660786| 0.0084779|
+|variable |      mean|       var|   n|     t.stat|   p.value|
+|:--------|---------:|---------:|---:|----------:|---------:|
+|never    | 0.0977469| 0.0004783|  99|  0.0389298| 0.9689864|
+|former   | 0.0976356| 0.0003555| 106| -0.0389298| 0.9689864|
 
 
 
@@ -240,17 +240,17 @@ cases
 statistics
 
 
-|var1     |var2 |        F|   p-value|         R|   p-value|
-|:--------|:----|--------:|---------:|---------:|---------:|
-|variable |Neu  | 1.790709| 0.1824734| 0.1221984| 0.0948021|
+|var1     |var2 |         F|   p-value|         R|   p-value|
+|:--------|:----|---------:|---------:|---------:|---------:|
+|variable |Neu  | 0.1140503| 0.7359282| 0.0333214| 0.6352833|
 
 cases
 
 
-|variable |      mean|       var|  n|    t.stat|  p.value|
-|:--------|---------:|---------:|--:|---------:|--------:|
-|never    | 0.4952459| 0.0088404| 99| -1.332769| 0.184292|
-|current  | 0.5143232| 0.0102878| 89|  1.332769| 0.184292|
+|variable |      mean|       var|   n|     t.stat|   p.value|
+|:--------|---------:|---------:|---:|----------:|---------:|
+|never    | 0.4952459| 0.0088404|  99| -0.3375129| 0.7360816|
+|former   | 0.4996447| 0.0085397| 106|  0.3375129| 0.7360816|
 
 
 
@@ -266,17 +266,17 @@ cases
 statistics
 
 
-|var1     |var2 |        F|   p-value|          R|   p-value|
-|:--------|:----|--------:|---------:|----------:|---------:|
-|variable |NK   | 7.140693| 0.0082045| -0.1695074| 0.0200441|
+|var1     |var2 |         F|   p-value|         R|   p-value|
+|:--------|:----|---------:|---------:|---------:|---------:|
+|variable |NK   | 0.0320173| 0.8581681| 0.0217744| 0.7566433|
 
 cases
 
 
-|variable |      mean|       var|  n|    t.stat|   p.value|
-|:--------|---------:|---------:|--:|---------:|---------:|
-|never    | 0.0908853| 0.0013115| 99|  2.709977| 0.0073742|
-|current  | 0.0782160| 0.0007662| 89| -2.709977| 0.0073742|
+|variable |      mean|       var|   n|     t.stat|   p.value|
+|:--------|---------:|---------:|---:|----------:|---------:|
+|never    | 0.0908853| 0.0013115|  99| -0.1784158| 0.8585785|
+|former   | 0.0917537| 0.0011071| 106|  0.1784158| 0.8585785|
 
 
 
@@ -333,8 +333,8 @@ cases
 
 ## Significant CpG sites
 
-There were 1365
-CpG sites with association p-values < 3.86 &times; 10<sup>-4</sup>.
+There were 157
+CpG sites with association p-values < 1.893 &times; 10<sup>-4</sup>.
 These are listed in the file [associations.csv](associations.csv).
 
 
@@ -344,20 +344,21 @@ associations under different sets of covariates:
 
 |             | p.value.none| p.value.all| p.value.sva|
 |:------------|------------:|-----------:|-----------:|
-|p.value.none |          661|         367|         114|
-|p.value.all  |          367|         931|         135|
-|p.value.sva  |          114|         135|         289|
+|p.value.none |           14|          10|          13|
+|p.value.all  |           10|          33|          17|
+|p.value.sva  |           13|          17|         140|
 
 
 
-Below are the 1
-CpG sites with association p-values < 8.2975685 &times; 10<sup>-26</sup>
+Below are the 2
+CpG sites with association p-values < 1.6062898 &times; 10<sup>-13</sup>
 in the sva regression model.
 
 
-|           |chromosome | position| p.value.none| p.value.all| p.value.sva| coefficient.none| coefficient.all| coefficient.sva|
-|:----------|:----------|--------:|------------:|-----------:|-----------:|----------------:|---------------:|---------------:|
-|cg05575921 |chr5       |   373378|            0|           0|           0|       -0.2458808|      -0.2451238|      -0.1572324|
+|           |chromosome |  position| p.value.none| p.value.all| p.value.sva| coefficient.none| coefficient.all| coefficient.sva|
+|:----------|:----------|---------:|------------:|-----------:|-----------:|----------------:|---------------:|---------------:|
+|cg05951221 |chr2       | 233284402|            0|           0|           0|       -0.0564848|      -0.0540633|      -0.0517851|
+|cg05575921 |chr5       |    373378|            0|           0|           0|       -0.0466583|      -0.0446954|      -0.0356144|
 
 Plots of these sites follow, one for each covariate set.
 "p[lm]" denotes the p-value obtained using a linear model
@@ -366,7 +367,7 @@ and "p[beta]" the p-value obtained using beta regression.
 
 
 
-### CpG site cg05575921
+### CpG site cg05951221
 
 
 
@@ -381,16 +382,6 @@ and "p[beta]" the p-value obtained using beta regression.
 
 
 ![plot of chunk unnamed-chunk-56](figure/unnamed-chunk-56-1.png)
-
-## Selected CpG sites
-
-Number of CpG sites selected: 1.
-
-
-|           |chromosome | position| p.value.none| p.value.all| p.value.sva| coefficient.none| coefficient.all| coefficient.sva|
-|:----------|:----------|--------:|------------:|-----------:|-----------:|----------------:|---------------:|---------------:|
-|cg05575921 |chr5       |   373378|            0|           0|           0|       -0.2458808|      -0.2451238|      -0.1572324|
-
 
 
 
@@ -409,6 +400,34 @@ Number of CpG sites selected: 1.
 
 
 ![plot of chunk unnamed-chunk-59](figure/unnamed-chunk-59-1.png)
+
+## Selected CpG sites
+
+Number of CpG sites selected: 1.
+
+
+|           |chromosome | position| p.value.none| p.value.all| p.value.sva| coefficient.none| coefficient.all| coefficient.sva|
+|:----------|:----------|--------:|------------:|-----------:|-----------:|----------------:|---------------:|---------------:|
+|cg05575921 |chr5       |   373378|            0|           0|           0|       -0.0466583|      -0.0446954|      -0.0356144|
+
+
+
+
+### CpG site cg05575921
+
+
+
+
+
+![plot of chunk unnamed-chunk-61](figure/unnamed-chunk-61-1.png)
+
+
+![plot of chunk unnamed-chunk-61](figure/unnamed-chunk-61-2.png)
+
+
+
+
+![plot of chunk unnamed-chunk-62](figure/unnamed-chunk-62-1.png)
 
 ## R session information
 
@@ -450,13 +469,14 @@ Number of CpG sites selected: 1.
 ##  [56] tidyselect_1.2.0            rlang_1.1.1                 AnnotationDbi_1.56.2        munsell_0.5.0               tools_4.1.3                
 ##  [61] cachem_1.0.6                cli_3.4.1                   generics_0.1.3              RSQLite_2.2.18              evaluate_0.21              
 ##  [66] stringr_1.5.0               fastmap_1.1.0               yaml_2.3.7                  bit64_4.0.5                 AnnotationFilter_1.18.0    
-##  [71] KEGGREST_1.34.0             xml2_1.3.3                  biomaRt_2.50.3              compiler_4.1.3              rstudioapi_0.14            
-##  [76] filelock_1.0.2              curl_4.3.3                  png_0.1-8                   tibble_3.2.1                stringi_1.7.6              
-##  [81] highr_0.10                  GenomicFeatures_1.46.5      lattice_0.20-45             ProtGenerics_1.26.0         nloptr_2.0.3               
-##  [86] vctrs_0.6.3                 pillar_1.9.0                lifecycle_1.0.3             BiocManager_1.30.19         data.table_1.14.8          
-##  [91] bitops_1.0-7                rtracklayer_1.54.0          R6_2.5.1                    BiocIO_1.4.0                codetools_0.2-18           
-##  [96] dichromat_2.0-0.1           boot_1.3-28                 SummarizedExperiment_1.24.0 openssl_2.0.6               rjson_0.2.21               
-## [101] withr_2.5.0                 GenomicAlignments_1.30.0    Rsamtools_2.10.0            GenomeInfoDbData_1.2.7      hms_1.1.3                  
-## [106] rpart_4.1.16                grid_4.1.3                  bamsignals_1.26.0           base64_2.0.1                minqa_1.2.5                
-## [111] rmarkdown_2.23              MatrixGenerics_1.6.0        biovizBase_1.42.0           base64enc_0.1-3             restfulr_0.0.15
+##  [71] KEGGREST_1.34.0             mime_0.12                   xml2_1.3.3                  biomaRt_2.50.3              compiler_4.1.3             
+##  [76] rstudioapi_0.14             filelock_1.0.2              curl_4.3.3                  png_0.1-8                   tibble_3.2.1               
+##  [81] stringi_1.7.6               highr_0.10                  GenomicFeatures_1.46.5      lattice_0.20-45             ProtGenerics_1.26.0        
+##  [86] commonmark_1.8.1            nloptr_2.0.3                vctrs_0.6.3                 pillar_1.9.0                lifecycle_1.0.3            
+##  [91] BiocManager_1.30.19         data.table_1.14.8           bitops_1.0-7                rtracklayer_1.54.0          R6_2.5.1                   
+##  [96] BiocIO_1.4.0                codetools_0.2-18            dichromat_2.0-0.1           boot_1.3-28                 SummarizedExperiment_1.24.0
+## [101] openssl_2.0.6               rjson_0.2.21                withr_2.5.0                 GenomicAlignments_1.30.0    Rsamtools_2.10.0           
+## [106] GenomeInfoDbData_1.2.7      hms_1.1.3                   rpart_4.1.16                grid_4.1.3                  bamsignals_1.26.0          
+## [111] base64_2.0.1                minqa_1.2.5                 rmarkdown_2.23              MatrixGenerics_1.6.0        biovizBase_1.42.0          
+## [116] base64enc_0.1-3             restfulr_0.0.15
 ```

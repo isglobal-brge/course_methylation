@@ -83,7 +83,7 @@ qq(pvals.cohort2,main=("QQPlot EWAS cohort 2 smoking Never VS Current"))
 pvals.cohort3<-EWASres.cohort3$p.value
 qq(pvals.cohort3,main=("QQPlot EWAS cohort 3 smoking Never VS Current")) 
 ```
-THe plots can be found here ([cohort1](./../data/DAY4/Output/QQPlot.EWAS.cohort1.NeverVScurrent.jpg), [cohort2](./../data/DAY4/Output/QQPlot.EWAS.cohort2.NeverVScurrent.jpg), [cohort3](./../data/DAY4/Output/QQPlot.EWAS.cohort3.NeverVScurrent.jpg))
+THe plots can be found here ([cohort1](./data/DAY4/Output/QQPlot.EWAS.cohort1.NeverVScurrent.jpg), [cohort2](./data/DAY4/Output/QQPlot.EWAS.cohort2.NeverVScurrent.jpg), [cohort3](./data/DAY4/Output/QQPlot.EWAS.cohort3.NeverVScurrent.jpg))
 
 ### Box plot 
 
@@ -112,7 +112,7 @@ p1<-ggplot(data=QCPlot.df,aes(x=Cohort, y=coefficient, fill=Cohort)) +
   geom_boxplot() 
 p1
 ```
-The boxplot can be found [here](./../data/DAY4/Output/BoxPlot.MA.Smoking.NeverVScurrent.png)
+The boxplot can be found [here](./data/DAY4/Output/BoxPlot.MA.Smoking.NeverVScurrent.png)
 
 ### Precision plot
 
@@ -140,7 +140,7 @@ the sample size (N) for each cohort
 p2<-ggplot(data=precision,aes(x=sqrt_N, y=invSE, color=Cohort)) +  geom_point() 
 p2
 ```
-The precision plot can be found [here](./../data/DAY4/Output/PrecisionPlot.MA.Smoking.NeverVScurrent.png)
+The precision plot can be found [here](./data/DAY4/Output/PrecisionPlot.MA.Smoking.NeverVScurrent.png)
 
 ## MetaEWAS: Statistical methods to combine results from different studies
 
@@ -305,7 +305,7 @@ lambda.current
 pvals.current<-dat.current.ord$p.fe
 qq(pvals.current,main=("QQPlot metaEWAS smoking Never VS Current")) 
 ```
-The QQPlot plot can be found [here](./../data/DAY4/Output/QQPlot.MA.Smoking.NeverVSformer.jpg)
+The QQPlot plot can be found [here](./data/DAY4/Output/QQPlot.MA.Smoking.NeverVSformer.jpg)
 
 ### Volcano plot
 ```{r VolcanoPlot, warning=FALSE}
@@ -330,7 +330,7 @@ p3 <- p2 + scale_colour_manual(values = mycolors)
 
 p3
 ```
-The volcano plot can be found [here](./../data/DAY4/Output/VolcanoPlot.MA.Smoking.NeverVScurrent.png)
+The volcano plot can be found [here](./data/DAY4/Output/VolcanoPlot.MA.Smoking.NeverVScurrent.png)
 
 
 ### Forest plot
@@ -345,9 +345,10 @@ to AHRR gene and it is well known for its association with tabbacco.
 
 X<-"cg05575921"
 G<-"AHRR"
-I2<-dat.current.ord$i2.fe
+I2<-dat.current.ord[dat.current.ord$probe=="cg05575921", "i2.fe"]
 forest(meta.results.current$cg05575921,digits=4,
        xlab=expression(paste("Change in DNA methylation never vs current")),
        mlab="Fixed-effects meta-analysis",col="deepskyblue2",border="deepskyblue2",cex=0.8)
+title(paste0("Forest plot for probe:\n",X," (",G,"), I-squared: ",I2,""),line=-2)
 ```
-The forest plot can be found [here](./../data/DAY4/Output/ForestPlot.MA.Smoking.NeverVScurrent.png)
+The forest plot can be found [here](./data/DAY4/Output/ForestPlot.MA.Smoking.NeverVScurrent.png)

@@ -1,7 +1,7 @@
 # Pre-processing of DNA methylation data
 
 In this chapter will explain the steps for the pre-processing of
-DNA methylation data with the meffil R package. A file with the slides
+DNA methylation data with the `meffil` R package. A file with the slides
 can be downloaded [here](./Slides/ISG_summer_school_EWAS2.pptx)
 
 At the end of the practice, please answer these questions:

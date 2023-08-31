@@ -1,6 +1,6 @@
 # Epigenome-wide association study (EWAS)
 In this chapter we will run an Epigenome-Wide Association Study (EWAS)
-A file with the theory can be downloaded [here](./Slides/ISG_summer_school_EWAS3.pptx)
+A file with the slides can be downloaded [here](./Slides/ISG_summer_school_EWAS3.pptx)
 
 At the end of the practice, please answer these questions:
 
@@ -133,7 +133,7 @@ summary(ewas.current)
 ```
 We are interested in the EWAS results. This function calculated the results  
 1) without adjusting for covariates, 2) adjusting for the covariates we specified above
-and also 3) adjusting by the surrogate variables to correct the batch (noise)
+and also 3) adjusting for the covariates and the surrogate variables to correct the batch (noise)
 ```{r summary2}
 summary(ewas.current$analyses)
 ```
@@ -219,7 +219,7 @@ ewas.summary <- meffil.ewas.summary(ewas.current,
 meffil.ewas.report(ewas.summary,
                    output.file="./data/DAY3/Output/Report.EWAS.cohort1.NeverVScurrent.html")
 ```
-The report can be found [here](./../data/DAY3/Output/Report.EWAS.cohort1.NeverVScurrent.html)
+The report can be found [here](./data/DAY3/Output/Report.EWAS.cohort1.NeverVScurrent.html)
 
 ### Plots
 
@@ -259,7 +259,7 @@ p3
 
 **Manhattan plot**
 
-The plot that you should obtain can be found [here](./../data/DAY3/Output/ManhattanPlot.EWAS.cohort1.NeverVScurrent)
+The plot that you should obtain can be found [here](./data/DAY3/Output/ManhattanPlot.EWAS.cohort1.NeverVScurrent)
 ```{r manhattan, out.width="100%"}
 # Create a dataframe with chr, start, end and pval
 df.current<-res.current.ord[,c("chromosome","position","p.value")]

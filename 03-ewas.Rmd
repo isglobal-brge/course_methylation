@@ -1,6 +1,6 @@
 # Epigenome-wide association study (EWAS)
 In this chapter we will run an Epigenome-Wide Association Study (EWAS).
-A file with the slides can be downloaded [here](./Slides/ISG_summer_school_EWAS3.pptx)
+A file with the slides can be downloaded [here](./Slides/ISG_summer_school_EWAS3.pdf)
 
 At the end of the practice, please answer these questions:
 
@@ -42,7 +42,7 @@ table(eset.cohort1$Smoking)
 ### Data preparation
 Here we will show an example to run the analysis testing never smokers against 
 current smokers. Nevertheless, the same code can be applied to run other
-analyses testing never vs former or current vs former. 
+analyses testing never vs former. 
 
 The first step is to subset the ExpressionSet with only the samples that we need.
 In this case, we only keep the never smokers and the current smokers,
@@ -159,7 +159,7 @@ The column names stand for:
 - fdr: p.value corrected by the FALSE DISCOVERY RATE method
 - p.holm: p.value corrected by Holm-Bonferroni method (we are not going to use it)
 - t.statistic 
-- coefficient: coefficient of the association. In this case is odd ratio (OR), which is a statistical measure to quantify the strength of association of a binary variable (the effect or beta)
+- coefficient: coefficient of the association (the effect or beta)
 - coefficient.ci.high: confidence interval up 
 - coefficient.ci.low: confindence interval down
 - coefficient.se:  standard error of the coefficient
@@ -282,3 +282,9 @@ kp <- kpAxis(kp, ymin=0, ymax=40, cex=0.7)
 
 ```
 
+**ANSWERS**
+
+1. Unadjusted: 2.44, adjusted for covariates: 2.22 and adjusted for covariates + sva: 1.51
+2. 289
+3. 164 show a negative effect and 125 show a positive effect
+4. cg05575921, it is located in chromosome 5

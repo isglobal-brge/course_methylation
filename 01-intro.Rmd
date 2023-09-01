@@ -1,3 +1,4 @@
+A file with the slides can be downloaded [here](./Slides/ISG_summer_school_EWAS1.pdf)
 
 # Resources and tools for epigenetics in Bioconductor
 

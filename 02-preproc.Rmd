@@ -2,11 +2,11 @@
 
 In this chapter will explain the steps for the pre-processing of
 DNA methylation data with the `meffil` R package. A file with the slides
-can be downloaded [here](./Slides/ISG_summer_school_EWAS2.pptx)
+can be downloaded [here](./Slides/ISG_summer_school_EWAS2.pdf)
 
 At the end of the practice, please answer these questions:
 
-1. Is there any sample that is excluded due to the low quality?
+1. Is there any sample that is excluded due to the meth vs unmeth comparison (low-quality samples)?
 2. Is there any sample that is excluded due to inconsistent sex?
 3. Which are the main biological and technical variables associated with PC1?
 
@@ -270,3 +270,9 @@ provide the eSet needed for the EWAS.
 saveRDS(eSet, 'save_path')
 ```
 
+
+**ANSWERS**
+
+1. Yes. Samples GSM1051809, GSM1052037 and GSM1052049
+2. No. There are some sex outliers but there are no inconsistences
+3. Age (biological) and Slide (technical)

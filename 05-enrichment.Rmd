@@ -1,10 +1,10 @@
 # Biological interpretation of findings
 In this chapter we will explain the steps for the biological interpretation of
-the findings. A file with the slides can be downloaded [here](./Slides/ISG_summer_school_EWAS5.pptx)
+the findings. A file with the slides can be downloaded [here](./Slides/ISG_summer_school_EWAS5.pdf)
 
 At the end of the practice, please answer these questions:
 
-1. Which are the enriched GO terms in current smokers? and in former smokers?
+1. Which is the top 1 enriched GO term in current smokers? and in former smokers?
 2. Which are the enriched KEGG pathways in current smokers? and in former smokers?
 3. Which are the enriched tissues in current smokers? and informer smokers?
 
@@ -12,7 +12,6 @@ At the end of the practice, please answer these questions:
 We will need to load some libraries:
 ```{r libs_annot, eval=FALSE}
 library(IlluminaHumanMethylation450kanno.ilmn12.hg19)
-library(biomaRt)
 library(clusterProfiler)
 library(org.Hs.eg.db)
 library(enrichplot)
@@ -61,8 +60,10 @@ ann.genes.current<-metaEWAS.ann.ord$UCSC_RefGene_Name
 ann.genes.current <- unlist(lapply(strsplit(ann.genes.current, ";"), unique))
 
 ### 4.4. Save results 
-write.table(metaEWAS.FDRsig$probe,"./data/DAY5/Output/list.cpgs.MA.Smoking.NeverVScurrent.txt")
-write.table(ann.genes.current,"./data/DAY5/Output/list.genes.MA.Smoking.NeverVScurrent.txt")
+write.table(metaEWAS.FDRsig$probe,"./data/DAY5/Output/list.cpgs.MA.Smoking.NeverVScurrent.txt", row.names = F, col.names = F, quote = F)
+write.table(metaEWAS.FDRsig$probe[1:1000],"./data/DAY5/Output/list.cpgs.MA.Smoking.NeverVScurrent_subset.txt", row.names = F, col.names = F, quote = F)
+
+write.table(ann.genes.current,"./data/DAY5/Output/list.genes.MA.Smoking.NeverVScurrent.txt", row.names = F, col.names = F, quote = F)
 ```
 
 
@@ -76,31 +77,26 @@ Genes and Genomes (KEGG) databases. The GO database allows us to see if a
 specific gene function is overrepresented in our gene list. The KEGG database
 will show if a specific pathway is overrepresented in our gene list. 
 
-First we need to convert Gene Names to Entrez Gene IDs
+First of all we convert Gene Symbols to Ensembl and Entrez Gene IDs to use them later
 ```{r nameconversion}
-ensembl = useMart(biomart="ENSEMBL_MART_ENSEMBL", host="grch37.ensembl.org", path="/biomart/martservice" ,dataset="hsapiens_gene_ensembl")
-attributes = c('hgnc_symbol','entrezgene_id')
-filters = c('hgnc_symbol')
-
-entrez <- getBM(attributes=attributes, filters=filters, values=ann.genes.current, mart=ensembl)
-entrezid <- entrez$entrezgene_id
+ids <- bitr(ann.genes.current, fromType="SYMBOL", toType=c("ENSEMBL", "ENTREZID"), OrgDb="org.Hs.eg.db")
 ```
 
-First we need to obtain the list of all human genes that are curated in the databases
+
+We will first work with the Gene Ontology (GO) database, that allows us to see if a
+specific gene function is overrepresented in our gene list. We need to obtain the
+list of all human genes that are curated in GO.
 ```{r genelist}
 # GO
 df = as.data.frame(org.Hs.egGO)
 go_gene_list = unique(sort(df$gene_id))
-
-# KEGG
-dfk = as.data.frame(org.Hs.egPATH)
-kegg_gene_list = unique(sort(dfk$gene_id))
 ```
 
 ### GO
-And then run the analyses for each one and keep the most interesting results.
+And then run the analyses and keep the most interesting results.
 ```{r goresults}
-ans.go <- enrichGO(gene = entrezid, ont = "BP",
+ans.go <- enrichGO(gene = ids$ENTREZID,
+                   ont = "BP",
                    OrgDb ="org.Hs.eg.db",
                    universe = go_gene_list,
                    readable=TRUE,
@@ -108,7 +104,7 @@ ans.go <- enrichGO(gene = entrezid, ont = "BP",
 
 tab.go <- as.data.frame(ans.go)
 tab.go<- subset(tab.go, Count>5)
-
+head(tab.go)
 ```
 
 Finally we can perform different type of plots to see the results in a graphical way
@@ -116,27 +112,55 @@ Finally we can perform different type of plots to see the results in a graphical
 p1 <- barplot(ans.go, showCategory=10) + ggtitle('Never vs Current Smokers') + theme(plot.title = element_text(size = 18))
 p1
 ans.go <- pairwise_termsim(ans.go)
-p2 <- emapplot(ans.go, cex_label_category = 0.5) + ggtitle('Never vs Current Smokers') + theme(plot.title = element_text(size = 18))
+p2 <- emapplot(ans.go, cex_label_category = 0.5, showCategory = 20) + ggtitle('Never vs Current Smokers') + theme(plot.title = element_text(size = 18))
 p2
 ```
 
-### KEGG
-And the same for the KEGG database
-```{r keggresults, eval=FALSE}
-ans.kegg <- enrichKEGG(gene = entrezid,
-                       organism = 'hsa',
-                       universe = kegg_gene_list,
-                       pvalueCutoff = 0.05,
-                       use_internal_data = TRUE)
-tab.kegg <- as.data.frame(ans.kegg)
-tab.kegg<- subset(tab.kegg, Count>5)
+### Reactome
+Now we do the same for the Reactome database
+```{r reactresults, eval=FALSE}
+x <- enrichPathway(gene=ids$ENTREZID, pvalueCutoff = 0.05, readable=TRUE)
+viewPathway("Platelet activation, signaling and aggregation", 
+            readable = TRUE)
 ```
+
+REACTOME Y DISEASE 
+```{r}
+ans.do <- enrichDO(gene     = ids$`ncbi-geneid`,
+              ont           = "DO",
+              pvalueCutoff  = 0.05,
+              pAdjustMethod = "BH",
+              universe      = names(geneList),
+              minGSSize     = 5,
+              maxGSSize     = 500,
+              qvalueCutoff  = 0.05,
+              readable      = FALSE)
+
+ncg <- enrichNCG(ids$`ncbi-geneid`)
+```
+
 ```{r keggplots, eval=FALSE}
 
-p3 <- barplot(ans.kegg, showCategory=10) + ggtitle('Never vs Current Smokers') + theme(plot.title = element_text(size = 25))
+p3 <- barplot(ans.do, showCategory=10) + ggtitle('Never vs Current Smokers') + theme(plot.title = element_text(size = 25))
 p3
 ans.go <- pairwise_termsim(ans.go)
 p4 <- emapplot(ans.kegg) + ggtitle('Never vs Current Smokers') + theme(plot.title = element_text(size = 25))
 p4
 ```
+### Online Tools
+
+The functional enrichment can also be done online with some interesting tools:
+
+[**eFORGE**](https://eforge.altiusinstitute.org/) is used to identify cell-type
+or tissue-type specific signals in epigenomic data by looking at the overlap between 
+differentially methylated positions (DMPs) with DNase I hypersensitive sites (DHSs) 
+
+
+[**EWAS Catalog**](http://www.ewascatalog.org/) is a huge database of EWAS results
+
+
+
+**ANSWERS**
+
+1. For current smokers it is the regulation of neuron projection development. For former smokers it is
 

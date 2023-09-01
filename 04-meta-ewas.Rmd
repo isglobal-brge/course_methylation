@@ -1,11 +1,11 @@
 # Meta-analysis of epigenome-wide association studies (metaEWAS)
 
 In this chapter we will run a meta-analysis of epigenome-wide association studies (metaEWAS)
-A file with the slides can be downloaded [here](./Slides/ISG_summer_school_EWAS4.pptx)
+A file with the slides can be downloaded [here](./Slides/ISG_summer_school_EWAS4.pdf)
 
 At the end of the practice, please answer these questions:
 
-1. What does the precision plot show?
+1. What do we expect a precision plot to show? Does our precision plot follow the theory?
 2. How many FDR CpGs are associated with current smoking? and how many with former smoking?
 3. Which is the CpG with the lowest p-value for current smoking? Does it show increased or decreased methylation? Does it show heterogeneity across studies? Is the effect size of this CpG similar between current and never smokers and between former and never smokers?
 
@@ -352,3 +352,10 @@ forest(meta.results.current$cg05575921,digits=4,
 title(paste0("Forest plot for probe:\n",X," (",G,"), I-squared: ",I2,""),line=-2)
 ```
 The forest plot can be found [here](./data/DAY4/Output/ForestPlot.MA.Smoking.NeverVScurrent.png)
+
+
+**ANSWERS**
+
+1. We expect a lower SE with increasing N (sample size). No, the cohort 2 with a larger sample size than cohort 3, has a higher SE
+2. 8194 CpGs are associated with current smoking and 8493 CpGs with former
+3. cg05575921, decreased methylation (of a 14% of methylation in current smokers against never smokers). No, its homogeneous. There is a smaller effect in former than in current smokers.

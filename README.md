@@ -4,11 +4,11 @@
 The aim of this course is to introduce basic concepts and guidelines to conduct epigenome-wide association studies (EWAS) using DNA
 methylation data obtained from arrays. The course is a comprehensive program designed to equip participants with the knowledge and practical skills required to effectively analyze and interpret DNA methylation data using the powerful Bioconductor framework. Upon successful completion of the module, participants should be able to conduct:
 
-1) Introduction to epigenetics ([slides introduction](), [slides application: transitioning African populations]())
-2) Pre-processing of DNA methylation data (slides)
-3) Epigenome-wide association studies (EWAS) (slides)
-4) Meta-analysis of EWAS from different studies (slides)
-5) Annotation and functional interpretation of findings (slides)
+1) Introduction to epigenetics ([slides introduction](./Slides/ISG_summer_school_EWAS1.pdf), [slides application: transitioning African populations](./Slides/ISGlobal_2023_FPC_Updated.pdf))
+2) Pre-processing of DNA methylation data ([slides](./Slides/ISG_summer_school_EWAS2.pdf))
+3) Epigenome-wide association studies (EWAS) ([slides](./Slides/ISG_summer_school_EWAS3.pdf))
+4) Meta-analysis of EWAS from different studies ([slides](./Slides/ISG_summer_school_EWAS4.pdf))
+5) Annotation and functional interpretation of findings ([slides](./Slides/ISG_summer_school_EWAS5.pdf))
 
 To enhance the learning experience, the course will include practical sessions where participants will work on real-world methylation datasets, addressing key research questions and challenges in the field. Participants will receive guidance from experienced instructors who will provide hands-on demonstrations and offer personalized assistance throughout the course.
 

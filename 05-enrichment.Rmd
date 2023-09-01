@@ -112,11 +112,11 @@ tab.go<- subset(tab.go, Count>5)
 ```
 
 Finally we can perform different type of plots to see the results in a graphical way
-```{r goplots}
-p1 <- barplot(ans.go, showCategory=10) + ggtitle('Never vs Current Smokers') + theme(plot.title = element_text(size = 25))
+```{r goplotss}
+p1 <- barplot(ans.go, showCategory=10) + ggtitle('Never vs Current Smokers') + theme(plot.title = element_text(size = 18))
 p1
 ans.go <- pairwise_termsim(ans.go)
-p2 <- emapplot(ans.go) + ggtitle('Never vs Current Smokers') + theme(plot.title = element_text(size = 25))
+p2 <- emapplot(ans.go, cex_label_category = 0.5) + ggtitle('Never vs Current Smokers') + theme(plot.title = element_text(size = 18))
 p2
 ```
 
@@ -126,7 +126,8 @@ And the same for the KEGG database
 ans.kegg <- enrichKEGG(gene = entrezid,
                        organism = 'hsa',
                        universe = kegg_gene_list,
-                       pvalueCutoff = 0.05)
+                       pvalueCutoff = 0.05,
+                       use_internal_data = TRUE)
 tab.kegg <- as.data.frame(ans.kegg)
 tab.kegg<- subset(tab.kegg, Count>5)
 ```

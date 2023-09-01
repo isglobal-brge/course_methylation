@@ -1,5 +1,5 @@
 # Epigenome-wide association study (EWAS)
-In this chapter we will run an Epigenome-Wide Association Study (EWAS)
+In this chapter we will run an Epigenome-Wide Association Study (EWAS).
 A file with the slides can be downloaded [here](./Slides/ISG_summer_school_EWAS3.pptx)
 
 At the end of the practice, please answer these questions:

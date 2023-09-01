@@ -6,15 +6,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Chapter 3 Epigenome-wide association study (EWAS) | Introduction to Epigenome-Wide Association Studies (EWAS)</title>
 <meta name="author" content="Juan R. González, Mariona Bustamante, Sofía Aguilar &amp; Laura Balagué">
-<meta name="description" content="In this chapter we will run an Epigenome-Wide Association Study (EWAS) A file with the slides can be downloaded here At the end of the practice, please answer these questions: Which is the lambda...">
+<meta name="description" content="In this chapter we will run an Epigenome-Wide Association Study (EWAS). A file with the slides can be downloaded here At the end of the practice, please answer these questions: Which is the lambda...">
 <meta name="generator" content="bookdown 0.34 with bs4_book()">
 <meta property="og:title" content="Chapter 3 Epigenome-wide association study (EWAS) | Introduction to Epigenome-Wide Association Studies (EWAS)">
 <meta property="og:type" content="book">
 <meta property="og:url" content="https://isglobal-brge.github.io/course_methylation/epigenome-wide-association-study-ewas.html">
-<meta property="og:description" content="In this chapter we will run an Epigenome-Wide Association Study (EWAS) A file with the slides can be downloaded here At the end of the practice, please answer these questions: Which is the lambda...">
+<meta property="og:description" content="In this chapter we will run an Epigenome-Wide Association Study (EWAS). A file with the slides can be downloaded here At the end of the practice, please answer these questions: Which is the lambda...">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Chapter 3 Epigenome-wide association study (EWAS) | Introduction to Epigenome-Wide Association Studies (EWAS)">
-<meta name="twitter:description" content="In this chapter we will run an Epigenome-Wide Association Study (EWAS) A file with the slides can be downloaded here At the end of the practice, please answer these questions: Which is the lambda...">
+<meta name="twitter:description" content="In this chapter we will run an Epigenome-Wide Association Study (EWAS). A file with the slides can be downloaded here At the end of the practice, please answer these questions: Which is the lambda...">
 <!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
 <script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.5.0/transition.js"></script><script src="libs/bs3compat-0.5.0/tabs.js"></script><script src="libs/bs3compat-0.5.0/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
@@ -86,8 +86,8 @@
 <h1>
 <span class="header-section-number">3</span> Epigenome-wide association study (EWAS)<a class="anchor" aria-label="anchor" href="#epigenome-wide-association-study-ewas"><i class="fas fa-link"></i></a>
 </h1>
-<p>In this chapter we will run an Epigenome-Wide Association Study (EWAS)
-A file with the slides can be downloaded <a href="./Slides/ISG_summer_school_EWAS3.pptx">here</a></p>
+<p>In this chapter we will run an Epigenome-Wide Association Study (EWAS).
+A file with the slides can be downloaded <a href="./Slides/ISG_summer_school_EWAS3.pdf">here</a></p>
 <p>At the end of the practice, please answer these questions:</p>
 <ol style="list-style-type: decimal">
 <li>Which is the lambda of the unadjusted EWAS of current smoking? How does it change in adding covariates and surrogate variables?</li>
@@ -154,7 +154,7 @@ contains the normalised betas together with the phenotypes.</p>
 </h3>
 <p>Here we will show an example to run the analysis testing never smokers against
 current smokers. Nevertheless, the same code can be applied to run other
-analyses testing never vs former or current vs former.</p>
+analyses testing never vs former.</p>
 <p>The first step is to subset the ExpressionSet with only the samples that we need.
 In this case, we only keep the never smokers and the current smokers,
 getting rid of the former smokers.</p>
@@ -337,7 +337,7 @@ and also 3) adjusting for the covariates and the surrogate variables to correct 
 <li>fdr: p.value corrected by the FALSE DISCOVERY RATE method</li>
 <li>p.holm: p.value corrected by Holm-Bonferroni method (we are not going to use it)</li>
 <li>t.statistic</li>
-<li>coefficient: coefficient of the association. In this case is odd ratio (OR), which is a statistical measure to quantify the strength of association of a binary variable (the effect or beta)</li>
+<li>coefficient: coefficient of the association (the effect or beta)</li>
 <li>coefficient.ci.high: confidence interval up</li>
 <li>coefficient.ci.low: confindence interval down</li>
 <li>coefficient.se: standard error of the coefficient</li>
@@ -465,7 +465,13 @@ was defined at FDR p-value &lt; 0.05. We tested 37,842 CpGs.</p>
 <div class="inline-figure"><img src="plots/manhattan-1.png" width="100%" style="display: block; margin: auto;"></div>
 <div class="sourceCode" id="cb177"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#kpText(kp, data = top.cpgs, labels = names(top.cpgs), ymax=10, pos=3)</span></span></code></pre></div>
-
+<p><strong>ANSWERS</strong></p>
+<ol style="list-style-type: decimal">
+<li>Unadjusted: 2.44, adjusted for covariates: 2.22 and adjusted for covariates + sva: 1.51</li>
+<li>289</li>
+<li>164 show a negative effect and 125 show a positive effect</li>
+<li>cg05575921, it is located in chromosome 5</li>
+</ol>
 </div>
 </div>
 </div>
@@ -505,7 +511,7 @@ was defined at FDR p-value &lt; 0.05. We tested 37,842 CpGs.</p>
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Introduction to Epigenome-Wide Association Studies (EWAS)</strong>" was written by Juan R. González, Mariona Bustamante, Sofía Aguilar &amp; Laura Balagué. It was last built on 2023-08-31.</p>
+    <p>"<strong>Introduction to Epigenome-Wide Association Studies (EWAS)</strong>" was written by Juan R. González, Mariona Bustamante, Sofía Aguilar &amp; Laura Balagué. It was last built on 2023-09-01.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

@@ -87,10 +87,10 @@
 <span class="header-section-number">4</span> Meta-analysis of epigenome-wide association studies (metaEWAS)<a class="anchor" aria-label="anchor" href="#meta-analysis-of-epigenome-wide-association-studies-metaewas"><i class="fas fa-link"></i></a>
 </h1>
 <p>In this chapter we will run a meta-analysis of epigenome-wide association studies (metaEWAS)
-A file with the slides can be downloaded <a href="./Slides/ISG_summer_school_EWAS4.pptx">here</a></p>
+A file with the slides can be downloaded <a href="./Slides/ISG_summer_school_EWAS4.pdf">here</a></p>
 <p>At the end of the practice, please answer these questions:</p>
 <ol style="list-style-type: decimal">
-<li>What does the precision plot show?</li>
+<li>What do we expect a precision plot to show? Does our precision plot follow the theory?</li>
 <li>How many FDR CpGs are associated with current smoking? and how many with former smoking?</li>
 <li>Which is the CpG with the lowest p-value for current smoking? Does it show increased or decreased methylation? Does it show heterogeneity across studies? Is the effect size of this CpG similar between current and never smokers and between former and never smokers?</li>
 </ol>
@@ -492,7 +492,12 @@ to AHRR gene and it is well known for its association with tabbacco.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/title.html">title</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"Forest plot for probe:\n"</span>,<span class="va">X</span>,<span class="st">" ("</span>,<span class="va">G</span>,<span class="st">"), I-squared: "</span>,<span class="va">I2</span>,<span class="st">""</span><span class="op">)</span>,line<span class="op">=</span><span class="op">-</span><span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 <p><img src="plots/ForestPlot-1.png" width="576" style="display: block; margin: auto;">
 The forest plot can be found <a href="./data/DAY4/Output/ForestPlot.MA.Smoking.NeverVScurrent.png">here</a></p>
-
+<p><strong>ANSWERS</strong></p>
+<ol style="list-style-type: decimal">
+<li>We expect a lower SE with increasing N (sample size). No, the cohort 2 with a larger sample size than cohort 3, has a higher SE</li>
+<li>8194 CpGs are associated with current smoking and 8493 CpGs with former</li>
+<li>cg05575921, decreased methylation (of a 14% of methylation in current smokers against never smokers). No, its homogeneous. There is a smaller effect in former than in current smokers.</li>
+</ol>
 </div>
 </div>
 </div>
@@ -540,7 +545,7 @@ The forest plot can be found <a href="./data/DAY4/Output/ForestPlot.MA.Smoking.N
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Introduction to Epigenome-Wide Association Studies (EWAS)</strong>" was written by Juan R. González, Mariona Bustamante, Sofía Aguilar &amp; Laura Balagué. It was last built on 2023-08-31.</p>
+    <p>"<strong>Introduction to Epigenome-Wide Association Studies (EWAS)</strong>" was written by Juan R. González, Mariona Bustamante, Sofía Aguilar &amp; Laura Balagué. It was last built on 2023-09-01.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

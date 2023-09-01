@@ -89,7 +89,7 @@
 <p>This section offers a summary of the main data structures that are implemented in <a href="https://bioconductor.org/">Bioconductor</a> for dealing epigenomic data data. <code>Omic</code> data is typically composed of three datasets: one containing the actual high-dimensional data of omic variables per individuals, annotation data that specifies the characteristics of the variables and phenotypic information that encodes the subject’s traits of interest, covariates and sampling characteristics. Bioconductor can effectively deal with this data using (among others) <code>ExpressionSet</code> objects which is a data structure that contains the beta values of individuals at each CpG, their genomic information and the phenotypes of the individuals. Specific data is accessed, processed and analyzed with specific functions from diverse packages, conceived as methods acting on the <code>ExpressionSet</code> object.</p>
 <p>We will need these libraries:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">BiocManager</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://bioconductor.github.io/BiocManager/">BiocManager</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://bioconductor.org/packages/GenomicRanges">GenomicRanges</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/seandavi/GEOquery">GEOquery</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">brgedata</span><span class="op">)</span></span></code></pre></div>
@@ -146,19 +146,19 @@ documents illustrating how to use the package, with integrated code</li>
 <p>A package needs to be installed once, using the instructions on the
 package landing page (e.g., <a href="https://bioconductor.org/packages/release/bioc/html/DESeq2.html">DESeq2</a>).</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va">BiocManager</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span><span class="op">(</span><span class="st">"DESeq2"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="https://bioconductor.github.io/BiocManager/">BiocManager</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html">install</a></span><span class="op">(</span><span class="st">"DESeq2"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># or</span></span>
 <span></span>
-<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span><span class="op">(</span><span class="st">"DESeq2"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html">install</a></span><span class="op">(</span><span class="st">"DESeq2"</span><span class="op">)</span></span></code></pre></div>
 </li>
 <li>
 <p>older versions can be installed by</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span><span class="op">(</span><span class="st">"DESeq2"</span>, version <span class="op">=</span> <span class="st">"3.8"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html">install</a></span><span class="op">(</span><span class="st">"DESeq2"</span>, version <span class="op">=</span> <span class="st">"3.8"</span><span class="op">)</span></span></code></pre></div>
 </li>
-<li><p><code><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install()</a></code> install <em>Bioconductor</em> and <a href="https://cran.r-project.org/">CRAN</a></p></li>
+<li><p><code><a href="https://bioconductor.github.io/BiocManager/reference/install.html">install()</a></code> install <em>Bioconductor</em> and <a href="https://cran.r-project.org/">CRAN</a></p></li>
 <li>
 <p>Github packages can be install by</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -717,7 +717,7 @@ Figure 1.1: ExpressionSet scheme.
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Introduction to Epigenome-Wide Association Studies (EWAS)</strong>" was written by Juan R. González, Mariona Bustamante, Sofía Aguilar &amp; Laura Balagué. It was last built on 2023-08-31.</p>
+    <p>"<strong>Introduction to Epigenome-Wide Association Studies (EWAS)</strong>" was written by Juan R. González, Mariona Bustamante, Sofía Aguilar &amp; Laura Balagué. It was last built on 2023-09-01.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

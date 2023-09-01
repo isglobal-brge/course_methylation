@@ -88,10 +88,10 @@
 </h1>
 <p>In this chapter will explain the steps for the pre-processing of
 DNA methylation data with the <code>meffil</code> R package. A file with the slides
-can be downloaded <a href="./Slides/ISG_summer_school_EWAS2.pptx">here</a></p>
+can be downloaded <a href="./Slides/ISG_summer_school_EWAS2.pdf">here</a></p>
 <p>At the end of the practice, please answer these questions:</p>
 <ol style="list-style-type: decimal">
-<li>Is there any sample that is excluded due to the low quality?</li>
+<li>Is there any sample that is excluded due to the meth vs unmeth comparison (low-quality samples)?</li>
 <li>Is there any sample that is excluded due to inconsistent sex?</li>
 <li>Which are the main biological and technical variables associated with PC1?</li>
 </ol>
@@ -362,7 +362,12 @@ provide the eSet needed for the EWAS.</p>
 <div class="sourceCode" id="cb107"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># DO NOT RUN</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">saveRDS</a></span><span class="op">(</span><span class="va">eSet</span>, <span class="st">'save_path'</span><span class="op">)</span></span></code></pre></div>
-
+<p><strong>ANSWERS</strong></p>
+<ol style="list-style-type: decimal">
+<li>Yes. Samples GSM1051809, GSM1052037 and GSM1052049</li>
+<li>No. There are some sex outliers but there are no inconsistences</li>
+<li>Age (biological) and Slide (technical)</li>
+</ol>
 </div>
 </div>
 </div>
@@ -400,7 +405,7 @@ provide the eSet needed for the EWAS.</p>
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Introduction to Epigenome-Wide Association Studies (EWAS)</strong>" was written by Juan R. González, Mariona Bustamante, Sofía Aguilar &amp; Laura Balagué. It was last built on 2023-08-31.</p>
+    <p>"<strong>Introduction to Epigenome-Wide Association Studies (EWAS)</strong>" was written by Juan R. González, Mariona Bustamante, Sofía Aguilar &amp; Laura Balagué. It was last built on 2023-09-01.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

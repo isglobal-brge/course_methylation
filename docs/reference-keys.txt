@@ -41,4 +41,6 @@ load-metaewas-results
 annotation-of-cpg-sites
 functional-enrichment-analysis
 go
-kegg
+reactome
+disease
+online-tools

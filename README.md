@@ -14,4 +14,17 @@ To enhance the learning experience, the course will include practical sessions w
 
 ## Material 
 - The data to reproduce the vignettes (input and output files) and data for practical sessions can be downloaded [here](https://mega.nz/folder/Y3EDAD6Y#pQB_HeqEfAYTg6UixU-k5A)
-- The R code for practical sessions can be found [here](https://isglobal-brge.github.io/course_methylation/)
+- The R code for practical sessions can be found [here](https://isglobal-brge.github.io/course_methylation/).
+
+## Getting started
+We have created the material using R version 4.2.1 (later can also work) - if your R version is lower, we recommend you to update it so everything works properly. We also need you to have RStudio Desktop. If you do not have R installed in your computer, the last version can be easily downloaded [here](https://cran.r-project.org/). RStudio can be downloaded [here](https://posit.co/download/rstudio-desktop/). 
+
+The required package are (you can type this code in your console to install them):
+
+``` 
+BiocManager::install(c("GenomicRanges", "GEOquery", "brgedata", "meffil", "Biobase",
+                       "ggplot2", "ggrepel", "karyoploteR", "qqman", "metafor", "reshape",
+                       "plyr", "IlluminaHumanMethylation450kanno.ilmn12.hg19", "clusterProfiler",
+                       "org.Hs.eg.db", "enrichplot"))
+```
+  

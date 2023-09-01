@@ -25,6 +25,6 @@ The required package are (you can type this code in your console to install them
 BiocManager::install(c("GenomicRanges", "GEOquery", "brgedata", "meffil", "Biobase",
                        "ggplot2", "ggrepel", "karyoploteR", "qqman", "metafor", "reshape",
                        "plyr", "IlluminaHumanMethylation450kanno.ilmn12.hg19", "clusterProfiler",
-                       "org.Hs.eg.db", "enrichplot"))
+                       "org.Hs.eg.db", "ReactomePA", "enrichplot"))
 ```
   

@@ -28,3 +28,9 @@ BiocManager::install(c("GenomicRanges", "GEOquery", "brgedata", "meffil", "Bioba
                        "org.Hs.eg.db", "ReactomePA", "enrichplot"))
 ```
   
+If the installation of the package `meffil` throws errors, try this alternative command:
+
+``` 
+install.packages("devtools")
+devtools::install_github("perishky/meffil")+
+```

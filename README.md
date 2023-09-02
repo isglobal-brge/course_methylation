@@ -32,5 +32,5 @@ If the installation of the package `meffil` throws errors, try this alternative 
 
 ``` 
 install.packages("devtools")
-devtools::install_github("perishky/meffil")+
+devtools::install_github("perishky/meffil")
 ```

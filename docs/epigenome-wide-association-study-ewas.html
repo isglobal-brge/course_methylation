@@ -425,64 +425,11 @@ was defined at FDR p-value &lt; 0.05. We tested 37,842 CpGs.</p>
 <span>                                    <span class="va">methyl.current</span>,</span>
 <span>                                    selected.cpg.sites<span class="op">=</span><span class="va">candidate.site</span>,</span>
 <span>                                    parameters<span class="op">=</span><span class="va">ewas.parameters</span><span class="op">)</span>                             </span></code></pre></div>
-<pre><code>## [meffil.ewas.summary] Tue Sep  5 23:37:08 2023 QQ plots 
-## [meffil.ewas.summary] Tue Sep  5 23:37:14 2023 Manhattan plots 
-## [meffil.ewas.summary] Tue Sep  5 23:37:15 2023 CpG site plots: 1 
-## [FUN] Tue Sep  5 23:37:15 2023 Plotting cg05575921 
-## [meffil.ewas.summary] Tue Sep  5 23:37:15 2023 Sample characteristics 
-## [meffil.ewas.sample.characteristics] Tue Sep  5 23:37:15 2023 summarizing variables 
-## [summarize.variable] Tue Sep  5 23:37:15 2023 variable of interest 
-## [summarize.variable] Tue Sep  5 23:37:15 2023 Age 
-## [summarize.variable] Tue Sep  5 23:37:15 2023 Sex 
-## [summarize.variable] Tue Sep  5 23:37:15 2023 Bcell 
-## [summarize.variable] Tue Sep  5 23:37:15 2023 CD4T 
-## [summarize.variable] Tue Sep  5 23:37:15 2023 CD8T 
-## [summarize.variable] Tue Sep  5 23:37:15 2023 Mono 
-## [summarize.variable] Tue Sep  5 23:37:15 2023 Neu 
-## [summarize.variable] Tue Sep  5 23:37:15 2023 NK 
-## [meffil.ewas.covariate.associations] Tue Sep  5 23:37:15 2023 covariate associations 
-## [FUN] Tue Sep  5 23:37:15 2023 Age</code></pre>
-<pre><code>## Warning in cor.test.default(vars[[var1]], as.integer(vars[[var2]]), method = "s"): Cannot compute exact p-value with ties</code></pre>
-<pre><code>## [FUN] Tue Sep  5 23:37:15 2023 Sex</code></pre>
-<pre><code>## Warning in cor.test.default(as.integer(vars[[1]]), as.integer(vars[[2]]), : Cannot compute exact p-value with ties</code></pre>
-<pre><code>## Warning in type.convert.default(X[[i]], ...): 'as.is' should be specified by the caller; using TRUE
-
-## Warning in type.convert.default(X[[i]], ...): 'as.is' should be specified by the caller; using TRUE
-
-## Warning in type.convert.default(X[[i]], ...): 'as.is' should be specified by the caller; using TRUE
-
-## Warning in type.convert.default(X[[i]], ...): 'as.is' should be specified by the caller; using TRUE</code></pre>
-<pre><code>## [FUN] Tue Sep  5 23:37:15 2023 Bcell</code></pre>
-<pre><code>## Warning in cor.test.default(vars[[var1]], as.integer(vars[[var2]]), method = "s"): Cannot compute exact p-value with ties</code></pre>
-<pre><code>## [FUN] Tue Sep  5 23:37:15 2023 CD4T</code></pre>
-<pre><code>## Warning in cor.test.default(vars[[var1]], as.integer(vars[[var2]]), method = "s"): Cannot compute exact p-value with ties</code></pre>
-<pre><code>## [FUN] Tue Sep  5 23:37:15 2023 CD8T</code></pre>
-<pre><code>## Warning in cor.test.default(vars[[var1]], as.integer(vars[[var2]]), method = "s"): Cannot compute exact p-value with ties</code></pre>
-<pre><code>## [FUN] Tue Sep  5 23:37:15 2023 Mono</code></pre>
-<pre><code>## Warning in cor.test.default(vars[[var1]], as.integer(vars[[var2]]), method = "s"): Cannot compute exact p-value with ties</code></pre>
-<pre><code>## [FUN] Tue Sep  5 23:37:16 2023 Neu</code></pre>
-<pre><code>## Warning in cor.test.default(vars[[var1]], as.integer(vars[[var2]]), method = "s"): Cannot compute exact p-value with ties</code></pre>
-<pre><code>## [FUN] Tue Sep  5 23:37:16 2023 NK</code></pre>
-<pre><code>## Warning in cor.test.default(vars[[var1]], as.integer(vars[[var2]]), method = "s"): Cannot compute exact p-value with ties</code></pre>
 <p><strong>DO NOT RUN THIS STEP IN THE VIRTUAL MACHINE</strong> - The report can be found <a href="./data/DAY3/Output/Report.EWAS.cohort1.NeverVScurrent.html">here</a></p>
-<div class="sourceCode" id="cb190"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb173"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/meffil/man/meffil.ewas.report.html">meffil.ewas.report</a></span><span class="op">(</span><span class="va">ewas.summary</span>,</span>
 <span>                   output.file<span class="op">=</span><span class="st">"./data/DAY3/Output/Report.EWAS.cohort1.NeverVScurrent_student.html"</span><span class="op">)</span></span></code></pre></div>
-<pre><code>## [meffil.ewas.report] Tue Sep  5 23:37:40 2023 Writing report as html file to ./data/DAY3/Output/Report.EWAS.cohort1.NeverVScurrent_student.html</code></pre>
-<pre><code>## Warning in in_dir(input_dir(), expr): You changed the working directory to C:/Users/lbalague/Desktop/course_methylation/data/DAY3/Output (probably via
-## setwd()). It will be restored to C:/Users/lbalague/AppData/Local/Programs/R/R-4.2.1/library/meffil/reports. See the Note section in ?knitr::knit
-
-## Warning in in_dir(input_dir(), expr): You changed the working directory to C:/Users/lbalague/Desktop/course_methylation/data/DAY3/Output (probably via
-## setwd()). It will be restored to C:/Users/lbalague/AppData/Local/Programs/R/R-4.2.1/library/meffil/reports. See the Note section in ?knitr::knit
-
-## Warning in in_dir(input_dir(), expr): You changed the working directory to C:/Users/lbalague/Desktop/course_methylation/data/DAY3/Output (probably via
-## setwd()). It will be restored to C:/Users/lbalague/AppData/Local/Programs/R/R-4.2.1/library/meffil/reports. See the Note section in ?knitr::knit
-
-## Warning in in_dir(input_dir(), expr): You changed the working directory to C:/Users/lbalague/Desktop/course_methylation/data/DAY3/Output (probably via
-## setwd()). It will be restored to C:/Users/lbalague/AppData/Local/Programs/R/R-4.2.1/library/meffil/reports. See the Note section in ?knitr::knit
-
-## Warning in in_dir(input_dir(), expr): You changed the working directory to C:/Users/lbalague/Desktop/course_methylation/data/DAY3/Output (probably via
-## setwd()). It will be restored to C:/Users/lbalague/AppData/Local/Programs/R/R-4.2.1/library/meffil/reports. See the Note section in ?knitr::knit</code></pre>
+<pre><code>## [meffil.ewas.report] Wed Sep  6 00:09:30 2023 Writing report as html file to ./data/DAY3/Output/Report.EWAS.cohort1.NeverVScurrent_student.html</code></pre>
 </div>
 <div id="plots" class="section level3" number="3.3.5">
 <h3>
@@ -490,7 +437,7 @@ was defined at FDR p-value &lt; 0.05. We tested 37,842 CpGs.</p>
 </h3>
 <p><strong>Volcano plot</strong></p>
 <p>The plot that you should obtain can be found <a href="./data/DAY3/Output/VolcanoPlot.EWAS.cohort1.NeverVScurrent.png">here</a></p>
-<div class="sourceCode" id="cb193"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb175"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res.current.ord</span><span class="op">$</span><span class="va">diffexpressed</span> <span class="op">&lt;-</span> <span class="st">"NO"</span></span>
 <span><span class="va">res.current.ord</span><span class="op">$</span><span class="va">diffexpressed</span><span class="op">[</span><span class="va">res.current.ord</span><span class="op">$</span><span class="va">coefficient</span> <span class="op">&gt;</span> <span class="fl">0</span></span>
 <span>                              <span class="op">&amp;</span> <span class="va">res.current.ord</span><span class="op">$</span><span class="va">fdr</span> <span class="op">&lt;</span><span class="fl">0.05</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"POSITIVE"</span></span>
@@ -520,7 +467,7 @@ was defined at FDR p-value &lt; 0.05. We tested 37,842 CpGs.</p>
 <div class="inline-figure"><img src="plots/volcano-1.png" width="576" style="display: block; margin: auto;"></div>
 <p><strong>Manhattan plot</strong></p>
 <p>The plot that you should obtain can be found <a href="./data/DAY3/Output/ManhattanPlot.EWAS.cohort1.NeverVScurrent.png">here</a></p>
-<div class="sourceCode" id="cb194"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb176"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Create a dataframe with chr, start, end and pval</span></span>
 <span><span class="va">df.current</span><span class="op">&lt;-</span><span class="va">res.current.ord</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"chromosome"</span>,<span class="st">"position"</span>,<span class="st">"p.value"</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">df.current</span><span class="op">)</span></span></code></pre></div>
@@ -529,7 +476,7 @@ was defined at FDR p-value &lt; 0.05. We tested 37,842 CpGs.</p>
 {"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["chromosome"],"name":[1],"type":["chr"],"align":["left"]},{"label":["position"],"name":[2],"type":["int"],"align":["right"]},{"label":["p.value"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"chr5","2":"373378","3":"3.449766e-31","_rn_":"cg05575921"},{"1":"chr2","2":"233284661","3":"8.297569e-26","_rn_":"cg21566642"},{"1":"chr19","2":"17000585","3":"1.396044e-25","_rn_":"cg03636183"},{"1":"chr2","2":"233284402","3":"2.110764e-24","_rn_":"cg05951221"},{"1":"chr2","2":"233284934","3":"1.992495e-23","_rn_":"cg01940273"},{"1":"chr5","2":"373299","3":"1.392884e-21","_rn_":"cg23576855"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<div class="sourceCode" id="cb195"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb177"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df.current</span><span class="op">$</span><span class="va">start</span><span class="op">&lt;-</span><span class="va">df.current</span><span class="op">$</span><span class="va">position</span> </span>
 <span><span class="va">df.current</span><span class="op">$</span><span class="va">end</span><span class="op">&lt;-</span><span class="va">df.current</span><span class="op">$</span><span class="va">position</span> <span class="op">+</span> <span class="fl">1</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/row_colnames.html">colnames</a></span><span class="op">(</span><span class="va">df.current</span><span class="op">)</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"chr"</span>,<span class="st">"position"</span>,<span class="st">"p.value"</span>,<span class="st">"start"</span>,<span class="st">"end"</span><span class="op">)</span></span>
@@ -538,15 +485,11 @@ was defined at FDR p-value &lt; 0.05. We tested 37,842 CpGs.</p>
 <span><span class="co"># Create GRanges object needed </span></span>
 <span><span class="va">df.GRanges</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/GenomicRanges/man/makeGRangesFromDataFrame.html">makeGRangesFromDataFrame</a></span><span class="op">(</span><span class="va">df.current</span>, keep.extra.columns <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co">#top.cpgs &lt;- subset(df.GRanges, p.value&lt;1e-30)</span></span>
-<span></span>
 <span><span class="va">kp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/karyoploteR/man/plotKaryotype.html">plotKaryotype</a></span><span class="op">(</span>plot.type<span class="op">=</span><span class="fl">4</span>, labels.plotter <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
 <span><span class="va">kp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/karyoploteR/man/kpAddChromosomeNames.html">kpAddChromosomeNames</a></span><span class="op">(</span><span class="va">kp</span>, cex<span class="op">=</span><span class="fl">0.6</span>, srt<span class="op">=</span><span class="fl">45</span><span class="op">)</span></span>
 <span><span class="va">kp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/karyoploteR/man/kpPlotManhattan.html">kpPlotManhattan</a></span><span class="op">(</span><span class="va">kp</span>, data<span class="op">=</span><span class="va">df.GRanges</span>,pval<span class="op">=</span><span class="va">df.current</span><span class="op">$</span><span class="va">p.value</span>, ymax<span class="op">=</span><span class="fl">40</span>,genomewideline <span class="op">=</span><span class="fl">3.42</span><span class="op">)</span></span>
 <span><span class="va">kp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/karyoploteR/man/kpAxis.html">kpAxis</a></span><span class="op">(</span><span class="va">kp</span>, ymin<span class="op">=</span><span class="fl">0</span>, ymax<span class="op">=</span><span class="fl">40</span>, cex<span class="op">=</span><span class="fl">0.7</span><span class="op">)</span></span></code></pre></div>
 <div class="inline-figure"><img src="plots/manhattan-1.png" width="100%" style="display: block; margin: auto;"></div>
-<div class="sourceCode" id="cb196"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#kpText(kp, data = top.cpgs, labels = names(top.cpgs), ymax=10, pos=3)</span></span></code></pre></div>
 <p><strong>ANSWERS</strong></p>
 <ol style="list-style-type: decimal">
 <li>Unadjusted: 2.44, adjusted for covariates: 2.22 and adjusted for covariates + sva: 1.51</li>
@@ -593,7 +536,7 @@ was defined at FDR p-value &lt; 0.05. We tested 37,842 CpGs.</p>
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Introduction to Epigenome-Wide Association Studies (EWAS)</strong>" was written by Juan R. González, Mariona Bustamante, Sofía Aguilar &amp; Laura Balagué. It was last built on 2023-09-05.</p>
+    <p>"<strong>Introduction to Epigenome-Wide Association Studies (EWAS)</strong>" was written by Juan R. González, Mariona Bustamante, Sofía Aguilar &amp; Laura Balagué. It was last built on 2023-09-06.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

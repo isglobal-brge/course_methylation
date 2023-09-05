@@ -2,7 +2,7 @@
 # EWAS report
 - study: Illumina methylation data
 - author: Analyst
-- date: 05 septiembre, 2023
+- date: 06 septiembre, 2023
 
 ## Parameters
 

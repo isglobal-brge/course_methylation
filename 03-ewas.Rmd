@@ -230,7 +230,7 @@ This report contains:
 - Significant CpG sites. As threshold we will indicate FDR=0.05.
 - Specific CpGs Box plot: To observe the methylation differences between Never VS Current smokers, you can specify the CpGs that you are interested in. Today we will select our top significant CpG "cg05575921" that is annotated to AHRR gene and it is well known for its association with tabbacco. 
 
-```{r report, warning=FALSE, message=FALSE}
+```{r report, warning=FALSE, message=FALSE, results=FALSE}
 ewas.parameters <- meffil.ewas.parameters(max.plots = 1,model="sva", sig.threshold = 3.86e-04) #FDR (0.05) = p.value (3.86e-04)
 candidate.site <- c("cg05575921")
 ewas.summary <- meffil.ewas.summary(ewas.current,

@@ -612,12 +612,12 @@ Figure 1.1: ExpressionSet scheme.
 <p><code>SummarizedExperiment</code> is extended to <code>RangedSummarizedExperiment</code>, a child class that contains the annotation data of the features in a <code>GenomicRanges</code> object. In our epigenomic example, the second most primitive class of <code>brge_methy</code> object with <em>omic</em> functionality, after <code>SummarizedExperiment</code>, is <code>RangedSummarizedExperiment</code>. Annotation data, with variable names given by</p>
 <div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="fu">rowData</span><span class="op">(</span><span class="va">brge_methy</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code>##  [1] "Forward_Sequence"         "SourceSeq"                "Random_Loci"              "Methyl27_Loci"            "genes"                    "UCSC_RefGene_Accession"  
-##  [7] "group"                    "Phantom"                  "DMR"                      "Enhancer"                 "HMM_Island"               "Regulatory_Feature_Name" 
-## [13] "Regulatory_Feature_Group" "DHS"</code></pre>
+<pre><code>##  [1] "Forward_Sequence"         "SourceSeq"                "Random_Loci"              "Methyl27_Loci"            "genes"                   
+##  [6] "UCSC_RefGene_Accession"   "group"                    "Phantom"                  "DMR"                      "Enhancer"                
+## [11] "HMM_Island"               "Regulatory_Feature_Name"  "Regulatory_Feature_Group" "DHS"</code></pre>
 <p>can be obtained in a <code>GRanges</code> object, for a given variable. For instance, metadata of CpG genomic annotation and neighboring genes is obtained using array syntax</p>
 <div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/matrixStats/man/rowRanges.html">rowRanges</a></span><span class="op">(</span><span class="va">brge_methy</span><span class="op">)</span><span class="op">[</span>, <span class="st">"genes"</span><span class="op">]</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">rowRanges</span><span class="op">(</span><span class="va">brge_methy</span><span class="op">)</span><span class="op">[</span>, <span class="st">"genes"</span><span class="op">]</span></span></code></pre></div>
 <pre><code>## GRanges object with 392277 ranges and 1 metadata column:
 ##              seqnames    ranges strand |         genes
 ##                 &lt;Rle&gt; &lt;IRanges&gt;  &lt;Rle&gt; |   &lt;character&gt;
@@ -717,7 +717,7 @@ Figure 1.1: ExpressionSet scheme.
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Introduction to Epigenome-Wide Association Studies (EWAS)</strong>" was written by Juan R. González, Mariona Bustamante, Sofía Aguilar &amp; Laura Balagué. It was last built on 2023-09-04.</p>
+    <p>"<strong>Introduction to Epigenome-Wide Association Studies (EWAS)</strong>" was written by Juan R. González, Mariona Bustamante, Sofía Aguilar &amp; Laura Balagué. It was last built on 2023-09-05.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

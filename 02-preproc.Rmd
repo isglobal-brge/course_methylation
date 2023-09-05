@@ -37,7 +37,7 @@ remove the duplicates.
 
 First we load the phenotype data
 ```{r phenoload}
-pheno <- read.table("/data/DAY2/Input/GSE42861_pheno_cohort1.txt",
+pheno <- read.table("./data/DAY2/Input/GSE42861_pheno_cohort1.txt",
                     sep = '\t', header = T)
 head(pheno)
 ```
@@ -77,7 +77,7 @@ the QC using 10 samples, we will continue working with the full dataset.
 We need to load the same QC Objects we have just created, but those including all
 the samples
 ```{r loadqc}
-load('/data/DAY2/Output/QCObjects_cohort1.RData')
+load('./data/DAY2/Output/QCObjects_cohort1.RData')
 ```
 
 After that, we setup the parameters for the QC
@@ -109,7 +109,7 @@ with detail.
 
 ```{r qcrep, eval=FALSE}
 meffil.qc.report(qc.summary, 
-                 output.file="./data/DAY2/Output/QCReport_cohort1.html")
+                 output.file="./data/DAY2/Output/QCReport_cohort1_student.html")
 ```
 If you are working in the virtual machine, just open the report that we have 
 already created with this same data.
@@ -206,7 +206,7 @@ norm.summary <- meffil.normalization.summary(norm.objects,
                                              pcs$x,
                                              parameters=norm.parameters)
 meffil.normalization.report(norm.summary,
-                            output.file="./data/DAY2/Outout/NormReport_cohort1")
+                            output.file="./data/DAY2/Outout/NormReport_cohort1_student")
 ```
 ## Creation of a Expression Set
 

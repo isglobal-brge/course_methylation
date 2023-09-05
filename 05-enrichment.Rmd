@@ -115,7 +115,7 @@ p3
 
 ### Reactome
 Now we do the same for the Reactome database
-```{r reactresults, eval=FALSE}
+```{r reactresults}
 ans.react <- enrichPathway(gene=ids$ENTREZID,
                            pvalueCutoff = 0.05,
                            readable=TRUE)

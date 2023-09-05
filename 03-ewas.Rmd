@@ -27,7 +27,7 @@ We begin loading the output from the last step, which is the `ExpressionSet` tha
 contains the normalised betas together with the phenotype.
 
 ```{r loaddataset}
-eset.cohort1<-readRDS("/data/DAY3/Input/GSE42861_norm_cohort1.Rds") 
+eset.cohort1<-readRDS("./data/DAY3/Input/GSE42861_norm_cohort1.Rds") 
 
 eset.cohort1
 ``` 
@@ -85,7 +85,7 @@ levels(pheno.current$Smoking)
 ```
 Finally, create an object with the exposure variable (Smoking). 
 You will need this object to run the `meffil.ewas()` function.
-```{r variable}
+```{r variable2}
 variable <- pheno.current$Smoking
 class(variable)
 ```
@@ -230,7 +230,7 @@ This report contains:
 - Significant CpG sites. As threshold we will indicate FDR=0.05.
 - Specific CpGs Box plot: To observe the methylation differences between Never VS Current smokers, you can specify the CpGs that you are interested in. Today we will select our top significant CpG "cg05575921" that is annotated to AHRR gene and it is well known for its association with tabbacco. 
 
-```{r report, eval=FALSE}
+```{r report}
 ewas.parameters <- meffil.ewas.parameters(max.plots = 1,model="sva", sig.threshold = 3.86e-04) #FDR (0.05) = p.value (3.86e-04)
 candidate.site <- c("cg05575921")
 ewas.summary <- meffil.ewas.summary(ewas.current,
@@ -241,9 +241,9 @@ ewas.summary <- meffil.ewas.summary(ewas.current,
 
 **DO NOT RUN THIS STEP IN THE VIRTUAL MACHINE** - The report can be found [here](./data/DAY3/Output/Report.EWAS.cohort1.NeverVScurrent.html)
 
-```{r}
+```{r meffil_report}
 meffil.ewas.report(ewas.summary,
-                   output.file="/data/DAY3/Output/Report.EWAS.cohort1.NeverVScurrent_student.html")
+                   output.file="./data/DAY3/Output/Report.EWAS.cohort1.NeverVScurrent_student.html")
 ```
 
 ### Plots

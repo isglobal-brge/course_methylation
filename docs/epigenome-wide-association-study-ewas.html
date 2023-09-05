@@ -255,7 +255,7 @@ to the methylation.</p>
 </h3>
 <p>To run the EWAS we will use the function meffil.ewas from meffil R package. We need as arguments:</p>
 <ul>
-<li>beta: Methylattion matrix</li>
+<li>beta: Methylation matrix</li>
 <li>variable: Vector with the exposure variable.</li>
 <li>covariates: A dataframe with the covariates to include in the regression model</li>
 <li>rlm: As we want to run a robust linear regression model, we need to specify
@@ -283,7 +283,7 @@ as covariates in the regression model</li>
 </h3>
 <p>We obtain an object with several information</p>
 <div class="sourceCode" id="cb154"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">ewas.current</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/DOSE/man/summary-methods.html">summary</a></span><span class="op">(</span><span class="va">ewas.current</span><span class="op">)</span></span></code></pre></div>
 <pre><code>##                    Length Class           Mode     
 ## class                   1 -none-          character
 ## version                 1 package_version list     
@@ -306,7 +306,7 @@ as covariates in the regression model</li>
 1) without adjusting for covariates, 2) adjusting for the covariates we specified above
 and also 3) adjusting for the covariates and the surrogate variables to correct the batch (noise)</p>
 <div class="sourceCode" id="cb156"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">ewas.current</span><span class="op">$</span><span class="va">analyses</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/DOSE/man/summary-methods.html">summary</a></span><span class="op">(</span><span class="va">ewas.current</span><span class="op">$</span><span class="va">analyses</span><span class="op">)</span></span></code></pre></div>
 <pre><code>##      Length Class  Mode
 ## none 5      -none- list
 ## all  5      -none- list
@@ -511,7 +511,7 @@ was defined at FDR p-value &lt; 0.05. We tested 37,842 CpGs.</p>
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Introduction to Epigenome-Wide Association Studies (EWAS)</strong>" was written by Juan R. González, Mariona Bustamante, Sofía Aguilar &amp; Laura Balagué. It was last built on 2023-09-02.</p>
+    <p>"<strong>Introduction to Epigenome-Wide Association Studies (EWAS)</strong>" was written by Juan R. González, Mariona Bustamante, Sofía Aguilar &amp; Laura Balagué. It was last built on 2023-09-04.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

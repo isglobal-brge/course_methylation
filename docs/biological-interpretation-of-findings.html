@@ -91,7 +91,7 @@ the findings. A file with the slides can be downloaded <a href="./Slides/ISG_sum
 <p>At the end of the practice, please answer these questions:</p>
 <ol style="list-style-type: decimal">
 <li>Which is the top 1 enriched GO term in current smokers? and in former smokers?</li>
-<li>Which are the enriched KEGG pathways in current smokers? and in former smokers?</li>
+<li>Which are the enriched Reactome pathways in current smokers? and in former smokers?</li>
 <li>Which are the enriched tissues in current smokers? and informer smokers?</li>
 </ol>
 <p>We will need to load some libraries:</p>
@@ -99,7 +99,8 @@ the findings. A file with the slides can be downloaded <a href="./Slides/ISG_sum
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">IlluminaHumanMethylation450kanno.ilmn12.hg19</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://yulab-smu.top/biomedical-knowledge-mining-book/">clusterProfiler</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">org.Hs.eg.db</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://yulab-smu.top/biomedical-knowledge-mining-book/">enrichplot</a></span><span class="op">)</span></span></code></pre></div>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://yulab-smu.top/biomedical-knowledge-mining-book/">enrichplot</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://yulab-smu.top/biomedical-knowledge-mining-book/">DOSE</a></span><span class="op">)</span></span></code></pre></div>
 <div id="load-metaewas-results" class="section level2" number="5.1">
 <h2>
 <span class="header-section-number">5.1</span> Load MetaEWAS results<a class="anchor" aria-label="anchor" href="#load-metaewas-results"><i class="fas fa-link"></i></a>
@@ -160,9 +161,7 @@ R package and select the columns of interest</p>
 <span></span>
 <span><span class="co">### 4.4. Save results </span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html">write.table</a></span><span class="op">(</span><span class="va">metaEWAS.FDRsig</span><span class="op">$</span><span class="va">probe</span>,<span class="st">"./data/DAY5/Output/list.cpgs.MA.Smoking.NeverVScurrent.txt"</span>, row.names <span class="op">=</span> <span class="cn">F</span>, col.names <span class="op">=</span> <span class="cn">F</span>, quote <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html">write.table</a></span><span class="op">(</span><span class="va">metaEWAS.FDRsig</span><span class="op">$</span><span class="va">probe</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">1000</span><span class="op">]</span>,<span class="st">"./data/DAY5/Output/list.cpgs.MA.Smoking.NeverVScurrent_subset.txt"</span>, row.names <span class="op">=</span> <span class="cn">F</span>, col.names <span class="op">=</span> <span class="cn">F</span>, quote <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html">write.table</a></span><span class="op">(</span><span class="va">ann.genes.current</span>,<span class="st">"./data/DAY5/Output/list.genes.MA.Smoking.NeverVScurrent.txt"</span>, row.names <span class="op">=</span> <span class="cn">F</span>, col.names <span class="op">=</span> <span class="cn">F</span>, quote <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html">write.table</a></span><span class="op">(</span><span class="va">metaEWAS.FDRsig</span><span class="op">$</span><span class="va">probe</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">100</span><span class="op">]</span>,<span class="st">"./data/DAY5/Output/list.cpgs.MA.Smoking.NeverVSformer_subset.txt"</span>, row.names <span class="op">=</span> <span class="cn">F</span>, col.names <span class="op">=</span> <span class="cn">F</span>, quote <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div id="functional-enrichment-analysis" class="section level2" number="5.3">
 <h2>
@@ -173,8 +172,13 @@ all the human genes that are anotated in specific databases. With this, we can s
 if our list of genes is a random subset or no.</p>
 <p>First of all we convert Gene Symbols to Ensembl and Entrez Gene IDs to use them later</p>
 <div class="sourceCode" id="cb224"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ids</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/clusterProfiler/man/bitr.html">bitr</a></span><span class="op">(</span><span class="va">ann.genes.current</span>, fromType<span class="op">=</span><span class="st">"SYMBOL"</span>, toType<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"ENSEMBL"</span>, <span class="st">"ENTREZID"</span><span class="op">)</span>, OrgDb<span class="op">=</span><span class="st">"org.Hs.eg.db"</span><span class="op">)</span></span></code></pre></div>
-<pre><code>## 'select()' returned 1:many mapping between keys and columns</code></pre>
+<code class="sourceCode R"><span><span class="va">ids</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/clusterProfiler/man/bitr.html">bitr</a></span><span class="op">(</span><span class="va">ann.genes.current</span>, fromType<span class="op">=</span><span class="st">"SYMBOL"</span>, toType<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"ENSEMBL"</span>, <span class="st">"ENTREZID"</span><span class="op">)</span>, OrgDb<span class="op">=</span><span class="st">"org.Hs.eg.db"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">ids</span><span class="op">)</span></span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["SYMBOL"],"name":[1],"type":["chr"],"align":["left"]},{"label":["ENSEMBL"],"name":[2],"type":["chr"],"align":["left"]},{"label":["ENTREZID"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"AHRR","2":"ENSG00000063438","3":"57491","_rn_":"1"},{"1":"F2RL3","2":"ENSG00000127533","3":"9002","_rn_":"2"},{"1":"C10orf105","2":"ENSG00000214688","3":"414152","_rn_":"3"},{"1":"CDH23","2":"ENSG00000107736","3":"64072","_rn_":"4"},{"1":"GPR15","2":"ENSG00000154165","3":"2838","_rn_":"5"},{"1":"HS6ST1","2":"ENSG00000136720","3":"9394","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 <div id="go" class="section level3" number="5.3.1">
 <h3>
 <span class="header-section-number">5.3.1</span> GO<a class="anchor" aria-label="anchor" href="#go"><i class="fas fa-link"></i></a>
@@ -182,12 +186,11 @@ if our list of genes is a random subset or no.</p>
 <p>We will first work with the Gene Ontology (GO) database, that allows us to see if a
 specific gene function is overrepresented in our gene list. We need to obtain the
 list of all human genes that are curated in GO.</p>
-<div class="sourceCode" id="cb226"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># GO</span></span>
-<span><span class="va">df</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="va">org.Hs.egGO</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb225"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">df</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="va">org.Hs.egGO</span><span class="op">)</span></span>
 <span><span class="va">go_gene_list</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/unique.html">unique</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/sort.html">sort</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">gene_id</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>And then run the analyses and keep the most interesting results.</p>
-<div class="sourceCode" id="cb227"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb226"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ans.go</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/clusterProfiler/man/enrichGO.html">enrichGO</a></span><span class="op">(</span>gene <span class="op">=</span> <span class="va">ids</span><span class="op">$</span><span class="va">ENTREZID</span>,</span>
 <span>                   ont <span class="op">=</span> <span class="st">"BP"</span>,</span>
 <span>                   OrgDb <span class="op">=</span><span class="st">"org.Hs.eg.db"</span>,</span>
@@ -204,15 +207,23 @@ list of all human genes that are curated in GO.</p>
   </script>
 </div>
 <p>Finally we can perform different type of plots to see the results in a graphical way</p>
-<div class="sourceCode" id="cb228"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/barplot.html">barplot</a></span><span class="op">(</span><span class="va">ans.go</span>, showCategory<span class="op">=</span><span class="fl">10</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span><span class="op">(</span><span class="st">'Never vs Current Smokers'</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">18</span><span class="op">)</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb227"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/barplot.html">barplot</a></span><span class="op">(</span><span class="va">ans.go</span>, showCategory<span class="op">=</span><span class="fl">10</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span><span class="op">(</span><span class="st">'Never vs Current Smokers'</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">18</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">p1</span></span></code></pre></div>
 <div class="inline-figure"><img src="plots/goplotss-1.png" width="576" style="display: block; margin: auto;"></div>
-<div class="sourceCode" id="cb229"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb228"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ans.go</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/enrichplot/man/pairwise_termsim.html">pairwise_termsim</a></span><span class="op">(</span><span class="va">ans.go</span><span class="op">)</span></span>
-<span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/enrichplot/man/emapplot.html">emapplot</a></span><span class="op">(</span><span class="va">ans.go</span>, cex_label_category <span class="op">=</span> <span class="fl">0.5</span>, showCategory <span class="op">=</span> <span class="fl">20</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span><span class="op">(</span><span class="st">'Never vs Current Smokers'</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">18</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/enrichplot/man/emapplot.html">emapplot</a></span><span class="op">(</span><span class="va">ans.go</span>, cex_label_category <span class="op">=</span> <span class="fl">0.5</span>, showCategory <span class="op">=</span> <span class="fl">20</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span><span class="op">(</span><span class="st">'Never vs Current Smokers'</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">18</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">p2</span></span></code></pre></div>
 <div class="inline-figure"><img src="plots/goplotss-2.png" width="576" style="display: block; margin: auto;"></div>
+<div class="sourceCode" id="cb229"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">p3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/enrichplot/man/cnetplot.html">cnetplot</a></span><span class="op">(</span><span class="va">ans.go</span>, circular <span class="op">=</span> <span class="cn">FALSE</span>, colorEdge <span class="op">=</span> <span class="cn">TRUE</span>, showCategory <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> </span>
+<span><span class="va">p3</span></span></code></pre></div>
+<div class="inline-figure"><img src="plots/goplotss-3.png" width="576" style="display: block; margin: auto;"></div>
 </div>
 <div id="reactome" class="section level3" number="5.3.2">
 <h3>
@@ -220,16 +231,44 @@ list of all human genes that are curated in GO.</p>
 </h3>
 <p>Now we do the same for the Reactome database</p>
 <div class="sourceCode" id="cb230"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ans.react</span> <span class="op">&lt;-</span> <span class="fu">enrichPathway</span><span class="op">(</span>gene<span class="op">=</span><span class="va">ids</span><span class="op">$</span><span class="va">ENTREZID</span>, pvalueCutoff <span class="op">=</span> <span class="fl">0.05</span>, readable<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">ans.react</span> <span class="op">&lt;-</span> <span class="fu">enrichPathway</span><span class="op">(</span>gene<span class="op">=</span><span class="va">ids</span><span class="op">$</span><span class="va">ENTREZID</span>,</span>
+<span>                           pvalueCutoff <span class="op">=</span> <span class="fl">0.05</span>,</span>
+<span>                           readable<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">tab.react</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="va">ans.react</span><span class="op">)</span></span>
-<span><span class="va">tab.react</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/subset.html">subset</a></span><span class="op">(</span><span class="va">tab.react</span>, <span class="va">Count</span><span class="op">&gt;</span><span class="fl">5</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">tab.react</span><span class="op">)</span></span></code></pre></div>
+<p>In this case, it exists a function that allows us to graphically investigate
+each of the pathwaysto see how the genes interact between them.
+We need to prepare a named list with the entrez gene ids and their fold change</p>
+<div class="sourceCode" id="cb231"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ids_coef_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/S4Vectors/man/Vector-merge.html">merge</a></span><span class="op">(</span><span class="va">ids</span>, <span class="va">metaEWAS.ann.ord</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'UCSC_RefGene_Name'</span>, <span class="st">'coef.fe'</span><span class="op">)</span><span class="op">]</span>, </span>
+<span>                     by.x <span class="op">=</span> <span class="st">'SYMBOL'</span>, </span>
+<span>                     by.y<span class="op">=</span><span class="st">'UCSC_RefGene_Name'</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">pathway_genes</span> <span class="op">&lt;-</span> <span class="fu">str_split</span><span class="op">(</span><span class="va">tab.react</span><span class="op">$</span><span class="va">geneID</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="st">'/'</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
+<span></span>
+<span><span class="va">ids_coef_df</span> <span class="op">&lt;-</span> <span class="va">ids_coef_df</span><span class="op">[</span><span class="va">ids_coef_df</span><span class="op">$</span><span class="va">SYMBOL</span> <span class="op"><a href="https://rdrr.io/pkg/BiocGenerics/man/match.html">%in%</a></span> <span class="va">pathway_genes</span>,<span class="op">]</span></span>
+<span><span class="va">ids_coef_df</span> <span class="op">&lt;-</span> <span class="va">ids_coef_df</span><span class="op">[</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/duplicated.html">duplicated</a></span><span class="op">(</span><span class="va">ids_coef_df</span><span class="op">$</span><span class="va">ENTREZID</span><span class="op">)</span>,<span class="op">]</span></span>
+<span><span class="va">ids_coef</span> <span class="op">&lt;-</span> <span class="va">ids_coef_df</span><span class="op">$</span><span class="va">coef.fe</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">ids_coef</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">ids_coef_df</span><span class="op">$</span><span class="va">ENTREZID</span></span>
+<span></span>
+<span></span>
+<span><span class="va">p3</span> <span class="op">&lt;-</span> <span class="fu">viewPathway</span><span class="op">(</span><span class="st">"Platelet activation, signaling and aggregation"</span>, </span>
+<span>            readable <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>            foldChange <span class="op">=</span> <span class="va">ids_coef</span><span class="op">)</span></span>
+<span><span class="va">p3</span></span></code></pre></div>
+<div class="inline-figure">
+<img src="plots/reactpathway-1.png" width="576" style="display: block; margin: auto;">
+If the net is too busy, we can re-plot keeping just the genes on our list (the coloured ones)</div>
+<div class="sourceCode" id="cb232"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">p3</span><span class="op">$</span><span class="va">data</span> <span class="op">&lt;-</span> <span class="va">p3</span><span class="op">$</span><span class="va">data</span><span class="op">[</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">p3</span><span class="op">$</span><span class="va">data</span><span class="op">$</span><span class="va">color</span><span class="op">)</span>,<span class="op">]</span></span>
+<span><span class="va">p3</span></span></code></pre></div>
+<div class="inline-figure"><img src="plots/replot-1.png" width="576" style="display: block; margin: auto;"></div>
 </div>
 <div id="disease" class="section level3" number="5.3.3">
 <h3>
 <span class="header-section-number">5.3.3</span> Disease<a class="anchor" aria-label="anchor" href="#disease"><i class="fas fa-link"></i></a>
 </h3>
-<p>To be provided</p>
+<p>And finally, the same process for the Disease Database</p>
 </div>
 <div id="online-tools" class="section level3" number="5.3.4">
 <h3>
@@ -243,7 +282,9 @@ differentially methylated positions (DMPs) with DNase I hypersensitive sites (DH
 We can submit the names of our top CpGs to see the last published information about them</p>
 <p><strong>ANSWERS</strong></p>
 <ol style="list-style-type: decimal">
-<li>For current smokers it is the regulation of neuron projection development. For former smokers it is</li>
+<li>For current smokers it is the regulation of neuron projection development. For former smokers it is embryonic organ development</li>
+<li>For current smokers it is Platelet activation, signaling and aggregation. For former smokers it is Neuronal System</li>
+<li>In current smokers they are blood and muscle. In former smokers they are blood and ESC</li>
 </ol>
 </div>
 </div>
@@ -283,7 +324,7 @@ We can submit the names of our top CpGs to see the last published information ab
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Introduction to Epigenome-Wide Association Studies (EWAS)</strong>" was written by Juan R. González, Mariona Bustamante, Sofía Aguilar &amp; Laura Balagué. It was last built on 2023-09-02.</p>
+    <p>"<strong>Introduction to Epigenome-Wide Association Studies (EWAS)</strong>" was written by Juan R. González, Mariona Bustamante, Sofía Aguilar &amp; Laura Balagué. It was last built on 2023-09-04.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

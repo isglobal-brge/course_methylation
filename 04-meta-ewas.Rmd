@@ -66,7 +66,6 @@ lambda.cohort3<- qchisq(median(EWASres.cohort3$p.value,na.rm=T), df = 1,
 
 lambdas<-cbind(lambda.cohort1,lambda.cohort2,lambda.cohort3)
 lambdas
-write.table(lambdas,"./data/DAY4/Output/Lambdas.NeverVScurrent.txt",sep=",")
 ```
 
 Then, we will create a QQplot for each of the 3 cohorts:
@@ -145,7 +144,7 @@ The precision plot can be found [here](./data/DAY4/Output/PrecisionPlot.MA.Smoki
 ## MetaEWAS: Statistical methods to combine results from different studies
 
 We will combine the EWAS results through a fixed-effect weight meta-analysis 
-using Metafor R package
+using `metafor` R package
 
 ### Data preparation
 
@@ -277,7 +276,6 @@ We order the results by the metaEWAS p.value
 ```{r order_metaewas}
 dat.current.ord<-dat.current[order(dat.current$p.fe),]
 dim(dat.current.ord)
-write.table(dat.current.ord, "./data/DAY4/Output/MA.Smoking.NeverVScurrent.txt")
 ```
 
 **Significant hits **
@@ -289,9 +287,6 @@ was defined at FDR p-value < 0.05.
 sig.current<-dat.current.ord[dat.current.ord$fdr <0.05,]
 dim(sig.current)
 head(sig.current)
-
-write.table(sig.current,
-            "./data/DAY4/Output/MA.Smoking.NeverVScurrent.FDRsig.txt")
 ```
 
 ### Lambda and QQplot

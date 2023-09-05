@@ -23,10 +23,18 @@ library(karyoploteR) #  Manhattan plot
 
 ## Load dataset and extract the phenotypes and methylation matrix
 
-We begin loading the output from the last step, which is the ExpressionSet that
-contains the normalised betas together with the phenotypes.
+We begin loading the output from the last step, which is the `ExpressionSet` that
+contains the normalised betas together with the phenotype.
+
 ```{r loaddataset}
-eset.cohort1<-readRDS("./data/DAY3/Input/GSE42861_norm_cohort1.Rds") 
+eset.cohort1<-readRDS("/data/DAY3/Input/GSE42861_norm_cohort1.Rds") 
+
+eset.cohort1
+``` 
+Use  `pData()` function from `Biobase` R package to extract cohort 1 phenodata 
+and `exprs()` function from `Biobase` R package to extract the cohort 1 methylation matrix. 
+
+```{r extracteset}
 pheno.cohort1<-pData(eset.cohort1)
 dim(pheno.cohort1)
 head(pheno.cohort1)
@@ -34,20 +42,20 @@ head(pheno.cohort1)
 methyl.cohort1<-exprs(eset.cohort1)
 dim(methyl.cohort1) 
 methyl.cohort1[1:5,1:5]
-
-table(eset.cohort1$Smoking)
 ```
 
 ## Run EWAS
 ### Data preparation
+
 Here we will show an example to run the analysis testing never smokers against 
 current smokers. Nevertheless, the same code can be applied to run other
 analyses testing never vs former. 
 
-The first step is to subset the ExpressionSet with only the samples that we need.
+The first step is to subset the `ExpressionSet` with only the samples that we need.
 In this case, we only keep the never smokers and the current smokers,
 getting rid of the former smokers. 
 ```{r subset}
+table(pheno.cohort1$Smoking)
 current <- pheno.cohort1[pheno.cohort1$Smoking %in% c('never','current'),]
 dim(current)
 eset.current <- eset.cohort1[,rownames(current)] #subset the eset
@@ -55,32 +63,34 @@ eset.current
 table(eset.current$Smoking)
 ```
 
-Extract methylation
-```{r methylcurrent}
-methyl.current<-exprs(eset.current)
-methyl.current[1:5,1:5]
-```
-
-Extract phenodata with never and current smokers
+Extract phenodata from the `ExpressionSet` with never and current smokers
+using `pData()` function from `Biobase` R package.
 ```{r phenocurrent}
 pheno.current<-pData(eset.current)
-pheno.current$Smoking<-as.character(pheno.current$Smoking)
-pheno.current$Smoking<-as.factor(pheno.current$Smoking)
+head(pheno.current)
 ```
+Now, we need to check the exposure variable (Smoking). We need this variable 
+as factor.
+```{r variable}
+pheno.current$Smoking<-as.factor(pheno.current$Smoking)
+class(pheno.current$Smoking)
+```
+Check the levels. We want "never" to be the reference level.To this end, you 
+can use the `relevel()`function.
 
-Check the levels. We want "never" to be the reference level
 ```{r levels}
 levels(pheno.current$Smoking)
 pheno.current$Smoking <- relevel(pheno.current$Smoking, "never")
 levels(pheno.current$Smoking)
 ```
-Select the exposure variable (Smoking)
+Finally, create an object with the exposure variable (Smoking). 
+You will need this object to run the `meffil.ewas()` function.
 ```{r variable}
 variable <- pheno.current$Smoking
 class(variable)
 ```
-Select the covariates of interest for the EWAS. We are interested in sex, age 
-and cell type proportions. 
+The next step is to select the covariates of interest for the EWAS. 
+We are interested in sex, age and cell type proportions.
 Check the class of these covariates before running the analysis.
 ```{r covs}
 class(pheno.current$Age)
@@ -91,22 +101,40 @@ class(pheno.current$CD8T)
 class(pheno.current$Mono)
 class(pheno.current$Neu)
 class(pheno.current$NK)
+```
+
+Then, create a new `data.frame`with the covariates of interest. 
+You will need this object  to run the `meffil.ewas()` function.
+
+```{r covssubs}
 pheno.current$Sex<-as.factor(pheno.current$Sex)
-covariates <- pheno.current[,c("Age","Sex","Bcell","CD4T","CD8T","Mono","Neu","NK")]
+covariates <- pheno.current[,c("Age","Sex",
+                               "Bcell","CD4T","CD8T","Mono","Neu","NK")]
+```
+
+After having the exposure and the covariates objects ready, you will need to
+extract the methylation matrix from the `ExpressionSet` using `exprs()` function
+from `Biobase` R package. You will need this object to run the `meffil.ewas()` function.
+```{r methylcurrent}
+methyl.current<-exprs(eset.current)
+methyl.current[1:5,1:5]
 ```
 
 Check order of the samples between the pheno and the methylation matrix. 
-If you do not order samples as they are in the ExpressionSet, you could 
-incorrectly assign the values of the variables to the samples and therefore also
-to the methylation.
+If samples are not in the same order, you could incorrectly assign the values 
+of the variables to the samples and therefore also to the methylation.
 ```{r check}
-table(ifelse(rownames(pheno.current)==colnames(methyl.current),"Matched","--NOT MATCHED--"))
+table(ifelse(rownames(pheno.current)==colnames(methyl.current),
+             "Matched","--NOT MATCHED--"))
 ```
 
 ### EWAS
-To run the EWAS we will use the function meffil.ewas from meffil R package. We need as arguments:
 
-- beta: Methylattion matrix
+To run the EWAS we will use the function `meffil.ewas()` from `meffil` R package.
+
+We need as arguments:
+
+- beta: Methylation matrix
 - variable: Vector with the exposure variable. 
 - covariates: A dataframe with the covariates to include in the regression model
 - rlm: As we want to run a robust linear regression model, we need to specify 
@@ -116,7 +144,7 @@ data, we will winsorize the methylation beta values (1%), with 0.5% at upper and
 lower ends of the distribution [@ghoshvogt2012]
 - sva (by default TRUE). This function will apply Surrogate Variable Analysis 
 (SVA) to the methylation levels and covariates and include the resulting variables
-as covariates in the regression model
+as covariates in the regression model to correct for technical batch (noise)
 
 ```{r ewas, warning=FALSE, message=FALSE}
 ewas.current <- meffil.ewas(methyl.current,
@@ -137,12 +165,13 @@ and also 3) adjusting for the covariates and the surrogate variables to correct 
 ```{r summary2}
 summary(ewas.current$analyses)
 ```
-We will use the results from the analysis adjusted for SVA
+We will use the results from the analysis adjusted for the covariates and the surrogate variables
 ```{r res}
 res.current<-ewas.current$analyses$sva
 res.current<-res.current$table
 ```
-Create a column with the Probe ID, which is in the rows of the results dataframe
+We will create a column with the Probe ID, which now is in the rows of the results 
+dataframe
 ```{r probeid}
 res.current$probeID<-rownames(res.current)
 ```
@@ -151,7 +180,6 @@ We order the results by p.value
 ```{r order_res}
 res.current.ord<-res.current[order(res.current$p.value),]
 head(res.current.ord)
-colnames(res.current.ord)
 ```
 The column names stand for:
 
@@ -188,17 +216,10 @@ dim(res.current.sig[res.current.sig$coefficient >0,])
 
 ```
 
-We save the results
-```{r saveewas, eval=FALSE}
-write.table(res.current.ord,
-            "./data/DAY3/Output/Results.EWAS.cohort1.NeverVScurrent.txt",
-            sep=",")
-
-```
 
 ### Report
 
-To explore the results, we will create a report using meffil.ewas.parameters() and meffil.ewas.summary() functions from meffil R package. 
+To explore the results, we will create a report using `meffil.ewas.parameters()` and `meffil.ewas.summary()` functions from `meffil ` R package. 
 
 This report contains: 
 
@@ -216,10 +237,14 @@ ewas.summary <- meffil.ewas.summary(ewas.current,
                                     methyl.current,
                                     selected.cpg.sites=candidate.site,
                                     parameters=ewas.parameters)								
-meffil.ewas.report(ewas.summary,
-                   output.file="./data/DAY3/Output/Report.EWAS.cohort1.NeverVScurrent.html")
 ```
-The report can be found [here](./data/DAY3/Output/Report.EWAS.cohort1.NeverVScurrent.html)
+
+**DO NOT RUN THIS STEP IN THE VIRTUAL MACHINE** - The report can be found [here](./data/DAY3/Output/Report.EWAS.cohort1.NeverVScurrent.html)
+
+```{r}
+meffil.ewas.report(ewas.summary,
+                   output.file="/data/DAY3/Output/Report.EWAS.cohort1.NeverVScurrent_student.html")
+```
 
 ### Plots
 

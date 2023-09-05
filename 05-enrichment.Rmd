@@ -5,7 +5,7 @@ the findings. A file with the slides can be downloaded [here](./Slides/ISG_summe
 At the end of the practice, please answer these questions:
 
 1. Which is the top 1 enriched GO term in current smokers? and in former smokers?
-2. Which are the enriched KEGG pathways in current smokers? and in former smokers?
+2. Which are the enriched Reactome pathways in current smokers? and in former smokers?
 3. Which are the enriched tissues in current smokers? and informer smokers?
 
 
@@ -15,6 +15,7 @@ library(IlluminaHumanMethylation450kanno.ilmn12.hg19)
 library(clusterProfiler)
 library(org.Hs.eg.db)
 library(enrichplot)
+library(DOSE)
 ```
 
 ## Load MetaEWAS results
@@ -58,12 +59,6 @@ Create list of Genes for Enrichment and save list of FDR CpGs and FDR genes
 ```{r listGenes}
 ann.genes.current<-metaEWAS.ann.ord$UCSC_RefGene_Name
 ann.genes.current <- unlist(lapply(strsplit(ann.genes.current, ";"), unique))
-
-### 4.4. Save results 
-write.table(metaEWAS.FDRsig$probe,"./data/DAY5/Output/list.cpgs.MA.Smoking.NeverVScurrent.txt", row.names = F, col.names = F, quote = F)
-write.table(metaEWAS.FDRsig$probe[1:1000],"./data/DAY5/Output/list.cpgs.MA.Smoking.NeverVScurrent_subset.txt", row.names = F, col.names = F, quote = F)
-
-write.table(ann.genes.current,"./data/DAY5/Output/list.genes.MA.Smoking.NeverVScurrent.txt", row.names = F, col.names = F, quote = F)
 ```
 
 
@@ -73,8 +68,9 @@ all the human genes that are anotated in specific databases. With this, we can s
 if our list of genes is a random subset or no.
 
 First of all we convert Gene Symbols to Ensembl and Entrez Gene IDs to use them later
-```{r nameconversion, warning=FALSE}
+```{r nameconversion, warning=FALSE, message=FALSE}
 ids <- bitr(ann.genes.current, fromType="SYMBOL", toType=c("ENSEMBL", "ENTREZID"), OrgDb="org.Hs.eg.db")
+head(ids)
 ```
 ### GO
 
@@ -82,7 +78,6 @@ We will first work with the Gene Ontology (GO) database, that allows us to see i
 specific gene function is overrepresented in our gene list. We need to obtain the
 list of all human genes that are curated in GO.
 ```{r genelist}
-# GO
 df = as.data.frame(org.Hs.egGO)
 go_gene_list = unique(sort(df$gene_id))
 ```
@@ -102,37 +97,72 @@ head(tab.go)
 ```
 
 Finally we can perform different type of plots to see the results in a graphical way
-```{r goplotss}
-p1 <- barplot(ans.go, showCategory=10) + ggtitle('Never vs Current Smokers') + theme(plot.title = element_text(size = 18))
+```{r goplotss, warning=FALSE}
+p1 <- barplot(ans.go, showCategory=10) + 
+  ggtitle('Never vs Current Smokers') + 
+  theme(plot.title = element_text(size = 18))
 p1
+
 ans.go <- pairwise_termsim(ans.go)
-p2 <- emapplot(ans.go, cex_label_category = 0.5, showCategory = 20) + ggtitle('Never vs Current Smokers') + theme(plot.title = element_text(size = 18))
+p2 <- emapplot(ans.go, cex_label_category = 0.5, showCategory = 20) + 
+  ggtitle('Never vs Current Smokers') + 
+  theme(plot.title = element_text(size = 18))
 p2
+
+p3 <- cnetplot(ans.go, circular = FALSE, colorEdge = TRUE, showCategory = 2) 
+p3
 ```
 
 ### Reactome
 Now we do the same for the Reactome database
 ```{r reactresults, eval=FALSE}
-ans.react <- enrichPathway(gene=ids$ENTREZID, pvalueCutoff = 0.05, readable=TRUE)
+ans.react <- enrichPathway(gene=ids$ENTREZID,
+                           pvalueCutoff = 0.05,
+                           readable=TRUE)
 tab.react <- as.data.frame(ans.react)
-tab.react<- subset(tab.react, Count>5)
 head(tab.react)
 ```
 
+In this case, it exists a function that allows us to graphically investigate
+each of the pathwaysto see how the genes interact between them. 
+We need to prepare a named list with the entrez gene ids and their fold change
+```{r reactpathway, warning=FALSE, message=FALSE}
+ids_coef_df <- merge(ids, metaEWAS.ann.ord[,c('UCSC_RefGene_Name', 'coef.fe')], 
+                     by.x = 'SYMBOL', 
+                     by.y='UCSC_RefGene_Name')
+
+pathway_genes <- str_split(tab.react$geneID[[1]], '/')[[1]]
+
+ids_coef_df <- ids_coef_df[ids_coef_df$SYMBOL %in% pathway_genes,]
+ids_coef_df <- ids_coef_df[!duplicated(ids_coef_df$ENTREZID),]
+ids_coef <- ids_coef_df$coef.fe
+names(ids_coef) <- ids_coef_df$ENTREZID
+
+
+p3 <- viewPathway("Platelet activation, signaling and aggregation", 
+            readable = TRUE,
+            foldChange = ids_coef)
+p3
+```
+If the net is too busy, we can re-plot keeping just the genes on our list (the coloured ones)
+```{r replot, warning=FALSE}
+p3$data <- p3$data[!is.na(p3$data$color),]
+p3
+```
+
 ### Disease
-To be provided
-```{r, eval=FALSE, include=FALSE}
-ans.do <- enrichDO(gene     = ids$`ncbi-geneid`,
+And finally, the same process for the Disease Database
+```{r, include=FALSE}
+ans.do <- enrichDO(gene     = ids$ENTREZID,
               ont           = "DO",
-              pvalueCutoff  = 0.05,
+              pvalueCutoff  = 0.1,
               pAdjustMethod = "BH",
-              universe      = names(geneList),
               minGSSize     = 5,
               maxGSSize     = 500,
-              qvalueCutoff  = 0.05,
               readable      = FALSE)
 
-ncg <- enrichNCG(ids$`ncbi-geneid`)
+tab.do <- as.data.frame(ans.do)
+head(tab.do)
 ```
 ### Online Tools
 
@@ -150,5 +180,6 @@ We can submit the names of our top CpGs to see the last published information ab
 
 **ANSWERS**
 
-1. For current smokers it is the regulation of neuron projection development. For former smokers it is
-
+1. For current smokers it is the regulation of neuron projection development. For former smokers it is embryonic organ development
+2. For current smokers it is Platelet activation, signaling and aggregation. For former smokers it is Neuronal System
+3. In current smokers they are blood and muscle. In former smokers they are blood and ESC

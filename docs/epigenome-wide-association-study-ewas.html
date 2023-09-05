@@ -318,7 +318,7 @@ as covariates in the regression model to correct for technical batch (noise)</li
 </h3>
 <p>We obtain an object with several information</p>
 <div class="sourceCode" id="cb156"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">ewas.current</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/DOSE/man/summary-methods.html">summary</a></span><span class="op">(</span><span class="va">ewas.current</span><span class="op">)</span></span></code></pre></div>
 <pre><code>##                    Length Class           Mode     
 ## class                   1 -none-          character
 ## version                 1 package_version list     
@@ -341,7 +341,7 @@ as covariates in the regression model to correct for technical batch (noise)</li
 1) without adjusting for covariates, 2) adjusting for the covariates we specified above
 and also 3) adjusting for the covariates and the surrogate variables to correct the batch (noise)</p>
 <div class="sourceCode" id="cb158"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">ewas.current</span><span class="op">$</span><span class="va">analyses</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/DOSE/man/summary-methods.html">summary</a></span><span class="op">(</span><span class="va">ewas.current</span><span class="op">$</span><span class="va">analyses</span><span class="op">)</span></span></code></pre></div>
 <pre><code>##      Length Class  Mode
 ## none 5      -none- list
 ## all  5      -none- list
@@ -425,25 +425,25 @@ was defined at FDR p-value &lt; 0.05. We tested 37,842 CpGs.</p>
 <span>                                    <span class="va">methyl.current</span>,</span>
 <span>                                    selected.cpg.sites<span class="op">=</span><span class="va">candidate.site</span>,</span>
 <span>                                    parameters<span class="op">=</span><span class="va">ewas.parameters</span><span class="op">)</span>                             </span></code></pre></div>
-<pre><code>## [meffil.ewas.summary] Tue Sep  5 19:04:36 2023 QQ plots 
-## [meffil.ewas.summary] Tue Sep  5 19:04:38 2023 Manhattan plots 
-## [meffil.ewas.summary] Tue Sep  5 19:04:38 2023 CpG site plots: 1 
-## [FUN] Tue Sep  5 19:04:38 2023 Plotting cg05575921 
-## [meffil.ewas.summary] Tue Sep  5 19:04:45 2023 Sample characteristics 
-## [meffil.ewas.sample.characteristics] Tue Sep  5 19:04:45 2023 summarizing variables 
-## [summarize.variable] Tue Sep  5 19:04:45 2023 variable of interest 
-## [summarize.variable] Tue Sep  5 19:04:45 2023 Age 
-## [summarize.variable] Tue Sep  5 19:04:45 2023 Sex 
-## [summarize.variable] Tue Sep  5 19:04:45 2023 Bcell 
-## [summarize.variable] Tue Sep  5 19:04:45 2023 CD4T 
-## [summarize.variable] Tue Sep  5 19:04:45 2023 CD8T 
-## [summarize.variable] Tue Sep  5 19:04:45 2023 Mono 
-## [summarize.variable] Tue Sep  5 19:04:45 2023 Neu 
-## [summarize.variable] Tue Sep  5 19:04:45 2023 NK 
-## [meffil.ewas.covariate.associations] Tue Sep  5 19:04:45 2023 covariate associations 
-## [FUN] Tue Sep  5 19:04:45 2023 Age</code></pre>
+<pre><code>## [meffil.ewas.summary] Tue Sep  5 23:37:08 2023 QQ plots 
+## [meffil.ewas.summary] Tue Sep  5 23:37:14 2023 Manhattan plots 
+## [meffil.ewas.summary] Tue Sep  5 23:37:15 2023 CpG site plots: 1 
+## [FUN] Tue Sep  5 23:37:15 2023 Plotting cg05575921 
+## [meffil.ewas.summary] Tue Sep  5 23:37:15 2023 Sample characteristics 
+## [meffil.ewas.sample.characteristics] Tue Sep  5 23:37:15 2023 summarizing variables 
+## [summarize.variable] Tue Sep  5 23:37:15 2023 variable of interest 
+## [summarize.variable] Tue Sep  5 23:37:15 2023 Age 
+## [summarize.variable] Tue Sep  5 23:37:15 2023 Sex 
+## [summarize.variable] Tue Sep  5 23:37:15 2023 Bcell 
+## [summarize.variable] Tue Sep  5 23:37:15 2023 CD4T 
+## [summarize.variable] Tue Sep  5 23:37:15 2023 CD8T 
+## [summarize.variable] Tue Sep  5 23:37:15 2023 Mono 
+## [summarize.variable] Tue Sep  5 23:37:15 2023 Neu 
+## [summarize.variable] Tue Sep  5 23:37:15 2023 NK 
+## [meffil.ewas.covariate.associations] Tue Sep  5 23:37:15 2023 covariate associations 
+## [FUN] Tue Sep  5 23:37:15 2023 Age</code></pre>
 <pre><code>## Warning in cor.test.default(vars[[var1]], as.integer(vars[[var2]]), method = "s"): Cannot compute exact p-value with ties</code></pre>
-<pre><code>## [FUN] Tue Sep  5 19:04:45 2023 Sex</code></pre>
+<pre><code>## [FUN] Tue Sep  5 23:37:15 2023 Sex</code></pre>
 <pre><code>## Warning in cor.test.default(as.integer(vars[[1]]), as.integer(vars[[2]]), : Cannot compute exact p-value with ties</code></pre>
 <pre><code>## Warning in type.convert.default(X[[i]], ...): 'as.is' should be specified by the caller; using TRUE
 
@@ -452,23 +452,23 @@ was defined at FDR p-value &lt; 0.05. We tested 37,842 CpGs.</p>
 ## Warning in type.convert.default(X[[i]], ...): 'as.is' should be specified by the caller; using TRUE
 
 ## Warning in type.convert.default(X[[i]], ...): 'as.is' should be specified by the caller; using TRUE</code></pre>
-<pre><code>## [FUN] Tue Sep  5 19:04:49 2023 Bcell</code></pre>
+<pre><code>## [FUN] Tue Sep  5 23:37:15 2023 Bcell</code></pre>
 <pre><code>## Warning in cor.test.default(vars[[var1]], as.integer(vars[[var2]]), method = "s"): Cannot compute exact p-value with ties</code></pre>
-<pre><code>## [FUN] Tue Sep  5 19:04:49 2023 CD4T</code></pre>
+<pre><code>## [FUN] Tue Sep  5 23:37:15 2023 CD4T</code></pre>
 <pre><code>## Warning in cor.test.default(vars[[var1]], as.integer(vars[[var2]]), method = "s"): Cannot compute exact p-value with ties</code></pre>
-<pre><code>## [FUN] Tue Sep  5 19:04:49 2023 CD8T</code></pre>
+<pre><code>## [FUN] Tue Sep  5 23:37:15 2023 CD8T</code></pre>
 <pre><code>## Warning in cor.test.default(vars[[var1]], as.integer(vars[[var2]]), method = "s"): Cannot compute exact p-value with ties</code></pre>
-<pre><code>## [FUN] Tue Sep  5 19:04:49 2023 Mono</code></pre>
+<pre><code>## [FUN] Tue Sep  5 23:37:15 2023 Mono</code></pre>
 <pre><code>## Warning in cor.test.default(vars[[var1]], as.integer(vars[[var2]]), method = "s"): Cannot compute exact p-value with ties</code></pre>
-<pre><code>## [FUN] Tue Sep  5 19:04:49 2023 Neu</code></pre>
+<pre><code>## [FUN] Tue Sep  5 23:37:16 2023 Neu</code></pre>
 <pre><code>## Warning in cor.test.default(vars[[var1]], as.integer(vars[[var2]]), method = "s"): Cannot compute exact p-value with ties</code></pre>
-<pre><code>## [FUN] Tue Sep  5 19:04:49 2023 NK</code></pre>
+<pre><code>## [FUN] Tue Sep  5 23:37:16 2023 NK</code></pre>
 <pre><code>## Warning in cor.test.default(vars[[var1]], as.integer(vars[[var2]]), method = "s"): Cannot compute exact p-value with ties</code></pre>
 <p><strong>DO NOT RUN THIS STEP IN THE VIRTUAL MACHINE</strong> - The report can be found <a href="./data/DAY3/Output/Report.EWAS.cohort1.NeverVScurrent.html">here</a></p>
 <div class="sourceCode" id="cb190"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/meffil/man/meffil.ewas.report.html">meffil.ewas.report</a></span><span class="op">(</span><span class="va">ewas.summary</span>,</span>
 <span>                   output.file<span class="op">=</span><span class="st">"./data/DAY3/Output/Report.EWAS.cohort1.NeverVScurrent_student.html"</span><span class="op">)</span></span></code></pre></div>
-<pre><code>## [meffil.ewas.report] Tue Sep  5 19:04:55 2023 Writing report as html file to ./data/DAY3/Output/Report.EWAS.cohort1.NeverVScurrent_student.html</code></pre>
+<pre><code>## [meffil.ewas.report] Tue Sep  5 23:37:40 2023 Writing report as html file to ./data/DAY3/Output/Report.EWAS.cohort1.NeverVScurrent_student.html</code></pre>
 <pre><code>## Warning in in_dir(input_dir(), expr): You changed the working directory to C:/Users/lbalague/Desktop/course_methylation/data/DAY3/Output (probably via
 ## setwd()). It will be restored to C:/Users/lbalague/AppData/Local/Programs/R/R-4.2.1/library/meffil/reports. See the Note section in ?knitr::knit
 
@@ -517,7 +517,7 @@ was defined at FDR p-value &lt; 0.05. We tested 37,842 CpGs.</p>
 <span><span class="va">p3</span> <span class="op">&lt;-</span> <span class="va">p2</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_colour_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="va">mycolors</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">p3</span></span></code></pre></div>
-<div class="inline-figure"><img src="_main_files/figure-html/volcano-1.png" width="672" style="display: block; margin: auto;"></div>
+<div class="inline-figure"><img src="plots/volcano-1.png" width="576" style="display: block; margin: auto;"></div>
 <p><strong>Manhattan plot</strong></p>
 <p>The plot that you should obtain can be found <a href="./data/DAY3/Output/ManhattanPlot.EWAS.cohort1.NeverVScurrent.png">here</a></p>
 <div class="sourceCode" id="cb194"><pre class="downlit sourceCode r">
@@ -544,7 +544,7 @@ was defined at FDR p-value &lt; 0.05. We tested 37,842 CpGs.</p>
 <span><span class="va">kp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/karyoploteR/man/kpAddChromosomeNames.html">kpAddChromosomeNames</a></span><span class="op">(</span><span class="va">kp</span>, cex<span class="op">=</span><span class="fl">0.6</span>, srt<span class="op">=</span><span class="fl">45</span><span class="op">)</span></span>
 <span><span class="va">kp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/karyoploteR/man/kpPlotManhattan.html">kpPlotManhattan</a></span><span class="op">(</span><span class="va">kp</span>, data<span class="op">=</span><span class="va">df.GRanges</span>,pval<span class="op">=</span><span class="va">df.current</span><span class="op">$</span><span class="va">p.value</span>, ymax<span class="op">=</span><span class="fl">40</span>,genomewideline <span class="op">=</span><span class="fl">3.42</span><span class="op">)</span></span>
 <span><span class="va">kp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/karyoploteR/man/kpAxis.html">kpAxis</a></span><span class="op">(</span><span class="va">kp</span>, ymin<span class="op">=</span><span class="fl">0</span>, ymax<span class="op">=</span><span class="fl">40</span>, cex<span class="op">=</span><span class="fl">0.7</span><span class="op">)</span></span></code></pre></div>
-<div class="inline-figure"><img src="_main_files/figure-html/manhattan-1.png" width="100%" style="display: block; margin: auto;"></div>
+<div class="inline-figure"><img src="plots/manhattan-1.png" width="100%" style="display: block; margin: auto;"></div>
 <div class="sourceCode" id="cb196"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#kpText(kp, data = top.cpgs, labels = names(top.cpgs), ymax=10, pos=3)</span></span></code></pre></div>
 <p><strong>ANSWERS</strong></p>

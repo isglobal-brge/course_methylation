@@ -617,7 +617,7 @@ Figure 1.1: ExpressionSet scheme.
 ## [11] "HMM_Island"               "Regulatory_Feature_Name"  "Regulatory_Feature_Group" "DHS"</code></pre>
 <p>can be obtained in a <code>GRanges</code> object, for a given variable. For instance, metadata of CpG genomic annotation and neighboring genes is obtained using array syntax</p>
 <div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">rowRanges</span><span class="op">(</span><span class="va">brge_methy</span><span class="op">)</span><span class="op">[</span>, <span class="st">"genes"</span><span class="op">]</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/matrixStats/man/rowRanges.html">rowRanges</a></span><span class="op">(</span><span class="va">brge_methy</span><span class="op">)</span><span class="op">[</span>, <span class="st">"genes"</span><span class="op">]</span></span></code></pre></div>
 <pre><code>## GRanges object with 392277 ranges and 1 metadata column:
 ##              seqnames    ranges strand |         genes
 ##                 &lt;Rle&gt; &lt;IRanges&gt;  &lt;Rle&gt; |   &lt;character&gt;

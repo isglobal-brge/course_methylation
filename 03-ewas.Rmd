@@ -230,7 +230,7 @@ This report contains:
 - Significant CpG sites. As threshold we will indicate FDR=0.05.
 - Specific CpGs Box plot: To observe the methylation differences between Never VS Current smokers, you can specify the CpGs that you are interested in. Today we will select our top significant CpG "cg05575921" that is annotated to AHRR gene and it is well known for its association with tabbacco. 
 
-```{r report}
+```{r report, warning=FALSE, message=FALSE}
 ewas.parameters <- meffil.ewas.parameters(max.plots = 1,model="sva", sig.threshold = 3.86e-04) #FDR (0.05) = p.value (3.86e-04)
 candidate.site <- c("cg05575921")
 ewas.summary <- meffil.ewas.summary(ewas.current,
@@ -241,7 +241,7 @@ ewas.summary <- meffil.ewas.summary(ewas.current,
 
 **DO NOT RUN THIS STEP IN THE VIRTUAL MACHINE** - The report can be found [here](./data/DAY3/Output/Report.EWAS.cohort1.NeverVScurrent.html)
 
-```{r meffil_report}
+```{r meffil_report, warning=FALSE, message=FALSE}
 meffil.ewas.report(ewas.summary,
                    output.file="./data/DAY3/Output/Report.EWAS.cohort1.NeverVScurrent_student.html")
 ```
@@ -297,13 +297,10 @@ df.current<-df.current[,c("chr","start","end","p.value")]
 # Create GRanges object needed 
 df.GRanges<-makeGRangesFromDataFrame(df.current, keep.extra.columns = TRUE)
 
-#top.cpgs <- subset(df.GRanges, p.value<1e-30)
-
 kp <- plotKaryotype(plot.type=4, labels.plotter = NULL)
 kp <- kpAddChromosomeNames(kp, cex=0.6, srt=45)
 kp <- kpPlotManhattan(kp, data=df.GRanges,pval=df.current$p.value, ymax=40,genomewideline =3.42)
 kp <- kpAxis(kp, ymin=0, ymax=40, cex=0.7)
-#kpText(kp, data = top.cpgs, labels = names(top.cpgs), ymax=10, pos=3)
 
 ```
 

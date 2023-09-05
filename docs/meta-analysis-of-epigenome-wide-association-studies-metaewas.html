@@ -162,17 +162,17 @@ This includes:</p>
 <code class="sourceCode R"><span><span class="co">#cohort 1</span></span>
 <span><span class="va">pvals.cohort1</span><span class="op">&lt;-</span><span class="va">EWASres.cohort1</span><span class="op">$</span><span class="va">p.value</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/qqman/man/qq.html">qq</a></span><span class="op">(</span><span class="va">pvals.cohort1</span>,main<span class="op">=</span><span class="op">(</span><span class="st">"QQPlot EWAS cohort 1 smoking Never VS Current"</span><span class="op">)</span><span class="op">)</span> </span></code></pre></div>
-<div class="inline-figure"><img src="_main_files/figure-html/QQlots-1.png" width="672" style="display: block; margin: auto;"></div>
+<div class="inline-figure"><img src="plots/QQlots-1.png" width="576" style="display: block; margin: auto;"></div>
 <div class="sourceCode" id="cb202"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#cohort 2</span></span>
 <span><span class="va">pvals.cohort2</span><span class="op">&lt;-</span><span class="va">EWASres.cohort2</span><span class="op">$</span><span class="va">p.value</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/qqman/man/qq.html">qq</a></span><span class="op">(</span><span class="va">pvals.cohort2</span>,main<span class="op">=</span><span class="op">(</span><span class="st">"QQPlot EWAS cohort 2 smoking Never VS Current"</span><span class="op">)</span><span class="op">)</span> </span></code></pre></div>
-<div class="inline-figure"><img src="_main_files/figure-html/QQlots-2.png" width="672" style="display: block; margin: auto;"></div>
+<div class="inline-figure"><img src="plots/QQlots-2.png" width="576" style="display: block; margin: auto;"></div>
 <div class="sourceCode" id="cb203"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#cohort 3</span></span>
 <span><span class="va">pvals.cohort3</span><span class="op">&lt;-</span><span class="va">EWASres.cohort3</span><span class="op">$</span><span class="va">p.value</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/qqman/man/qq.html">qq</a></span><span class="op">(</span><span class="va">pvals.cohort3</span>,main<span class="op">=</span><span class="op">(</span><span class="st">"QQPlot EWAS cohort 3 smoking Never VS Current"</span><span class="op">)</span><span class="op">)</span> </span></code></pre></div>
-<p><img src="_main_files/figure-html/QQlots-3.png" width="672" style="display: block; margin: auto;">
+<p><img src="plots/QQlots-3.png" width="576" style="display: block; margin: auto;">
 THe plots can be found here (<a href="./data/DAY4/Output/QQPlot.EWAS.cohort1.NeverVScurrent.jpg">cohort1</a>, <a href="./data/DAY4/Output/QQPlot.EWAS.cohort2.NeverVScurrent.jpg">cohort2</a>, <a href="./data/DAY4/Output/QQPlot.EWAS.cohort3.NeverVScurrent.jpg">cohort3</a>)</p>
 </div>
 <div id="box-plot" class="section level3" number="4.3.2">
@@ -216,7 +216,7 @@ the 3 cohorts.</p>
 <code class="sourceCode R"><span><span class="va">p1</span><span class="op">&lt;-</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">QCPlot.df</span>,<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">Cohort</span>, y<span class="op">=</span><span class="va">coefficient</span>, fill<span class="op">=</span><span class="va">Cohort</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html">geom_boxplot</a></span><span class="op">(</span><span class="op">)</span> </span>
 <span><span class="va">p1</span></span></code></pre></div>
-<p><img src="_main_files/figure-html/BoxPlot-1.png" width="672" style="display: block; margin: auto;">
+<p><img src="plots/BoxPlot-1.png" width="576" style="display: block; margin: auto;">
 The boxplot can be found <a href="./data/DAY4/Output/BoxPlot.MA.Smoking.NeverVScurrent.png">here</a></p>
 </div>
 <div id="precision-plot" class="section level3" number="4.3.3">
@@ -248,7 +248,7 @@ the sample size (N) for each cohort</p>
 <div class="sourceCode" id="cb210"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p2</span><span class="op">&lt;-</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">precision</span>,<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">sqrt_N</span>, y<span class="op">=</span><span class="va">invSE</span>, color<span class="op">=</span><span class="va">Cohort</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span> </span>
 <span><span class="va">p2</span></span></code></pre></div>
-<p><img src="_main_files/figure-html/PrecisionPlot-1.png" width="672" style="display: block; margin: auto;">
+<p><img src="plots/PrecisionPlot-1.png" width="576" style="display: block; margin: auto;">
 The precision plot can be found <a href="./data/DAY4/Output/PrecisionPlot.MA.Smoking.NeverVScurrent.png">here</a></p>
 </div>
 </div>
@@ -434,7 +434,7 @@ was defined at FDR p-value &lt; 0.05.</p>
 <div class="sourceCode" id="cb230"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pvals.current</span><span class="op">&lt;-</span><span class="va">dat.current.ord</span><span class="op">$</span><span class="va">p.fe</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/qqman/man/qq.html">qq</a></span><span class="op">(</span><span class="va">pvals.current</span>,main<span class="op">=</span><span class="op">(</span><span class="st">"QQPlot metaEWAS smoking Never VS Current"</span><span class="op">)</span><span class="op">)</span> </span></code></pre></div>
-<p><img src="_main_files/figure-html/qqplot-1.png" width="672" style="display: block; margin: auto;">
+<p><img src="plots/qqplot-1.png" width="576" style="display: block; margin: auto;">
 The QQPlot plot can be found <a href="./data/DAY4/Output/QQPlot.MA.Smoking.NeverVSformer.jpg">here</a></p>
 </div>
 <div id="volcano-plot" class="section level3" number="4.4.5">
@@ -462,7 +462,7 @@ The QQPlot plot can be found <a href="./data/DAY4/Output/QQPlot.MA.Smoking.Never
 <span><span class="va">p3</span> <span class="op">&lt;-</span> <span class="va">p2</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_colour_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="va">mycolors</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">p3</span></span></code></pre></div>
-<p><img src="_main_files/figure-html/VolcanoPlot-1.png" width="672" style="display: block; margin: auto;">
+<p><img src="plots/VolcanoPlot-1.png" width="576" style="display: block; margin: auto;">
 The volcano plot can be found <a href="./data/DAY4/Output/VolcanoPlot.MA.Smoking.NeverVScurrent.png">here</a></p>
 </div>
 <div id="forest-plot" class="section level3" number="4.4.6">
@@ -483,7 +483,7 @@ to AHRR gene and it is well known for its association with tabbacco.</p>
 <span>       xlab<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/expression.html">expression</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/paste.html">paste</a></span><span class="op">(</span><span class="st">"Change in DNA methylation never vs current"</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>       mlab<span class="op">=</span><span class="st">"Fixed-effects meta-analysis"</span>,col<span class="op">=</span><span class="st">"deepskyblue2"</span>,border<span class="op">=</span><span class="st">"deepskyblue2"</span>,cex<span class="op">=</span><span class="fl">0.8</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/title.html">title</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"Forest plot for probe:\n"</span>,<span class="va">X</span>,<span class="st">" ("</span>,<span class="va">G</span>,<span class="st">"), I-squared: "</span>,<span class="va">I2</span>,<span class="st">""</span><span class="op">)</span>,line<span class="op">=</span><span class="op">-</span><span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<p><img src="_main_files/figure-html/ForestPlot-1.png" width="672" style="display: block; margin: auto;">
+<p><img src="plots/ForestPlot-1.png" width="576" style="display: block; margin: auto;">
 The forest plot can be found <a href="./data/DAY4/Output/ForestPlot.MA.Smoking.NeverVScurrent.png">here</a></p>
 <p><strong>ANSWERS</strong></p>
 <ol style="list-style-type: decimal">
